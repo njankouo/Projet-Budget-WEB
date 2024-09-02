@@ -1,0 +1,46 @@
+
+
+{%extends 'master.html'%}
+{% load static %}
+
+
+{%block contenu%}
+<canvas id="chart"></canvas>
+<img src="{%static 'tel.jpeg'%}">
+<a href="{%url 'form'%}" class="btn btn-primary my-5 mx-5">Enregistrer</a>
+<h4>Nombre d'enregistrement : {{count}}</h4>
+<table class="table align-middle mb-0 bg-white text-center">
+  <thead class="bg-light">
+    <tr>
+    <th>#</th>
+      <th>nom</th>
+      <th>PRIX</th>
+      <th>PRENOM</th>
+    
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for institutions in institution%}
+   <tr>
+   <td>
+        {{ forloop.counter  }}
+   </td>
+   <td>
+
+   {{ institutions.nom }}
+   </td>
+      <td>{{ institutions.price }}</td>
+         <td>{{ institutions.prenom }}</td>
+            <td>
+          <a class="btn btn-danger" href="{% url 'delet' institutions.id%}"> <i class="fas fa-trash text-primary "></i>supprimer</a>
+           <a href="{%url 'edit' institutions.id%}" class='btn btn-primary'> <i class="fas fa-edit text-danger"></i>modifier</a>
+           <a href="som_view/{{ institutions.id}}" class="btn btn-dark text-light">Imprimer</a>
+            </td>
+   </tr>
+   {%endfor%}
+  </tbody>
+</table>
+
+
+{%endblock%}

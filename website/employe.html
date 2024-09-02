@@ -1,0 +1,52 @@
+{%extends 'master.html'%}
+
+{%block contenu%}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+            <div class="jumbotron my-5">
+  <h1 class="display-4">Enregistrement des employés</h1>
+  
+  <form class="my-5" method="post" action="{%url 'add_form'%}">
+{%csrf_token%}
+  <!-- Name input -->
+  <div class="form-outline mb-4">
+    <input type="text" id="form4Example1" class="form-control" name="fullname" />
+    <label class="form-label" for="form4Example1">Fullname</label>
+  </div>
+ <div class="form-outline mb-4">
+    <input type="text" id="prenom" class="form-control" name="emp_code" />
+    <label class="form-label" for="prenom">emp Code</label>
+  </div>
+   
+  <!-- Email input -->
+  <div class="form-outline mb-4">
+    <input type="text" id="adress" class="form-control" name="mobile"/>
+    <label class="form-label" for="adress">mobile</label>
+  </div>
+
+  <!-- Message input -->
+    <label class="form-label" for="position">Position</label>
+  <div class="mb-4">
+<select class=" form-control">
+{%for institution in institutions%}
+  <option value="{{ institution.id }}">{{institution.nom}}</option>
+{%endfor%}
+</select>
+  
+  </div>
+
+
+
+</form>
+  
+    <hr class="my-4">
+  <p class="lead">
+     <!-- Submit button -->
+  <button type="submit" class="btn btn-primary btn-block mb-4">Envoyer</button>
+  </p>
+</div></div>
+        </div>
+    </div>
+{%endblock%}
