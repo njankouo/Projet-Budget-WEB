@@ -30,13 +30,22 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',Home,name='home'),
     path('task', Task, name='task'),
-    path('operation',Operation, name='operation'),
+ 
    
     path('list_taches/', list_taches, name='list_taches'),
     path('delete_tache/<int:id>/',views.delete_tache,name="delete_tache"),
     path('tache/',views.tache,name="tache"),
     path('new_tache/',views.new_tache,name="new_tache"),
-    path('save_tache/',views.save_tache,name="save_tache"),
+    path('sous_programme/',views.sous_programme,name='sous_programme'),
+    path('add_sous_programme/',views.add_sous_programme,name='add_sous_programme'),
+    path('save_Sous_programme/',views.save_Sous_programme,name='save_Sous_programme'),
+    path('activites/',views.activites,name='activites'),
+    path('add_activite/',views.add_activite,name='add_activite'),
+    path('save_activity/',views.save_activity,name='save_activity'),
+    path('users/',views.users,name='users'),
+    path('save_taches/',views.save_taches,name='save_taches'),
+    path('operations/',views.operations,name='operations'),
+ 
     
 
 

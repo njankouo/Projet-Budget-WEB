@@ -12,13 +12,13 @@ from django.http import HttpResponse
 from django.http import FileResponse
 import os
 def Home(request):
-    institution=Institution.objects.order_by('-idinstitution')
+    institution=Institution.objects.order_by('-id')
     count=Institution.objects.all().count()
     context={
         'institution':institution,
         'count':count
     }
-    template="../website/index.html"
+    template="../website/authentification/login.html"
     return render(request,template,context)
 
 def Task(request):
@@ -29,16 +29,6 @@ def Operation(request):
     template="../website/operation.html"
     return render(request,template)
 
-def create_operation(request):
-    if request.method == 'POST':
-        form = TacheForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('create_operation')  # Replace with your success URL
-    else:
-        form = TacheForm()
-    
-    return render(request, 'create_tache.html', {'form': form})
 
 def list_taches(request):
     taches = Tache.objects.all()
@@ -48,7 +38,7 @@ def list_taches(request):
 
 def tache(request):
     template = "../website/tache.html"
-    tache = Activite.objects.all()
+    tache = Tache.objects.all()
     context= {'tache':tache}
     return render(request,template,context)
 
@@ -60,65 +50,122 @@ def delete_tache(request,id):
 def new_tache(request):
     
 
-    template = "../website/new_tache.html"
-    departement =Departement.objects.all()
-    structure= Structure.objects.all()
-    article= Article.objects.all()
-    typestructure = Typestructure.objects.all()
-    action = Action.objects.all()
-    rangs = Rang.objects.all()
-    context= {'structure':structure,'departement':departement,'article':article,'typestructure':typestructure,'action':action,'rangs':rangs}
+    template = "../website/forms/newtache.html"
+    sous_programme = Sousprogramme.objects.all()
+    activite = Activite.objects.all()
+    context={'sous_programme':sous_programme,'activite':activite}
+   
+   
+    
+    
+    
+   
     return render(request,template,context)
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404  
 from django.core.exceptions import ValidationError  # Import for validati
-def save_tache(request):
-    if request.method == "POST":
-        # Data retrieval
-        code = request.POST['code']
-        nom = request.POST['nom']
-        structure_id = request.POST['structure']
-        rang_id = request.POST['rang']
-        action_id = request.POST.get('action')  # Get the action ID from the form
-        justification = request.POST.get('justification', 'off') == 'on'
 
-        # Retrieve corresponding objects
-        structure = get_object_or_404(Structure, idstructure=structure_id)
-        rang = get_object_or_404(Rang, idrang=rang_id)
 
-        # Retrieve the Action object (handle potential errors)
-        action = None
-        if action_id:
-            try:
-                action = get_object_or_404(Action, idaction=action_id)
-            except (DoesNotExist, ValidationError) as e:
-                # Handle exceptions (e.g., action not found, validation error)
-                messages.error(request, f"Erreur : Action introuvable (ID: {action_id})")
-                return render(request, 'your_template.html', {'form': your_form})
+def sous_programme(request):
+    template ='../website/sous_programme.html'
+    sous_programme = Sousprogramme.objects.all()
+    context={'sous_programme':sous_programme}
+    return render(request,template,context)
 
-        # Create a new Activite instance with the retrieved objects
-        save_values = Activite.objects.create(
-            code=code,
-            nom=nom,
-            idstructure=structure,  # Assign the Structure instance directly
-            idaction=action,        # Assign the Action instance directly (or None)
-            idrang=rang,           # Assign the Rang instance directly
-            justification=justification,
-            objectif='Aucun',
-            prio=True,
-            etat=True,
-            partisprenantes=True,
-            autreconcerne=True,
-            cumulextrants=True,
-            responsables=True,
-            cumulindicateurs=True,
-            date_enregistre='2023-03-10',
-            derniere_modif='2023-03-10'
-        )
+def add_sous_programme(request):
+    template = '../website/form_sous_programme.html'
+    return render(request,template)
 
-        # Get the ID of the created instance (automatically assigned)
-        activite_id = save_values.idactivite
+def save_Sous_programme(request):  
+    if request.method == 'POST':  
+        try:  
+            nom = request.POST['nom']  
+            libelle = request.POST['libelle']  
+            indicateur = request.POST['indicateur']  
+            print(f"Nom: {nom}, Libelle: {libelle}, Indicateur: {indicateur}")  
 
-        print(f"Nouvelle activité créée avec ID: {activite_id}")
+            save_sousprogramme = Sousprogramme.objects.create(nom=nom, libelleobjectif=libelle, libelleindicateur=indicateur)  
+            save_sousprogramme.save()  
+            messages.success(request, 'Sous-Programme Enregistre Avec Succes!')  
+            return redirect('/sous_programme/')  
+        except Exception as e:  
+            print(f"Erreur: {e}")  
+            messages.error(request, 'Une Erreur Est Survenue')  
+            return redirect('/sous_programme/')  
+    return redirect('/sous_programme/')
 
-        return redirect('/tache/')
+def activites(request):
+    template ='../website/activite.html'
+    activite=Activite.objects.all()
+    context={'activite':activite}
+    return render(request,template,context)
+
+def add_activite(request):
+    sous_Programme=Sousprogramme.objects.all()
+    context={'sous_Programme':sous_Programme}
+    template ='../website/forms/ActivityForm.html'
+    return render(request,template,context)
+
+def save_activity(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            indicateur = request.POST['indicateur']
+            objectif = request.POST['objectif']
+            sous_programme_id = request.POST['sous_programme']
+
+            # Récupérer l'instance de Sousprogramme
+            sous_programme_instance = Sousprogramme.objects.get(id=sous_programme_id)
+            print(sous_programme_instance)
+
+            # Créer l'activité avec l'instance de Sousprogramme
+            save_activite = Activite.objects.create(
+                nom=nom,
+                idsousprogramme=sous_programme_instance,
+                libelleindicateur=indicateur,
+                libelleobjectif=objectif
+            )
+            save_activite.save()
+            messages.success(request, 'Activite Enregistrée Avec Succès !')
+            return redirect('/activites/')
+        except Sousprogramme.DoesNotExist:
+            messages.error(request, 'Le sous-programme spécifié n\'existe pas.')
+            return redirect('/activites/')
+        except Exception as e:
+            messages.error(request, 'Une erreur est survenue...')
+            print(f"Erreur: {e}")  
+            return redirect('/activites/')
+    return redirect('/activites/')
+
+def users(request):
+    template='../website/forms/compte.html'
+    return render(request,template)
+
+def save_taches(request):
+    if request.method == 'POST':
+        try:
+        
+            nom= request.POST['nom']
+            objectif = request.POST['objectif']
+            indicateur = request.POST['indicateur']
+            activite = request.POST['activite']
+            sousprogramme = request.POST['sousprogramme']
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sousprogramme))
+            instance_activite = Activite.objects.get(id=int(activite))
+            save_tache = Tache.objects.create(nom=nom,idsousprogramme=instance_sous_programme,idactivite=instance_activite,libelleobjectif=objectif,libelleindicateur=indicateur)
+            save_tache.save()
+            messages.success(request,'Tache Enregistre Avec Succes !')
+            return redirect('/tache/')
+        except Activite.DoesNotExist:
+            messages.error(request,'Activite Inexistante')
+        except Sousprogramme.DoesNotExist:
+            messages.error(request,'Sous-Programme Inexistant')
+        except Exception as e:
+            messages.error(request,'Une Erreur Est Survenue')
+            print(f"une erreur: {e}")
+            return redirect('/tache/')
+    return redirect('/tache/')
+
+def operations(request):
+    template = '../website/operations_list.html'
+    return render(request,template)

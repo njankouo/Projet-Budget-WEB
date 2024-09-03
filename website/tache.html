@@ -123,11 +123,12 @@
             </th>
             <th>Code</th>
             <th>Nom</th>
-            <th>Etat</th>
-            <th>Sous Rubrique</th>
-            <th>Programme</th>
-            <th>Structure</th>
-            <th>Type Structure</th>
+           
+            <th>Sous-Programme</th>
+          
+            <th>Activite</th>
+            <th>Libelle Objectif</th>
+            <th>Libelle Indicateur</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -140,13 +141,14 @@
                                   <label for="checkbox1"></label>
                               </span>
             </td>
-            <td>{{taches.code}}</td>
+            <td>{{taches.id}}</td>
             <td>{{taches.nom}}</td>
-            <td><span class='badge badge-success'>{{taches.etat}}</span></td>
-            <td></td>
-            <td></td>
-            <td>{{taches.idstructure}}</td>
-            <td>{{taches.idtypeactivite}}</td>
+            
+          
+            <td>{{taches.idsousprogramme.nom}}</td>
+            <td>{{taches.idactivite.nom}}</td>
+            <td>{{taches.libelleobjectif}}</td>
+            <td>{{taches.libelleindicateur}}</td>
             <td>
               <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="fa fa-edit" data-toggle="tooltip" title="Edit"></i></a>
               <a href="/delete_tache/{{taches.idactivite}}/" class="delete" ><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></a>
