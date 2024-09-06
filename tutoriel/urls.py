@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import  path
 from tutorial.views import Home
-from tutorial.views import Task
+
 from tutorial.views import Operation
 from tutorial.views import list_taches
 
@@ -29,7 +29,8 @@ from tutorial import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',Home,name='home'),
-    path('task', Task, name='task'),
+    path('dashboard/',views.dashboard,name='dashboard'),
+    
  
    
     path('list_taches/', list_taches, name='list_taches'),
@@ -45,6 +46,30 @@ urlpatterns = [
     path('users/',views.users,name='users'),
     path('save_taches/',views.save_taches,name='save_taches'),
     path('operations/',views.operations,name='operations'),
+    path('configurations/',views.configurations,name='configurations'),
+    path('add_annee/',views.add_annee,name='add_annee'),
+    path('delete_annee/<int:id>/',views.delete_annee,name='delete_annee'),
+    path('nature_tache/',views.nature_tache,name='nature_tache'),
+    path('delete_nature/<int:id>/',views.delete_nature,name='delete_nature'),
+
+    path('add_sources_financements/',views.add_sources_financements,name='add_sources_financements'),
+
+    path('delete_sources/<int:id>/',views.delete_sources,name='delete_sources'),
+    path('add_type_financements/',views.add_type_financements,name='add_type_financements'),
+    path('delete_types/<int:id>/',views.delete_types,name='delete_types'),
+    path('add_risque/',views.add_risque,name='add_risque'),
+    path('risques/<int:id>/',views.risques,name='risques'),
+
+
+    path('search_activite/',views.search_activite,name='search_activite'),
+
+    path('search_tache/',views.search_tache,name='search_tache'),
+    path('add_operation/',views.add_operation,name='add_operation'),
+
+    path('operation_paragraphe/<int:id>/',views.operation_paragraphe,name='operation_paragraphe'),
+
+
+    path('delete_operation/<int:id>/',views.delete_operation,name='delete_operation')
  
     
 

@@ -21,13 +21,6 @@ def Home(request):
     template="../website/authentification/login.html"
     return render(request,template,context)
 
-def Task(request):
-    template="../website/task.html"
-    return render(request,template)
-
-def Operation(request):
-    template="../website/operation.html"
-    return render(request,template)
 
 
 def list_taches(request):
@@ -167,5 +160,226 @@ def save_taches(request):
     return redirect('/tache/')
 
 def operations(request):
+    sourcefinancement= Sourcefinacement.objects.all()
+    typefinancement = Typefinancement.objects.all()
+    risque=Risque.objects.all()
+    sousprogramme = Sousprogramme.objects.all()
+    structure =Structure.objects.all()
+    operation=Operation.objects.all()
+
+    context={'sourcefinancement':sourcefinancement,'typefinancement':typefinancement,'risque':risque,'sousprogramme':sousprogramme,'structure':structure,'operation':operation}
+  
     template = '../website/operations_list.html'
+    return render(request,template,context)
+def configurations(request):
+    annee = Annee.objects.all()
+    nature =Naturetache.objects.all()
+    source = Sourcefinacement.objects.all()
+    type= Typefinancement.objects.all()
+    risque =Risque.objects.all()
+    context={'annee':annee,'nature':nature,'source':source,'type':type,'risque':risque}
+    template='../website/configurations.html'
+    return render(request,template,context)
+def add_annee(request):
+    if request.method == 'POST':
+        try:
+
+         
+            nom = request.POST['nom']
+            etat = request.POST['etat']
+            save_annee = Annee.objects.create(nom=nom,etat=etat)
+            save_annee.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/configurations/')
+        except Exception as e:
+            messages.error(request,'Une Erreur Est Survenue')
+            print(f"erreur:{e}")
+            return redirect('/configurations/')
+    return redirect('/configurations/')
+
+def delete_annee(request,id):
+    annee=Annee.objects.get(id=int(id))
+    annee.delete()
+    messages.success(request,'Annee Retire Avec Succes!')
+    return redirect('/configurations/')
+def delete_nature(request,id):
+    delete_nature=Naturetache.objects.get(id=int(id))
+    delete_nature.delete()
+    return redirect('/configurations/')
+def nature_tache(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            save_nature_tache=Naturetache.objects.create(nom=nom)
+            save_nature_tache.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/configurations/')
+        except Exception as e:
+            messages.error(request,"Erreur Survenue L'ors de L'enregistrement")
+            return redirect('/configurations/')
+    return redirect('/configurations/')
+def dashboard(request):
+    template ='../website/master.html'
     return render(request,template)
+
+def add_sources_financements(request):
+    if request.method == 'POST':
+        try:
+            nom=request.POST['nom']
+            etat = request.POST['etat']
+            save_source_financement=Sourcefinacement.objects.create(nom=nom,etat=etat)
+            save_Sous_programme.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/configurations/')
+        except Exception as e:
+            messages.error(request,"Erreur Survenue L'ors de L'enregistrement")
+            return redirect('/configurations/')
+    return redirect('/configurations/')
+
+def delete_sources(request,id):
+    sourcefinancement= Sourcefinacement.objects.get(id=int(id))
+    sourcefinancement.delete()
+    messages.success(request,'Source De Financement Retire ')
+    return redirect('/configurations/')
+
+
+def add_type_financements(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            etat= request.POST['etat']
+            nature = request.POST['nature']
+            instance_nature = Naturetache.objects.get(id=int(nature))
+            save_type_financement = Typefinancement.objects.create(nom=nom,etat=etat,idnaturetache=instance_nature)
+            save_type_financement.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/configurations/')
+        except Exception as e:
+            messages.error(request,f"Une Erreur:{e}")
+            return redirect('/configurations/')
+        except Naturetache.DoesNotExist:
+            messages.error('La nature De La Tache Est Inexistante')
+            return redirect('/configurations/')
+    return redirect('/configurations/')
+
+def delete_types(request,id):
+    delete_type_financement= Typefinancement.objects.get(id=int(id))
+    delete_type_financement.delete()
+    messages.success(request,'Type De Financement Retire')
+    return redirect('/configurations/')
+
+
+def add_risque(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            etat = request.POST['etat']
+            save_risque = Risque.objects.create(nom=nom,etat=etat)
+            save_risque.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/configurations/')
+        except Exception as e:
+            messages.error(request,'Une Erreur Est Survenue')
+            return redirect('/configurations/')
+    return redirect('/configurations/')
+
+def risques(request,id):
+    delete_risque= Risque.objects.get(id=int(id))
+    delete_risque.delete()
+    messages.success(request,'Risque Retire Avec Succes')
+    return redirect('/configurations/')
+from django.http import JsonResponse
+
+def search_activite(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        activites = Activite.objects.filter(idsousprogramme_id=selected_id).values('id', 'nom')
+        return JsonResponse(list(activites), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def search_tache(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        taches = Tache.objects.filter(idactivite=selected_id).values('id', 'nom')
+        return JsonResponse(list(taches), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+
+
+def add_operation(request):  
+    if request.method == 'POST':  
+        try:  
+            # Log received data  
+            print("Received POST data:", request.POST)  
+
+            # Récupération des données du formulaire  
+            nom = request.POST['nom']  
+            sous_programme = request.POST['sousprogramme']  
+            activite = request.POST['activite']  
+            tache = request.POST['tache']  
+            type_financement = request.POST['typefinancement']  
+            sourcefinancement = request.POST['sourcefinancement']  
+            risque = request.POST['risque']  
+            indicateur = request.POST['indicateur']  
+            resultat = request.POST['resultat']  
+
+            # Récupération des instances  
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
+            instance_activite = Activite.objects.get(id=int(activite))  
+            instance_tache = Tache.objects.get(id=int(tache))  
+            instance_type_financement = Typefinancement.objects.get(id=int(type_financement))  
+            instance_source_financement = Sourcefinacement.objects.get(id=int(sourcefinancement))  
+            instance_risque = Risque.objects.get(id=int(risque))  
+
+            # Log instances  
+            print("Instances retrieved: ", instance_sous_programme, instance_activite, instance_tache, instance_type_financement, instance_source_financement, instance_risque)  
+
+            # Création de l'opération  
+            saveoperations = Operation.objects.create(  
+                nom=nom,  
+                idsousprogramme=instance_sous_programme,  
+                idactivite=instance_activite,  
+                idtache=instance_tache,  
+                idtypefinancement=instance_type_financement,  
+                idsourcefinancement=instance_source_financement,  
+                idrisque=instance_risque,  
+                indicateurspoursuivis=indicateur,  
+                indicateurresult=resultat  
+            )  
+
+            messages.success(request, 'Enregistrement réussi')  
+            return redirect('/operations/')  
+        
+        except Exception as e:  
+            print("An error occurred:", str(e))  
+            messages.error(request, "Erreur lors de l'enregistrement.")  
+            return redirect('/operations/')  
+
+    return redirect('/operations/')
+
+
+def operation_paragraphe(request,id):
+    operation=Operation.objects.get(id=int(id))
+    template ='../website/operation_view.html'
+    context={'operation':operation}
+    return render(request,template,context)
+
+def delete_operation(request,id):
+    operation=Operation.objects.get(id=int(id))
+    operation.delete()
+    messages.success(request,'Operation Retire Avec Succes')
+    return redirect('/operations/')

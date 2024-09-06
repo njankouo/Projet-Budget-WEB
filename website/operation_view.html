@@ -1,0 +1,25 @@
+{%extends 'master.html'%}
+
+{%block content%}
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" style="font-weight: bold;font-family: forte;">Informations Sur L'operation {{operation.nom}}</h5>
+              <p>ANNEE: <b>{{operation.idannee}}</b></p>
+              <p>SOUS-PROGRAMME: <b>{{operation.idsousprogramme}}</b></p>
+              <p>TYPE DE FINANCEMENT: <b>{{operation.idtypefinancement}}</b></p>
+              <p>SOURCES DE FINANCEMENT: <b>{{operation.idsourcefinancement}}</b></p>
+              <p>LIBELLE OBJECTIF: <b>{{operation.indicateurspoursuivis}}</b></p>
+              <p>RESULTATS INDICATEURS: <b>{{operation.indicateurresult}}</b></p>
+              <p>TACHE: <b>{{operation.idtache}}</b></p>
+              <p>RISQUE: <b>{{operation.idrisque}}</b></p>
+            </div>
+          </div>
+    </div>
+
+</div>
+</div>
+
+{%endblock%}

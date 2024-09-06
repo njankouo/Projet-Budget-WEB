@@ -99,7 +99,12 @@
 
 
 {%block content%}
-<div class="container"style="margin-left: 23%;">
+
+  
+  <div class="card">
+<div class="card-body">
+
+
     <div class="table-wrapper">
       <div class="table-title">
         <div class="row">
@@ -107,8 +112,8 @@
             <h2>Gestion Des Taches </h2>
           </div>
           <div class="col-sm-6">
-            <a href="{%url 'new_tache'%}" class="btn btn-success"><i class="fa fa-plus"></i> <span>Ajouter</span></a>
-            <a href="#deleteEmployeeModal" class="btn btn-danger"><i class="fa fa-minus"></i> <span>supprimer</span></a>
+            <a href="{%url 'new_tache'%}" class="btn btn-success"><i  class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
+            <a href="#deleteEmployeeModal" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
           </div>
         </div>
       </div>
@@ -150,8 +155,9 @@
             <td>{{taches.libelleobjectif}}</td>
             <td>{{taches.libelleindicateur}}</td>
             <td>
-              <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="fa fa-edit" data-toggle="tooltip" title="Edit"></i></a>
-              <a href="/delete_tache/{{taches.idactivite}}/" class="delete" ><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></a>
+  <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+              <a href="/delete_tache/{{taches.idactivite}}/" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
+     
             </td>
           </tr>
           {%endfor%}
@@ -161,7 +167,8 @@
     </div>
   </div>
 
-
+</div>
+</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>  
 <script>  

@@ -98,7 +98,10 @@
     {%extends 'master.html'%}
 
     {%block content%}
-<div class="container"style="margin-left: 23%;">
+      
+  <div class="card">
+    <div class="card-body">
+<div class="container">
     <div class="table-wrapper">
       <div class="table-title">
         <div class="row">
@@ -106,12 +109,12 @@
             <h2>Gestion Des Activites </h2>
           </div>
           <div class="col-sm-6">
-            <a href="/add_activite/" class="btn btn-success"><i class="fa fa-plus"></i> <span>Ajouter</span></a>
-            <a href="" class="btn btn-danger"><i class="fa fa-minus"></i> <span>supprimer</span></a>
+            <a href="/add_activite/" class="btn btn-success"><i class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
+            <a href="" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
           </div>
         </div>
       </div>
-      <table class="table table-striped table-hover table-responsive text-center" id="myTable">
+      <table class="table table-hover table-responsive text-center" id="myTable">
         <thead>
           <tr>
             <th>
@@ -144,8 +147,8 @@
             <td>{{activites.libelleindicateur}}</td>
             <td>{{ activites.idsousprogramme.nom }}</td>
             <td>
-              <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="fa fa-edit" data-toggle="tooltip" title="Edit"></i></a>
-              <a href="" class="delete" ><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></a>
+              <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+              <a href="/delete_activite/{{activites.id}}" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
             </td>
           </tr>
       {%endfor%}
