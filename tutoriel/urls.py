@@ -69,7 +69,9 @@ urlpatterns = [
     path('operation_paragraphe/<int:id>/',views.operation_paragraphe,name='operation_paragraphe'),
 
 
-    path('delete_operation/<int:id>/',views.delete_operation,name='delete_operation')
+    path('delete_operation/<int:id>/',views.delete_operation,name='delete_operation'),
+    path('users/',views.users,name='users')
+
  
     
 

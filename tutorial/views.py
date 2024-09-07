@@ -383,3 +383,7 @@ def delete_operation(request,id):
     operation.delete()
     messages.success(request,'Operation Retire Avec Succes')
     return redirect('/operations/')
+
+def users(request):
+    template = '../website/authentification/register.html'
+    return render(request,template)
