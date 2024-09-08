@@ -70,9 +70,55 @@ urlpatterns = [
 
 
     path('delete_operation/<int:id>/',views.delete_operation,name='delete_operation'),
-    path('users/',views.users,name='users')
+    path('users/',views.users,name='users'),
 
+    path('rubrique/',views.rubrique,name='rubrique'),
+    path('sous_rubrique/',views.sous_rubrique,name='sous_rubrique'),
+    path('references/',views.references,name='references'),
+
+    path('add_rubrique/',views.add_rubrique,name='add_rubrique'),
+
+    path('add_sous_rubrique/',views.add_sous_rubrique,name='add_sous_rubrique'),
+
+
+    path('search_sous_rubrique/',views.search_sous_rubrique,name='search_sous_rubrique'),
+
+    path('add_references/',views.add_references,name='add_references'),
+
+    path('commandes/',views.commandes,name='commandes'),
+    path('configurations_tva/',views.configurations_tva,name='configurations_tva'),
+    path('configurations_ir/',views.configurations_ir,name='configurations_ir'),
+
+    path('add_tva/',views.add_tva,name='add_tva'),
+
+    path('add_ir/',views.add_ir,name='add_ir'),
+    path('secteur/',views.secteur,name='secteur'),
+    path('article/',views.article,name='article'),
+    path('add_secteur/',views.add_secteur,name='add_secteur'),
+
+    path('add_sous_secteur/',views.add_sous_secteur,name='add_sous_secteur'),
+    path('sous_secteur/',views.sous_secteur,name='sous_secteur'),
+    path('add_article/',views.add_article,name='add_article'),
+
+    path('add_section/',views.add_section,name='add_section'),
+
+    path('section',views.section,name='section'),
+
+    path('paragraphe/',views.paragraphe,name='paragraphe'),
  
+    path('search_section/',views.search_section,name='search_section'),
+
+    path('add_paragraphe/',views.add_paragraphe,name='add_paragraphe'),
+
+    path('add_prestataire/',views.add_prestataire,name='add_prestataire'),
+
+    path('search_operations/',views.search_operations,name='search_operations'),
+    path('add_commande/',views.add_commande,name='add_commande'),
+
+    path('add_references/<int:id>/',views.add_references,name='add_references'),
+    path('fiche_bon/<int:id>/',views.fiche_bon,name='fiche_bon'),
+    path('search_cu/',views.search_cu,name='search_cu'),
+    path('add_ligne_commande/<int:id>/',views.add_ligne_commande,name='add_ligne_commande')
     
 
 

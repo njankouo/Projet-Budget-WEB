@@ -140,9 +140,9 @@
       <li class="nav-item" role="presentation">
         <button class="nav-link " id="pills-risque-tab" data-bs-toggle="pill" data-bs-target="#pills-risque" type="button" role="tab" aria-controls="pills-risque" aria-selected="true">Risques</button>
       </li>
-         <!--   <li class="nav-item" role="presentation">
-        <button class="nav-link " id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="true">Gestion Localite</button>
-      </li> -->
+         <li class="nav-item" role="presentation">
+        <button class="nav-link " id="pills-prestataire-tab" data-bs-toggle="pill" data-bs-target="#pills-prestataires" type="button" role="tab" aria-controls="pills-prestataire" aria-selected="true">Gestion prestataires</button>
+      </li> 
     </ul>
     <hr class="bg-dark p-2">
     <div class="tab-content pt-2" id="myTabContent">
@@ -207,7 +207,7 @@
                                   </span>
                 </th>
            
-                <th style="width: 25%;">Nom</th>
+                <th >Nom</th>
                 <th style="width: 25%;">Etat</th>
              
                 <th style="width: 25%;">Actions</th>
@@ -614,6 +614,146 @@
           </div>
         </div>
     </div><!-- End Pills Tabs -->
+
+
+
+
+    <div class="tab-content pt-2" id="myTabContent">
+      <div class="tab-pane fade" id="pills-prestataires" role="tabpanel" aria-labelledby="prestataires-tab">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2>Gestion Des Prestataires </h2>
+              </div>
+              
+           
+              <div class="col-sm-6">
+                <a data-bs-toggle="modal" data-bs-target="#verticalycenteredprestataire" class="btn btn-success"><i class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
+                <a href="" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="verticalycenteredprestataire" tabindex="-1" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">AJOUTER DES PRESTATAIRES</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+               .
+               <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Saisissez Les Informations Relatives Aux Prestataires</h5>
+    
+                  <!-- Floating Labels Form -->
+                  <form class="row g-3" method="POST" action="/add_prestataire/">
+                    {%csrf_token%}
+                    <div class="col-md-12">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingName" placeholder="Nom Prestataire" name="nom">
+                        <label for="floatingName">Nom</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <input type="email" class="form-control" id="floatingEmail" placeholder="Email Prestataire" name="email">
+                        <label for="floatingEmail">Adresse Email</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-floating">
+                        <input type="tel" class="form-control" id="floatingPassword" placeholder="Telephone prestataire" name="tel">
+                        <label for="floatingPassword">Telephone </label>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input type="tel" class="form-control" id="floatingPassword" placeholder="Pays prestataire" name="pays">
+                        <label for="floatingPassword">Pays Prestataire</label>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input type="tel" class="form-control" id="floatingPassword" placeholder="Banque prestataire" name="banque">
+                        <label for="floatingPassword">Banque Prestataire </label>
+                      </div>
+                    </div>
+                   
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input type="tel" class="form-control" id="floatingPassword" placeholder="Ville Banque prestataire" name="ville">
+                        <label for="floatingPassword">Ville Banque Prestataire </label>
+                      </div>
+                    </div>
+                   
+
+                    <div class="col-12">
+                      <div class="form-floating">
+                        <input type="tel" class="form-control" id="floatingPassword" placeholder="swift Banque prestataire" name="swift">
+                        <label for="floatingPassword">Swift Banque Prestataire </label>
+                      </div>
+                    </div>
+                   
+                   
+                        
+    
+                </div>
+              </div>
+                
+              
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="bi bi-hand-thumbs-down-fill"></i> Close</button>
+                  <button type="submit" class="btn btn-primary">&nbsp;<i class='bi bi-hand-thumbs-up-fill'></i> Enregistrer</button>
+                </div>
+              </div>
+            </form>
+            </div>
+          </div>
+          <table class="table table-hover table-responsive text-center" id="myTable">
+            <thead>
+              <tr>
+                <th style="width: 20%;">
+               SWIFT
+                </th>
+           
+                <th >Nom</th>
+                <th >Contacts</th>
+                <th >Email</th>
+                <th >Pays</th>
+                <th >Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+     {%for prestataires in prestataire%}
+              <tr>
+                <td>
+                {{prestataires.bqswift}}
+                </td>
+                <td> {{prestataires.nom}}</td>
+               
+                <td> {{prestataires.contact}}</td>
+                
+                 
+                <td> {{prestataires.ad1}}</td>
+                 
+                <td> {{prestataires.bqpays}}</td>
+               
+               
+                <td>
+                  <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+                  <a href="/risques/{{risques.id}}/" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
+                </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+          
+        </div>
+      </div>
+  </div><!-- End Pills Tabs -->
 
   </div>
 </div>

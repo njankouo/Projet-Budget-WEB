@@ -174,6 +174,7 @@ class Typestructure(models.Model):
 
 class Article(models.Model):
     code=models.CharField(max_length=255,null=True)
+    nom= models.CharField(max_length=255,null=True)
     class Meta:
         db_table = 'article'  # Specify the exact table name you want
 
@@ -991,14 +992,88 @@ class Signataire(models.Model):
 
     def __str__(self):
         return self.nom
-    
+class Paragraphe(models.Model):
+    nom=models.CharField(null=True,max_length=255)
+    idsection = models.ForeignKey(Section,on_delete=models.CASCADE,null=True)
+    idarticle = models.ForeignKey(Article,on_delete=models.CASCADE,null=True)
+
+class Operation(models.Model):
+    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True, db_column='idtache')
+    nom=models.CharField(max_length=255,null=True)
+    numordre=models.CharField(max_length=255,null=True)
+    totalmontantaloue=models.CharField(max_length=255,null=True)
+    moyensnecessaires=models.CharField(max_length=255,null=True)
+    indicateurs2014=models.CharField(max_length=255,null=True)
+    aeencours=models.CharField(max_length=255,null=True)
+    cpconsommee=models.CharField(max_length=255,null=True)
+    indicateurspoursuivis=models.CharField(max_length=255,null=True)
+    valider=models.CharField(max_length=255,null=True)
+    m1=models.CharField(max_length=255,null=True)
+    etat=models.CharField(max_length=255,null=True)
+    m2=models.CharField(max_length=255,null=True)
+    date_enregistre=models.DateTimeField(null=True,blank=True)
+    derniere_modif=models.DateTimeField(null=True,blank=True)
+    periodeexecution=models.CharField(max_length=255,null=True)
+    montantengage=models.CharField(max_length=255,null=True)
+    montantliquide=models.CharField(max_length=255,null=True)
+    montantpayeht=models.CharField(max_length=255,null=True)
+    montantpayettc=models.CharField(max_length=255,null=True)
+    resultprocess=models.CharField(max_length=255,null=True)
+    indicateurresult=models.CharField(max_length=255,null=True)
+    montant_ordonne=models.CharField(max_length=255,null=True)
+    taxe_ordonne=models.CharField(max_length=255,null=True)
+    nap_ordonne=models.CharField(max_length=255,null=True)
+    valeurattendue=models.CharField(max_length=255,null=True)
+    justification=models.CharField(max_length=255,null=True)
+    valeurrealisee=models.CharField(max_length=255,null=True)
+    cpanneeplus1=models.CharField(max_length=255,null=True)
+    cpanneeplus2=models.CharField(max_length=255,null=True)
+    m3=models.CharField(max_length=255,null=True)
+    m4=models.CharField(max_length=255,null=True)
+    m5=models.CharField(max_length=255,null=True)
+    m6=models.CharField(max_length=255,null=True)
+    m7=models.CharField(max_length=255,null=True)
+    m8=models.CharField(max_length=255,null=True)
+    m9=models.CharField(max_length=255,null=True)
+    m10=models.CharField(max_length=255,null=True)
+    m11=models.CharField(max_length=255,null=True)
+    m12=models.CharField(max_length=255,null=True)
+    idsousprogramme= models.ForeignKey(Sousprogramme,on_delete=models.CASCADE,null=True)
+    idsourcefinancement = models.ForeignKey(Sourcefinacement,on_delete=models.CASCADE,null=True)
+    idtache=models.ForeignKey(Tache,on_delete=models.CASCADE,null=True)
+    idevaluationstructure=models.ForeignKey(Evaluationstructure, on_delete=models.CASCADE, null=True,blank=True, db_column='idevaluationstructure')
+    # periode_id=models.ForeignKey(Periode, on_delete=models.CASCADE, null=True,blank=True, db_column='periode_id')
+    idannee=models.ForeignKey(Annee, on_delete=models.CASCADE, null=True,blank=True, db_column='idannee')
+    idnaturetache=models.ForeignKey(Naturetache, on_delete=models.CASCADE, null=True,blank=True, db_column='idnaturetache')
+    # idnature_t=models.ForeignKey(Nature_t, on_delete=models.CASCADE, null=True,blank=True, db_column='idnature_t')
+    idbailleurfond=models.ForeignKey(Bailleurfond, on_delete=models.CASCADE, null=True,blank=True, db_column='idbailleurfond')
+    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
+    idrisque=models.ForeignKey(Risque, on_delete=models.CASCADE, null=True,blank=True, db_column='idrisque')
+    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True, db_column='idactivite')
+    idtypefinancement=models.ForeignKey(Typefinancement, on_delete=models.CASCADE, null=True,blank=True, db_column='idtypefinancement')
+    class Meta:
+        db_table = 'operation'  # Specify the exact table name you want
+
+    def __str__(self):
+        return self.nom
+class Tva(models.Model):
+    nom= models.CharField(null=True,max_length=255)
+
+class Ir(models.Model):
+    nom= models.CharField(null=True,max_length=255)
 class Boncommande(models.Model):
-    idimputation=models.ForeignKey(Imputation, on_delete=models.CASCADE, null=True,blank=True, db_column='idimputation')
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
     idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
     idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
-    idsignataire=models.ForeignKey(Signataire, on_delete=models.CASCADE, null=True,blank=True, db_column='idsignataire')
-    idbudget=models.ForeignKey(Budget, on_delete=models.CASCADE, null=True,blank=True, db_column='idbudget')
-    idmoyens=models.ForeignKey(Moyens, on_delete=models.CASCADE, null=True,blank=True, db_column='idmoyens')
+    idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True)
+    idoperation=models.ForeignKey(Operation, on_delete=models.CASCADE, null=True,blank=True)
+    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True)
+
+    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idtva=models.ForeignKey(Tva, on_delete=models.CASCADE, null=True,blank=True)
+    idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
+
     dateemission=models.DateTimeField(null=True,blank=True)
     object=models.CharField(max_length=255,null=True)
     code=models.CharField(max_length=255,null=True)
@@ -1326,10 +1401,10 @@ class Elementcout(models.Model):
     nom=models.CharField(max_length=255,null=True)
     prixunitaire=models.CharField(max_length=255,null=True)
     code=models.CharField(max_length=255,null=True)
-    idimputation=models.ForeignKey(Imputation, on_delete=models.CASCADE, null=True,blank=True, db_column='idimputation')
-    idrubriquemercurial=models.ForeignKey(Rubriquemercurial, on_delete=models.CASCADE, null=True,blank=True, db_column='idrubriquemercuriale')
-    idunite=models.ForeignKey(Unite, on_delete=models.CASCADE, null=True,blank=True, db_column='idunite')
-    idsousrubriquemercurial=models.ForeignKey(Sousrubriquemercurial, on_delete=models.CASCADE, null=True,blank=True, db_column='idsousrubriquemercurial')
+    # idimputation=models.ForeignKey(Imputation, on_delete=models.CASCADE, null=True,blank=True, db_column='idimputation')
+    idrubriquemercurial=models.ForeignKey(Rubrique, on_delete=models.CASCADE, null=True,blank=True, db_column='idrubriquemercuriale')
+    # idunite=models.ForeignKey(Unite, on_delete=models.CASCADE, null=True,blank=True, db_column='idunite')
+    idsousrubriquemercurial=models.ForeignKey(Sousrubrique, on_delete=models.CASCADE, null=True,blank=True, db_column='idsousrubriquemercurial')
     class Meta:
         db_table = 'elementcout'  
 
@@ -1978,66 +2053,8 @@ class Revuedifficilte(models.Model):
 
     def __str__(self):
         return self.nom
-    
-class Operation(models.Model):
-    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True, db_column='idtache')
-    nom=models.CharField(max_length=255,null=True)
-    numordre=models.CharField(max_length=255,null=True)
-    totalmontantaloue=models.CharField(max_length=255,null=True)
-    moyensnecessaires=models.CharField(max_length=255,null=True)
-    indicateurs2014=models.CharField(max_length=255,null=True)
-    aeencours=models.CharField(max_length=255,null=True)
-    cpconsommee=models.CharField(max_length=255,null=True)
-    indicateurspoursuivis=models.CharField(max_length=255,null=True)
-    valider=models.CharField(max_length=255,null=True)
-    m1=models.CharField(max_length=255,null=True)
-    etat=models.CharField(max_length=255,null=True)
-    m2=models.CharField(max_length=255,null=True)
-    date_enregistre=models.DateTimeField(null=True,blank=True)
-    derniere_modif=models.DateTimeField(null=True,blank=True)
-    periodeexecution=models.CharField(max_length=255,null=True)
-    montantengage=models.CharField(max_length=255,null=True)
-    montantliquide=models.CharField(max_length=255,null=True)
-    montantpayeht=models.CharField(max_length=255,null=True)
-    montantpayettc=models.CharField(max_length=255,null=True)
-    resultprocess=models.CharField(max_length=255,null=True)
-    indicateurresult=models.CharField(max_length=255,null=True)
-    montant_ordonne=models.CharField(max_length=255,null=True)
-    taxe_ordonne=models.CharField(max_length=255,null=True)
-    nap_ordonne=models.CharField(max_length=255,null=True)
-    valeurattendue=models.CharField(max_length=255,null=True)
-    justification=models.CharField(max_length=255,null=True)
-    valeurrealisee=models.CharField(max_length=255,null=True)
-    cpanneeplus1=models.CharField(max_length=255,null=True)
-    cpanneeplus2=models.CharField(max_length=255,null=True)
-    m3=models.CharField(max_length=255,null=True)
-    m4=models.CharField(max_length=255,null=True)
-    m5=models.CharField(max_length=255,null=True)
-    m6=models.CharField(max_length=255,null=True)
-    m7=models.CharField(max_length=255,null=True)
-    m8=models.CharField(max_length=255,null=True)
-    m9=models.CharField(max_length=255,null=True)
-    m10=models.CharField(max_length=255,null=True)
-    m11=models.CharField(max_length=255,null=True)
-    m12=models.CharField(max_length=255,null=True)
-    idsousprogramme= models.ForeignKey(Sousprogramme,on_delete=models.CASCADE,null=True)
-    idsourcefinancement = models.ForeignKey(Sourcefinacement,on_delete=models.CASCADE,null=True)
-    idtache=models.ForeignKey(Tache,on_delete=models.CASCADE,null=True)
-    idevaluationstructure=models.ForeignKey(Evaluationstructure, on_delete=models.CASCADE, null=True,blank=True, db_column='idevaluationstructure')
-    # periode_id=models.ForeignKey(Periode, on_delete=models.CASCADE, null=True,blank=True, db_column='periode_id')
-    idannee=models.ForeignKey(Annee, on_delete=models.CASCADE, null=True,blank=True, db_column='idannee')
-    idnaturetache=models.ForeignKey(Naturetache, on_delete=models.CASCADE, null=True,blank=True, db_column='idnaturetache')
-    # idnature_t=models.ForeignKey(Nature_t, on_delete=models.CASCADE, null=True,blank=True, db_column='idnature_t')
-    idbailleurfond=models.ForeignKey(Bailleurfond, on_delete=models.CASCADE, null=True,blank=True, db_column='idbailleurfond')
-    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
-    idrisque=models.ForeignKey(Risque, on_delete=models.CASCADE, null=True,blank=True, db_column='idrisque')
-    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True, db_column='idactivite')
-    idtypefinancement=models.ForeignKey(Typefinancement, on_delete=models.CASCADE, null=True,blank=True, db_column='idtypefinancement')
-    class Meta:
-        db_table = 'operation'  # Specify the exact table name you want
 
-    def __str__(self):
-        return self.nom
+
 
 class Revueaction(models.Model):
     idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True, db_column='idsousprogramme')

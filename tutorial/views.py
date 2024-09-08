@@ -177,7 +177,8 @@ def configurations(request):
     source = Sourcefinacement.objects.all()
     type= Typefinancement.objects.all()
     risque =Risque.objects.all()
-    context={'annee':annee,'nature':nature,'source':source,'type':type,'risque':risque}
+    prestataire = Societe.objects.all()
+    context={'annee':annee,'nature':nature,'source':source,'type':type,'risque':risque,'prestataire':prestataire}
     template='../website/configurations.html'
     return render(request,template,context)
 def add_annee(request):
@@ -387,3 +388,519 @@ def delete_operation(request,id):
 def users(request):
     template = '../website/authentification/register.html'
     return render(request,template)
+
+def rubrique(request):
+    template = '../website/rubrique.html'
+    rubrique = Rubrique.objects.all()
+    sous_rubrique= Sousrubrique.objects.all()
+    context ={'rubrique':rubrique,'sous_rubrique':sous_rubrique}
+    return render(request,template,context)
+
+def sous_rubrique(request):
+    template = '../website/sous_rubrique.html'
+    sous_rubrique= Sousrubrique.objects.all()
+    context={'sous_rubrique':sous_rubrique}
+    return render(request,template,context)
+
+def references(request):
+    template = '../website/references.html'
+    rubrique = Rubrique.objects.all()
+    sous_rubrique= Sousrubrique.objects.all()
+    reference = Elementcout.objects.all()
+    context ={'rubrique':rubrique,'sous_rubrique':sous_rubrique,'reference':reference}
+    return render(request,template,context)
+
+def add_rubrique(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            save_rubrique = Rubrique.objects.create(nom=nom)
+
+            save_rubrique.save()
+            messages.success(request,'Enregistrement Effectue')
+            return redirect('/rubrique/')
+        except Exception as e:
+            messages.error(request,'une erreur est survenue')
+            return redirect('/rubrique/')
+    return redirect('/rubrique/')
+
+def add_sous_rubrique(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            rubrique = request.POST['rubrique']
+            instance_rubrique = Rubrique.objects.get(id= int(rubrique))
+            save_rubrique = Sousrubrique.objects.create(nom=nom,idrubrique=instance_rubrique)
+
+            save_rubrique.save()
+            messages.success(request,'Enregistrement Effectue')
+            return redirect('/sous_rubrique/')
+        except Exception as e:
+            messages.error(request,'une erreur est survenue')
+            return redirect('/sous_rubrique/')
+    return redirect('/sous_rubrique/')
+
+def search_sous_rubrique(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        sous_rubrique = Sousrubrique.objects.filter(idrubrique=selected_id).values('id', 'nom')
+        return JsonResponse(list(sous_rubrique), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+import random  
+
+def generate_unique_code():  
+    # Générer une liste de chiffres de 0 à 9  
+    digits = list(range(10))  
+    # Mélanger les chiffres  
+    random.shuffle(digits)  
+    
+    # S'assurer que nous avons au moins 8 chiffres uniques  
+    unique_digits = digits[:8]  
+    
+    # Regrouper les chiffres en trois groupes  
+    groups = [  
+        ''.join(str(digit) for digit in unique_digits[i:i+3])  
+        for i in range(0, len(unique_digits), 3)  
+    ]  
+    
+    # Convertir les groupes en chaîne séparée par des tirets  
+    code = '-'.join(groups)  
+    return code   
+def add_references(request):
+    if request.method == 'POST':
+        try:
+
+            libelle = request.POST['libelle']
+            cu = request.POST['cu']
+            rubrique = request.POST['rubrique']
+            sous_rubrique = request.POST['sous_rubrique']
+            instance_rubrique = Rubrique.objects.get(id=int(rubrique))
+            instance_sous_rubrique = Sousrubrique.objects.get(id=int(sous_rubrique))
+           
+            concatene=concatene = generate_unique_code()  
+            save_element = Elementcout.objects.create(code=concatene,nom=libelle,prixunitaire=cu,idrubriquemercurial=instance_rubrique,idsousrubriquemercurial=instance_sous_rubrique)
+            save_element.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/references/')
+        except Exception as e:
+            messages.error(request,f'Une Erreur est Survenue: {e}')
+            return redirect('/references/')
+    return redirect('/references/')
+
+def commandes(request):
+    template = '../website/commande.html'
+    prestataire = Societe.objects.all()
+    operation = Operation.objects.all()
+    tva =Tva.objects.all()
+    ir=Ir.objects.all()
+    boncommande =Boncommande.objects.all()
+    context={'operation':operation,'prestataire':prestataire,'tva':tva,'ir':ir,'boncommande':boncommande}
+    return render(request,template,context)
+
+
+def configurations_tva(request):
+    template = '../website/tva.html'
+    tva = Tva.objects.all()
+    context={'tva':tva}
+    return render(request,template,context)
+
+def configurations_ir(request):
+    template = '../website/ir.html'
+    ir=Ir.objects.all()
+    context={'ir':ir}
+    return render(request,template,context)
+
+
+def add_tva(request):
+    if request.method == 'POST':
+        try:
+            nom= request.POST['nom']
+
+            save_tva = Tva.objects.create(nom=nom)
+            save_tva.save()
+
+            messages.success(request,'Enregistrement effectuee')
+
+            return redirect('/configurations_tva/')
+        except Exception as e:
+            messages.error(request,f'Erreur survenue:{e}')
+
+            return redirect('/configurations_tva/')
+    return redirect('/configurations_tva/')
+
+
+
+def add_ir(request):
+    if request.method == 'POST':
+        try:
+            nom= request.POST['nom']
+
+            save_tva = Ir.objects.create(nom=nom)
+            save_tva.save()
+
+            messages.success(request,'Enregistrement effectuee')
+
+            return redirect('/configurations_tva/')
+        except Exception as e:
+            messages.error(request,'Erreur survenue')
+
+            return redirect('/configurations_tva/')
+    return redirect('/configurations_tva/')
+
+
+def article(request):
+    template = '../website/article.html'
+    article=Article.objects.all()
+    context={'article':article}
+    return render(request,template,context)
+
+def secteur(request):
+    template = '../website/secteur.html'
+    secteur=Secteur.objects.all()
+    context={'secteur':secteur}
+    return render(request,template,context)
+
+def add_secteur(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+
+            save_secteur = Secteur.objects.create(nom=nom)
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/secteur/')
+        except Exception as e:
+            messages.error(request,'Erreur Survenue')
+            return redirect('/secteur/')
+    return redirect('/secteur/')
+
+def add_sous_secteur(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            secteur = request.POST['secteur']
+            instance_secteur=Secteur.objects.get(id = int(secteur))
+            print(nom)
+            save_secteur = Soussecteur.objects.create(nom=nom,idsecteur=instance_secteur)
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/secteur/')
+        except Exception as e:
+            messages.error(request,'Erreur Survenue')
+            return redirect('/secteur/')
+    return redirect('/secteur/')
+
+def sous_secteur(request):
+    template ='../website/sous_secteur.html'
+    sous_secteur=Soussecteur.objects.all()
+    context={'sous_secteur':sous_secteur}
+    return render(request,template,context)
+
+
+
+def generate_code():  
+    # Générer une liste de chiffres de 0 à 9  
+    digits = list(range(10))  
+    # Mélanger les chiffres  
+    random.shuffle(digits)  
+    
+    # S'assurer que nous avons au moins 8 chiffres uniques  
+    unique_digits = digits[:9]  
+    
+    # Regrouper les chiffres en trois groupes  
+    groups = [  
+        ''.join(str(digit) for digit in unique_digits[i:i+3])  
+        for i in range(0, len(unique_digits), 3)  
+    ]  
+    
+    # Convertir les groupes en chaîne séparée par des tirets  
+    code = '-'.join(groups)  
+    return code 
+def add_article(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            code = generate_code()
+            print(nom)
+            save_article = Article.objects.create(nom=nom,code=code)
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/article/')
+        except Exception as e:
+            messages.error(request,'Erreur Survenue')
+            return redirect('/article/')
+    return redirect('/article/')
+
+def generate_code_section():  
+    # Générer une liste de chiffres de 0 à 9  
+    digits = list(range(8))  
+    # Mélanger les chiffres  
+    random.shuffle(digits)  
+    
+    # S'assurer que nous avons au moins 8 chiffres uniques  
+    unique_digits = digits[:8]  
+    
+    # Regrouper les chiffres en trois groupes  
+    groups = [  
+        ''.join(str(digit) for digit in unique_digits[i:i+4])  
+        for i in range(0, len(unique_digits), 4)  
+    ]  
+    
+    # Convertir les groupes en chaîne séparée par des tirets  
+    code = '-'.join(groups)  
+    return code 
+def add_section(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            article = request.POST['article']
+            instance_article=Article.objects.get(id=int(article))
+            code=generate_code_section()
+            print(nom)
+            save_section = Section.objects.create(nom=nom,idarticle=instance_article,code=code)
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/article/')
+        except Exception as e:
+            messages.error(request,'Erreur Survenue')
+            return redirect('/article/')
+    return redirect('/article/')
+
+def section(request):
+    template = '../website/section.html'
+    section = Section.objects.all()
+    context={'section':section}
+    return render(request,template,context)
+
+
+def paragraphe(request):
+    template = '../website/paragraphe.html'
+    article = Article.objects.all()
+    paragraphe =Paragraphe.objects.all()
+    
+    context={'article':article,'paragraphe':paragraphe}
+  
+    return render(request,template,context)
+
+def search_section(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        articles = Section.objects.filter(idarticle=selected_id).values('id', 'nom')
+        return JsonResponse(list(articles), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def add_paragraphe(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            secteur = request.POST['secteur']
+            article = request.POST['article']
+            instance_secteur = Section.objects.get(id=int(secteur))
+            instance_article= Article.objects.get(id=int(article))
+          
+            save_paragraphe=Paragraphe.objects.create(nom=nom,idsection=instance_secteur,idarticle=instance_article)
+            save_paragraphe.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/paragraphe/')
+        except Exception as e:
+            print(f'erreur: {e}')
+            messages.error(request,f'Une Erreur est Survenue: {e}')
+            return redirect('paragraphe')
+    return redirect('/paragraphe/')
+
+
+def add_prestataire(request):
+    if request.method == 'POST':
+        try:
+            nom= request.POST['nom']
+            email = request.POST['email']
+            tel= request.POST['tel']
+            banque = request.POST['banque']
+            swift = request.POST['swift']
+            pays = request.POST['pays']
+            ville = request.POST['pays']
+            save_prestataire = Societe.objects.create(nom=nom,ad1=email,contact=tel,bqswift=swift,bqpays=pays,bqville=ville,bqnom=banque)
+            save_prestataire.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect('/configurations/')
+        except Exception as e:
+            messages.error(request,f'Une Erreur Est Survenue')
+            return redirect('/configurations/')
+    return redirect('/configurations/')
+from django.db.models import F  
+
+def search_operations(request):  
+    print("Requête reçue")  
+    selected_id = request.GET.get('id')  
+    print(f"ID sélectionné: {selected_id}")  
+    
+    if not selected_id:  
+        return JsonResponse({'error': 'ID non fourni'}, status=400)  
+    
+    try:  
+        selected_id = int(selected_id)  
+        
+        sous_programmes = Operation.objects.filter(id=selected_id).values(  
+            'idsousprogramme',   
+            'nom',   
+            'idactivite',   
+            'idtache'  
+        ).annotate(  
+            activite_nom=F('idactivite__nom'),  
+            tache_nom=F('idtache__nom')  
+        )  
+        
+        if not sous_programmes:  
+            return JsonResponse({'error': 'Aucune opération trouvée pour cet ID'}, status=404)  
+        
+        return JsonResponse(list(sous_programmes), safe=False)  
+    
+    except ValueError:  
+        return JsonResponse({'error': 'ID invalide, doit être un nombre entier'}, status=400)  
+    except Exception as e:  
+        print(f"Erreur: {str(e)}")  # Affiche l'erreur dans les logs  
+        return JsonResponse({'error': str(e)}, status=500)  
+def add_commande(request):  
+    if request.method == 'POST':  
+        try:  
+            societe = request.POST['societe']  
+            numero_commande = request.POST['numero_commande']  
+            operations = request.POST['operations']  
+            sous_programme = request.POST['sous_programme']  
+            activite = request.POST['activite']  
+            tache = request.POST['tache']  
+            tva = request.POST['tva']  
+            ir = request.POST['ir']  # Corrigé pour utiliser 'ir' au lieu de 'tva'  
+
+            # Récupération des instances  
+            instance_societe = Societe.objects.get(id=int(societe))  
+            instance_operation = Operation.objects.get(id=int(operations))  
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
+            instance_activite = Activite.objects.get(id=int(activite))  
+            instance_tache = Tache.objects.get(id=int(tache))  
+            instance_tva = Tva.objects.get(id=int(tva))  # Correction ici  
+            instance_ir = Ir.objects.get(id=int(ir))  # Correction ici  
+
+            # Création de l'instance de Boncommande  
+            save_commande = Boncommande(  
+                code=numero_commande,  
+                idsociete=instance_societe,  
+                idoperation=instance_operation,  
+                idsousprogramme=instance_sous_programme,  
+                idactivite=instance_activite,  
+                idtache=instance_tache,  
+                idtva=instance_tva,  
+                idir=instance_ir  
+            )  
+            save_commande.save()  
+
+            messages.success(request, 'Enregistrement Réussi')  
+            return redirect('/commandes/')  
+        except Exception as e:  
+            messages.error(request, f'Une erreur est survenue: {e}')  
+            print(f'erreur: {e}')  
+            return redirect('/commandes/')  
+    return redirect('/commandes/')  
+
+
+def add_references(request,id, context_dict={}):
+    boncommande =Boncommande.objects.get(id=int(id))
+    template ='../website/lignecommande.html'
+    reference = Elementcout.objects.all()
+
+    ligneboncommande =Ligneboncommande.objects.all()
+    
+    context={'boncommande':boncommande,'reference':reference,'ligneboncommande':ligneboncommande}
+  
+    return render(request,template,context)
+from django.template import loader
+from io import BytesIO
+from xhtml2pdf import pisa   
+import io
+from django.template.loader import get_template
+def fiche_bon(request, id):
+    template_path = "../website/pdf/fiche_bon.html"
+
+    try:
+        template = get_template(template_path)
+    except TemplateDoesNotExist:
+        print(f"Error: Template '{template_path}' not found.")
+        return HttpResponse("Template not found.", status=404)
+
+    # Fetch Boncommande data
+    try:
+        boncommande = Boncommande.objects.get(id=int(id))
+    except Boncommande.DoesNotExist:
+        return HttpResponse("Boncommande not found.", status=404)
+
+    # Prepare context
+    context = {'boncommande': boncommande}
+
+    # Render the template with the context
+    html = template.render(context)
+
+    # Create a BytesIO object to hold the PDF content
+    result = io.BytesIO()
+
+    # Convert HTML to PDF using pisaDocument
+    try:
+        pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+        if pdf.err:
+            return HttpResponse("Error generating PDF.", status=500)
+        
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    except Exception as e:
+        print(f"Error generating PDF: {e}")
+        return HttpResponse("Error generating PDF.", status=500)
+
+    return HttpResponse("No content generated.", status=204)
+
+def search_cu(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        cus = Elementcout.objects.filter(id=selected_id).values('id', 'prixunitaire')
+        return JsonResponse(list(cus), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def add_ligne_commande(request, id):  
+    if request.method == 'POST':  
+        try:  
+            code = request.POST['code']  
+            reference = request.POST['reference']  
+            cu = request.POST['cu']  
+            qte = request.POST['qte']  
+            prixT = request.POST['prixT']  
+            instance_element = Elementcout.objects.get(id=int(reference))  
+            instance_code = Boncommande.objects.get(id=int(code))
+            save_ligne_commande = Ligneboncommande.objects.create(  
+                prixunitaire=cu,  
+                quantite=qte,  
+                total=prixT,  
+                idelementcout=instance_element,  
+                idboncommande=instance_code  
+            )  
+            save_ligne_commande.save()  
+            messages.success(request, 'Enregistrement Réussi')  
+            
+            # Redirection vers l'URL avec l'ID de référence  
+            return redirect(f'/add_references/{id}/')  
+        except Exception as e:  
+            messages.error(request, f'Erreur: {str(e)}')  
+            return redirect(f'/add_references/{id}/')  # Redirige même en cas d'erreur  
+    else:  
+        # Gérer le cas où la méthode n'est pas POST  
+        return redirect(f'/add_references/{reference_id}/')  
