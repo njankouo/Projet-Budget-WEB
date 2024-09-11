@@ -211,7 +211,10 @@ def nature_tache(request):
     if request.method == 'POST':
         try:
             nom = request.POST['nom']
-            save_nature_tache=Naturetache.objects.create(nom=nom)
+            type_financement = request.POST['type_financement']
+            instance_type_financement= Typefinancement.objects.get(id=int(type_financement))
+            save_nature_tache=Naturetache.objects.create(nom=nom,idtypefinancement=instance_type_financement)
+            
             save_nature_tache.save()
             messages.success(request,'Enregistrement Reussi')
             return redirect('/configurations/')
@@ -221,7 +224,10 @@ def nature_tache(request):
     return redirect('/configurations/')
 def dashboard(request):
     template ='../website/master.html'
-    return render(request,template)
+    boncommande = Boncommande.objects.count()
+    ligneboncommande = Ligneboncommande.objects.count()
+    context={'boncommande':boncommande,'ligneboncommande':ligneboncommande}
+    return render(request,template,context)
 
 def add_sources_financements(request):
     if request.method == 'POST':
@@ -249,9 +255,9 @@ def add_type_financements(request):
         try:
             nom = request.POST['nom']
             etat= request.POST['etat']
-            nature = request.POST['nature']
-            instance_nature = Naturetache.objects.get(id=int(nature))
-            save_type_financement = Typefinancement.objects.create(nom=nom,etat=etat,idnaturetache=instance_nature)
+            # nature = request.POST['nature']
+            # instance_nature = Naturetache.objects.get(id=int(nature))
+            save_type_financement = Typefinancement.objects.create(nom=nom,etat=etat)
             save_type_financement.save()
             messages.success(request,'Enregistrement Reussi')
             return redirect('/configurations/')
@@ -318,9 +324,6 @@ def search_tache(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-
-
-
 def add_operation(request):  
     if request.method == 'POST':  
         try:  
@@ -333,21 +336,24 @@ def add_operation(request):
             activite = request.POST['activite']  
             tache = request.POST['tache']  
             type_financement = request.POST['typefinancement']  
-            sourcefinancement = request.POST['sourcefinancement']  
+            sourcefinancement_ids = request.POST.getlist('sourcefinancement[]')  
             risque = request.POST['risque']  
             indicateur = request.POST['indicateur']  
             resultat = request.POST['resultat']  
+
+            if not sourcefinancement_ids:  # Vérifie si la liste est vide
+                messages.error(request, "Aucune source de financement sélectionnée.")
+                return redirect('/operations/')
 
             # Récupération des instances  
             instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
             instance_activite = Activite.objects.get(id=int(activite))  
             instance_tache = Tache.objects.get(id=int(tache))  
             instance_type_financement = Typefinancement.objects.get(id=int(type_financement))  
-            instance_source_financement = Sourcefinacement.objects.get(id=int(sourcefinancement))  
             instance_risque = Risque.objects.get(id=int(risque))  
 
             # Log instances  
-            print("Instances retrieved: ", instance_sous_programme, instance_activite, instance_tache, instance_type_financement, instance_source_financement, instance_risque)  
+            print("Instances retrieved: ", instance_sous_programme, instance_activite, instance_tache, instance_type_financement, instance_risque)  
 
             # Création de l'opération  
             saveoperations = Operation.objects.create(  
@@ -356,11 +362,15 @@ def add_operation(request):
                 idactivite=instance_activite,  
                 idtache=instance_tache,  
                 idtypefinancement=instance_type_financement,  
-                idsourcefinancement=instance_source_financement,  
                 idrisque=instance_risque,  
                 indicateurspoursuivis=indicateur,  
                 indicateurresult=resultat  
             )  
+
+            # Ajout des sources de financement à l'opération
+            for source_id in sourcefinancement_ids:
+                source = Sourcefinacement.objects.get(id=int(source_id))
+                saveoperations.idsourcefinancement.add(source)  # Ajouter chaque source
 
             messages.success(request, 'Enregistrement réussi')  
             return redirect('/operations/')  
@@ -375,8 +385,9 @@ def add_operation(request):
 
 def operation_paragraphe(request,id):
     operation=Operation.objects.get(id=int(id))
+    operation_source_financement=operation.idsourcefinancement.all()
     template ='../website/operation_view.html'
-    context={'operation':operation}
+    context={'operation':operation,'operation_source_financement':operation_source_financement}
     return render(request,template,context)
 
 def delete_operation(request,id):
@@ -904,3 +915,34 @@ def add_ligne_commande(request, id):
     else:  
         # Gérer le cas où la méthode n'est pas POST  
         return redirect(f'/add_references/{reference_id}/')  
+
+
+def delete_commande(request, id):  
+    # Récupérer l'instance de Ligneboncommande ou renvoyer une 404 si non trouvée  
+    lignecommande = get_object_or_404(Ligneboncommande, id=id)  
+    
+    # Supprimer l'instance  
+    lignecommande.delete()  
+    
+    # Définir un message de succès  
+    messages.success(request, 'Commande retirée avec succès.')  
+    
+    # Rediriger vers la même page
+    return redirect(request.META.get('HTTP_REFERER'))  # Redirection vers la page d'origine
+
+def search_activities(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        activite = Activite.objects.filter(idsousprogramme=selected_id).values('id', 'nom')
+        return JsonResponse(list(activite), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def engagements(request):
+    template = '../website/engagement.html'
+    return render(request,template)

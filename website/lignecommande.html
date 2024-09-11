@@ -322,21 +322,26 @@
           </tr>
         </thead>
         <tbody>
-            {%for ligneboncommande in ligneboncommande%}
+     
+            {%for ligneboncommandes in ligneboncommande%}
+            {%if boncommande.id == ligneboncommandes.idboncommande_id%}
 
             <tr>
                
-                <td>{{ligneboncommande.idelementcout}}</td>
+                <td>{{ligneboncommandes.idelementcout}}
+               
+                  
+                </td>
                 
-                <td>{{ligneboncommande.quantite}}</td>
-                <td>{{ligneboncommande.prixunitaire}}</td>
+                <td>{{ligneboncommandes.quantite}}</td>
+                <td>{{ligneboncommandes.prixunitaire}}</td>
                 
-                <td>{{ligneboncommande.total}}</td>
+                <td>{{ligneboncommandes.total}}</td>
                 <td>
-                  <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
-                  <a href="" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
+                       <a href='/delete_commande/{{ligneboncommandes.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
                 </td>
               </tr>
+              {%endif%}
             {%endfor%}
             <tr>  
                 <td colspan="3" style="text-align: right;"><strong>Total Général :</strong></td>  

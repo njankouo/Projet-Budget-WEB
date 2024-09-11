@@ -24,9 +24,21 @@ class Risque(models.Model):
 
     def __str__(self):
         return self.nom
-    
+class Typefinancement(models.Model):
+    nom=models.CharField(max_length=255,null=True)
+    etat=models.CharField(max_length=255,null=True)
+    date_enregistre=models.DateTimeField(null=True,blank=True)
+    derniere_modif=models.DateTimeField(null=True,blank=True)
+    # idnaturetache=models.ForeignKey(Naturetache, on_delete=models.CASCADE, null=True,blank=True, db_column='idnaturetache')
+    class Meta:
+        db_table = 'typefinancement'  # Specify the exact table name you want
+
+    def __str__(self):
+        return self.nom
+
 class Naturetache(models.Model):
     nom=models.CharField(max_length=255,null=True)
+    idtypefinancement = models.ForeignKey(Typefinancement,on_delete=models.CASCADE,null=True)
     class Meta:
         db_table = 'naturetache'  # Specify the exact table name you want
 
@@ -464,17 +476,7 @@ class Bailleurfond(models.Model):
     def __str__(self):
         return self.nom
 
-class Typefinancement(models.Model):
-    nom=models.CharField(max_length=255,null=True)
-    etat=models.CharField(max_length=255,null=True)
-    date_enregistre=models.DateTimeField(null=True,blank=True)
-    derniere_modif=models.DateTimeField(null=True,blank=True)
-    idnaturetache=models.ForeignKey(Naturetache, on_delete=models.CASCADE, null=True,blank=True, db_column='idnaturetache')
-    class Meta:
-        db_table = 'typefinancement'  # Specify the exact table name you want
 
-    def __str__(self):
-        return self.nom
 
 class Soussecteur(models.Model):
     nom=models.CharField(max_length=255,null=True)
@@ -1039,7 +1041,7 @@ class Operation(models.Model):
     m11=models.CharField(max_length=255,null=True)
     m12=models.CharField(max_length=255,null=True)
     idsousprogramme= models.ForeignKey(Sousprogramme,on_delete=models.CASCADE,null=True)
-    idsourcefinancement = models.ForeignKey(Sourcefinacement,on_delete=models.CASCADE,null=True)
+    idsourcefinancement = models.ManyToManyField(Sourcefinacement,null=True)
     idtache=models.ForeignKey(Tache,on_delete=models.CASCADE,null=True)
     idevaluationstructure=models.ForeignKey(Evaluationstructure, on_delete=models.CASCADE, null=True,blank=True, db_column='idevaluationstructure')
     # periode_id=models.ForeignKey(Periode, on_delete=models.CASCADE, null=True,blank=True, db_column='periode_id')

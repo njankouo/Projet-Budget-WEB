@@ -118,8 +118,11 @@ urlpatterns = [
     path('add_references/<int:id>/',views.add_references,name='add_references'),
     path('fiche_bon/<int:id>/',views.fiche_bon,name='fiche_bon'),
     path('search_cu/',views.search_cu,name='search_cu'),
-    path('add_ligne_commande/<int:id>/',views.add_ligne_commande,name='add_ligne_commande')
-    
+    path('add_ligne_commande/<int:id>/',views.add_ligne_commande,name='add_ligne_commande'),
+    path('delete_commande/<int:id>/',views.delete_commande,name='delete_commande'),
+
+    path('search_activities/',views.search_activities,name='search_activities'),
+    path('engagements/',views.engagements,name='engagements')
 
 
 

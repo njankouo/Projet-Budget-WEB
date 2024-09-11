@@ -23,7 +23,12 @@
               <p>ANNEE: <b>{{operation.idannee}}</b></p>
               <p>SOUS-PROGRAMME: <b>{{operation.idsousprogramme}}</b></p>
               <p>TYPE DE FINANCEMENT: <b>{{operation.idtypefinancement}}</b></p>
-              <p>SOURCES DE FINANCEMENT: <b>{{operation.idsourcefinancement}}</b></p>
+              <p>SOURCES DE FINANCEMENT: <b>
+
+                {%for operation_source_financements in operation_source_financement%}
+                {{ operation_source_financements.nom }}{% if not forloop.last %}, {% endif %}
+                {%endfor%}
+              </b></p>
               <p>LIBELLE OBJECTIF: <b>{{operation.indicateurspoursuivis}}</b></p>
               <p>RESULTATS INDICATEURS: <b>{{operation.indicateurresult}}</b></p>
               <p>TACHE: <b>{{operation.idtache}}</b></p>

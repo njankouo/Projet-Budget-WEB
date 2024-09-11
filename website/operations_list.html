@@ -195,8 +195,8 @@
               
                 <div class="col-md-6">
                   <label for="type financement">Source Financement</label>
-                  <select id="source_financement" class="form-select" name="sourcefinancement">
-                    <option selected="">Selectionnez Le Source De Financement</option>
+                  <select id="source_financement" class="form-select" name="sourcefinancement[]" multiple>
+                    <option>Selectionnez Le Source De Financement</option>
                     {%for source_financements in sourcefinancement%}
                     <option value="{{source_financements.id}}">{{source_financements.nom}}</option>
                     {%endfor%}

@@ -16,57 +16,32 @@ th, td {
   padding: 8px;
 }
 
-.header {  
-    display: flex; /* Utilisation de Flexbox pour l'alignement */  
-            justify-content: space-between; /* Espace entre les deux blocs */  
-            align-items: center; /* Aligne verticalement les éléments */  
-            border-bottom: 2px solid #000;  
-            padding-bottom: 10px;  
-            margin-bottom: 20px;  
-        }  
+
          
-        .title {  
-            grid-column: span 2; /* Le titre s'étend sur les deux colonnes */  
-            font-size: 24px;  
-            font-weight: bold;  
-            text-align: center;  
-            margin: 10px 0;  
-        }  
-        .left-info, .right-info {  
-            padding: 5px;  
-        }  
-        .left-info {  
-            text-align: left; /* Alignement à gauche */  
-        } 
-        .right-info {  
-            text-align: right; /* Alignement à droite */  
-        }  
 </style>
+{%load static%}
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <body>
     <div class="header">  
         <div class="left-info">  
-               
-            <div>REPUBLIQUE DU CAMEROUN</div> 
-          PAIX-TRAVAIL-PATRIE
-          
+            <div>REPUBLIQUE DU CAMEROUN</div>   
+            <div>PAIX-TRAVAIL-PATRIE</div>  
         </div>  
-        <div class="right-info">  
-               
-            <div>REPUBLIQUE DU CAMEROUN</div> 
-          PAIX-TRAVAIL-PATRIE
-          
-        </div> 
+       <img src="{%static 'img/nasla.jpeg' %}"/> 
     </div>  
-<h2 style="font-weight: bold;text-align: center;font-size: 25px;">FICHE DE BON N<sup>o</sup> {{boncommande.code}}</h2>
-<p style="text-align: center;">(Budget De Fonctionnement)</p>
-<p style="font-weight: bold;">EXERCICE BUDGETAIRE: </p>
-<p style="font-weight: bold;">NUMERO DU BON: {{boncommande.code}}</p>
-<p style="font-weight: bold;">MONTANT TOTAL : </p>
-<p style="font-weight: bold;">PROCEDURE ENGAGEMENT: </p>
-<p style="font-weight: bold;">GESTIONNAIRE DE CREDIT : </p>
-<p style="font-weight: bold;">ETAT DE BON : </p>
+    
+    <h2 style="font-weight: bold; text-align: center; font-size: 25px;">  
+        FICHE DE BON N<sup>o</sup> {{boncommande.code}}  
+    </h2>  
+    <p style="text-align: center;">(Budget De Fonctionnement)</p>  
+    
+    <p style="font-weight: bold;">EXERCICE BUDGETAIRE:</p>  
+    <p style="font-weight: bold;">NUMERO DU BON: {{boncommande.code}}</p>  
+    <p style="font-weight: bold;">MONTANT TOTAL:</p>  
+    <p style="font-weight: bold;">PROCEDURE ENGAGEMENT:</p>  
+    <p style="font-weight: bold;">GESTIONNAIRE DE CREDIT:</p>  
+    <p style="font-weight: bold;">ETAT DE BON:</p>
 <table style="border: 1px solid black; width: 100%;">
     <tbody>
         <tr>

@@ -225,7 +225,7 @@ button:hover {
                         <div class="form-group">
                             <label for="action">Sous-Programme*:</label>
                           <div class="relative">
-                              <select class='form-control' name='sousprogramme' id="input-tags">
+                              <select class='form-control' name='sousprogramme' id="inputs">
                                 <option value="">Selectionnez Le Sous-Programme</option>
                                 {%for sousprogramme in sous_programme%}
                                 <option value="{{sousprogramme.id}}">{{sousprogramme.nom}}</option>
@@ -264,18 +264,56 @@ button:hover {
     </div>
 
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 <script>
-    new TomSelect("#input-tags",{
+    new TomSelect("#inputs",{
 	persist: false,
 	createOnBlur: true,
 	create: true
 });
-new TomSelect("#inputtags",{
-	persist: false,
-	createOnBlur: true,
-	create: true
-});
+// new TomSelect("#inputtags",{
+// 	persist: false,
+// 	createOnBlur: true,
+// 	create: true
+// });
 </script>
+
+
+<script>
+    $(document).ready(function() {
+      $('#inputs').on('change', function() {
+          var selectedId = $(this).val();
+      
+          $.ajax({
+              url: '/search_activities/',
+              method: 'GET',
+              data: { id: selectedId },
+              success: function(data) {
+                  var selectInformations = $('#inputtags');
+                  console.log('Données récupérées:', data); // Afficher les données dans la console
+                  selectInformations.empty(); // Effacer les anciennes options
+                  
+                  // Ajouter une option par défaut
+                //   selectInformations.append($('<option>', {
+                //       value: '',
+                //       text: 'Sélectionnez une activité'
+                //   }));
+  
+                  // Ajouter les nouvelles options
+                  data.forEach(function(activite) {
+                      selectInformations.append($('<option>', {
+                          value: activite.id,
+                          text: activite.nom
+                      }));
+                  });
+              },
+              error: function(xhr, status, error) {
+                  console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);
+              }
+          });
+      });
+  });
+  
+  </script>
 {%endblock%}
