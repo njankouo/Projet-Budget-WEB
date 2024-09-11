@@ -506,13 +506,7 @@ def add_references(request):
 
 def commandes(request):
     template = '../website/commande.html'
-    prestataire = Societe.objects.all()
-    operation = Operation.objects.all()
-    tva =Tva.objects.all()
-    ir=Ir.objects.all()
-    boncommande =Boncommande.objects.all()
-    context={'operation':operation,'prestataire':prestataire,'tva':tva,'ir':ir,'boncommande':boncommande}
-    return render(request,template,context)
+    return render(request,template)
 
 
 def configurations_tva(request):
@@ -945,4 +939,11 @@ def search_activities(request):
 
 def engagements(request):
     template = '../website/engagement.html'
-    return render(request,template)
+    prestataire = Societe.objects.all()
+    operation = Operation.objects.all()
+    tva =Tva.objects.all()
+    ir=Ir.objects.all()
+    boncommande =Boncommande.objects.all()
+    context={'operation':operation,'prestataire':prestataire,'tva':tva,'ir':ir,'boncommande':boncommande}
+
+    return render(request,template,context)

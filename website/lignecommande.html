@@ -228,6 +228,43 @@
               <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande</h5>
               <form class="row g-3" method="POST" action="/add_ligne_commande/{{boncommande.id}}/">
                 {%csrf_token%}
+
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-control" name="operation" id="operation">
+                            <option></option>
+                            {%for operations in operation%}
+                            <option value='{{operations.id}}'>{{operations.nom}}</option>
+                            {%endfor%}
+                    </select>
+                    <label for="floatingName">Selectionnez Une Operation</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-control" name="paragraphe" id="paragraphe">
+                            <option></option>
+                            {%for operations in operation%}
+                            <option value='{{operations.id}}'>{{operations.nom}}</option>
+                            {%endfor%}
+                    </select>
+                    <label for="floatingName">Selectionnez Un Paragraphe</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-control" name="annee" id="annee">
+                            <option></option>
+                            {%for operations in operation%}
+                            <option value='{{operations.id}}'>{{operations.nom}}</option>
+                            {%endfor%}
+                    </select>
+                    <label for="floatingName">Selectionnez Une Annee</label>
+                  </div>
+                </div>
+
                 <div class="col-md-12">
                   <div class="form-floating">
                     <select class="form-control" name="reference" id="reference">
@@ -436,6 +473,28 @@
 
 
 
+
+<script>
+  new TomSelect("#operation",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+<!-- <script>
+  new TomSelect("#paragraphe",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+<script>
+  new TomSelect("#annee",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script> -->
 <script>
     $(document).ready(function() {  
         $('#reference').on('change', function() {  
