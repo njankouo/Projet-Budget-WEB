@@ -123,7 +123,7 @@
       <div class="table-title">
         <div class="row">
           <div class="col-sm-6">
-            
+            <h4 style="font-weight: bold;">Liste Des Operations </h4>
           </div>
           <div class="col-sm-6">
             <a data-bs-toggle="modal" data-bs-target="#largeModal" class="btn btn-success"><i class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
@@ -238,14 +238,15 @@
           <tr>
          
        
-            <th>Nom</th>
+            <th style="width: 50%;">Nom</th>
             <!-- <th>Sous-Programme</th> -->
-            <th>Activite</th>
+            <!-- <th>Activite</th>
             <th>Taches</th>
-            <th>Structures</th>
+            <th>Structures</th> -->
             <!-- <th>Type Financement</th>
             <th>Sources Financement</th> -->
-            <th>Risque</th>
+            <th>Type De Financement</th>
+            <th>Indicateurs</th>
             <!-- <th>Libelle Objectif</th>
             <th>Libelle Indicateur</th> -->
            
@@ -258,21 +259,21 @@
           <tr>
           
             
-          <td><i class="bi bi-cloud-download-fill fa-2x"></i>  <a href="/operation_paragraphe/{{operations.id}}/">{{operations.nom}}   </a></td>
+          <td><i class="bi bi-cloud-download-fill fa-2x btn btn-dark"></i>  <a href="/operation_paragraphe/{{operations.id}}/">{{operations.nom}}   </a></td>
            
             <!-- <td>{{operations.idsousprogramme}}</td> -->
 
-            <td>{{operations.idactivite}}</td>
+            <!-- <td>{{operations.idactivite}}</td>
 
-            <td>{{operations.idtache}}</td>
-            <td>{{operations.idstructure}}</td>
-            <td>{{operations.idrisque}}</td>
+            <td>{{operations.idtache}}</td> -->
+            <td>{{operations.idtypefinancement}}</td>
+            <td>{{operations.indicateurspoursuivis}}</td>
             
        
             <td>
               <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
               <a href="/delete_operation/{{operations.id}}/" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
-              <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#largeModal{{operations.id}}"><i class="bi bi-plus-square-dotted"></i></button>
+              <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#largeModal{{operations.id}}"><i class="bi bi-eye"></i></button>
             </td>
           </tr>
    
@@ -284,39 +285,42 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Associez Le Paragraphe</h5>
-        
-                      <!-- No Labels Form -->
-                      <form class="row g-3">
+                  <div class="container-fluid">
+                    <div class="row">
                         <div class="col-md-12">
-                          <label for="paragraphe">Paragraphe</label>
-                          <select name="paragraphe" id="paragraphe" class="form-control">
-                                <option value=""></option>
-                          </select>
-                          
+                            <div class="card">
+                                <div class="card-body">
+                                  <h5 class="card-title" style="font-weight: bold;font-family: forte;">Informations Sur L'operation {{operations.nom}}</h5>
+                                  
+                                  <p>SOUS-PROGRAMME: <b>{{operations.idsousprogramme}}</b></p>
+                                  <p>TYPE DE FINANCEMENT: <b>{{operations.idtypefinancement}}</b></p>
+                                  <p>SOURCES DE FINANCEMENT: <b>
+                    
+                                    {%for operation_source_financements in operation_source_financement%}
+                                    {{ operation_source_financements.nom }}{% if not forloop.last %}, {% endif %}
+                                    {%endfor%}
+                                  </b></p>
+                                  <p>LIBELLE OBJECTIF: <b>{{operations.indicateurspoursuivis}}</b></p>
+                                  <p>RESULTATS INDICATEURS: <b>{{operations.indicateurresult}}</b></p>
+                                  <p>TACHE: <b>{{operations.idtache}}</b></p>
+                                  <p>RISQUE: <b>{{operations.idrisque}}</b></p>
+                                  <h5 style="font-weight: bold;" class="text-primary">MONTANT GLOBAL ENGAGE POUR L'OPERATION {{operations.nom}}</h5>
+                                  <hr class="bg-dark p-2"/>
+
+                                </div>
+                              </div>
                         </div>
-                        <div class="col-md-12">
-                          <label for="montant">Montant n</label>
-                          <input type="number" class="form-control" placeholder="montant n">
-                        </div>
-                        <div class="col-md-12">
-                          <label for="montant">Montant n+1</label>
-                          <input type="number" class="form-control" placeholder="montant n+1">
-                        </div>
-                       
-                      
-        
+                    
                     </div>
-                  </div>
+                    </div>
+                    
+                      
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                  <button type="submit" class="btn btn-primary">Enregistrer</button>
+      
                 </div>
 
-              </form><!-- End No Labels Form -->
               </div>
             </div>
           </div>

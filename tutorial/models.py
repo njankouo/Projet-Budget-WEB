@@ -1040,12 +1040,16 @@ class Operation(models.Model):
     m10=models.CharField(max_length=255,null=True)
     m11=models.CharField(max_length=255,null=True)
     m12=models.CharField(max_length=255,null=True)
+
+    # idparagraphe = models.ManyToManyField(Paragraphe, related_name='operations')
+    # idannee = models.ManyToManyField(Annee, related_name='operations')
+
     idsousprogramme= models.ForeignKey(Sousprogramme,on_delete=models.CASCADE,null=True)
     idsourcefinancement = models.ManyToManyField(Sourcefinacement,null=True)
     idtache=models.ForeignKey(Tache,on_delete=models.CASCADE,null=True)
     idevaluationstructure=models.ForeignKey(Evaluationstructure, on_delete=models.CASCADE, null=True,blank=True, db_column='idevaluationstructure')
     # periode_id=models.ForeignKey(Periode, on_delete=models.CASCADE, null=True,blank=True, db_column='periode_id')
-    idannee=models.ForeignKey(Annee, on_delete=models.CASCADE, null=True,blank=True, db_column='idannee')
+    # idannee=models.ForeignKey(Annee, on_delete=models.CASCADE, null=True,blank=True, db_column='idannee')
     idnaturetache=models.ForeignKey(Naturetache, on_delete=models.CASCADE, null=True,blank=True, db_column='idnaturetache')
     # idnature_t=models.ForeignKey(Nature_t, on_delete=models.CASCADE, null=True,blank=True, db_column='idnature_t')
     idbailleurfond=models.ForeignKey(Bailleurfond, on_delete=models.CASCADE, null=True,blank=True, db_column='idbailleurfond')
@@ -1060,6 +1064,13 @@ class Operation(models.Model):
         return self.nom
 class Tva(models.Model):
     nom= models.CharField(null=True,max_length=255)
+
+class OperationDetail(models.Model):
+    idoperation = models.ForeignKey(Operation,on_delete=models.CASCADE,null=True)
+    idannee=models.ForeignKey(Annee,on_delete=models.CASCADE,null=True)
+    montant = models.IntegerField(null=True)
+    idparagraphe=models.ForeignKey(Paragraphe,on_delete=models.CASCADE,null=True)
+
 
 class Ir(models.Model):
     nom= models.CharField(null=True,max_length=255)

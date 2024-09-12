@@ -33,6 +33,8 @@ urlpatterns = [
     
  
    
+ 
+
     path('list_taches/', list_taches, name='list_taches'),
     path('delete_tache/<int:id>/',views.delete_tache,name="delete_tache"),
     path('tache/',views.tache,name="tache"),
@@ -122,9 +124,9 @@ urlpatterns = [
     path('delete_commande/<int:id>/',views.delete_commande,name='delete_commande'),
 
     path('search_activities/',views.search_activities,name='search_activities'),
-    path('engagements/',views.engagements,name='engagements')
+    path('engagements/',views.engagements,name='engagements'),
 
-
+    path('paragraphes_operations/',views.paragraphe_operation,name='paragraphes_operations'),
 
 
 

@@ -386,8 +386,16 @@ def add_operation(request):
 def operation_paragraphe(request,id):
     operation=Operation.objects.get(id=int(id))
     operation_source_financement=operation.idsourcefinancement.all()
+    annee = Annee.objects.all()
+    paragraphe=Paragraphe.objects.all()
+    operation_detail = OperationDetail.objects.all()
+    
+   
     template ='../website/operation_view.html'
-    context={'operation':operation,'operation_source_financement':operation_source_financement}
+    context={'operation_detail':operation_detail,'operation':operation,'operation_source_financement':operation_source_financement,'annee':annee,'paragraphe':paragraphe}
+
+
+
     return render(request,template,context)
 
 def delete_operation(request,id):
@@ -947,3 +955,48 @@ def engagements(request):
     context={'operation':operation,'prestataire':prestataire,'tva':tva,'ir':ir,'boncommande':boncommande}
 
     return render(request,template,context)
+
+
+
+def paragraphe_operation(request):
+    if request.method == 'POST':
+        try:
+            operation = request.POST['operation']
+            paragraphe_ids = request.POST['paragraphe']  # Récupérer plusieurs valeurs
+            annee_ids = request.POST['annee']
+            montant = float(request.POST['montant']) 
+
+            # Récupérer l'instance de l'opération
+            instance_annee = Annee.objects.get(id=int(annee_ids))
+            instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe_ids))
+            instance_operation = Operation.objects.get(id=int(operation))
+
+            # Vérifier si l'entrée existe déjà
+            existing_details = OperationDetail.objects.filter(
+                idoperation=instance_operation,
+                idannee=instance_annee,
+                idparagraphe=instance_paragraphe
+            )
+
+            if existing_details.exists():
+                # Si elle existe, additionner les montants
+                for existing_detail in existing_details:
+                    existing_detail.montant += montant
+                    existing_detail.save()
+                messages.success(request, 'Montant mis à jour avec succès')
+            else:
+                # Sinon, créer un nouvel enregistrement
+                save_details = OperationDetail.objects.create(
+                    idoperation=instance_operation,
+                    idannee=instance_annee,
+                    idparagraphe=instance_paragraphe,
+                    montant=montant
+                )
+                save_details.save()
+                messages.success(request, 'Enregistrement Réussi')
+
+        except Exception as e:
+            messages.error(request, f'Erreur: {str(e)}')
+
+    # Rediriger vers la même page
+    return redirect(request.META.get('HTTP_REFERER', '/'))
