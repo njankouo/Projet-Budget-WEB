@@ -128,6 +128,12 @@ urlpatterns = [
 
     path('paragraphes_operations/',views.paragraphe_operation,name='paragraphes_operations'),
 
+    path('delete_paragraphe_operation/<int:id>/',views.delete_paragraphe_operation,name='delete_paragraphe_operation'),
+
+    path('add_user/',views.add_user,name='add_user'),
+
+    path('user_login/',views.user_login,name='user_login'),
+
 
 
 

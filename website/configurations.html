@@ -661,38 +661,38 @@
                   <!-- Floating Labels Form -->
                   <form class="row g-3" method="POST" action="/add_prestataire/">
                     {%csrf_token%}
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                       <div class="form-floating">
                         <input type="text" class="form-control" id="floatingName" placeholder="Nom Prestataire" name="nom">
                         <label for="floatingName">Nom</label>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <div class="form-floating">
                         <input type="email" class="form-control" id="floatingEmail" placeholder="Email Prestataire" name="email">
                         <label for="floatingEmail">Adresse Email</label>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <div class="form-floating">
                         <input type="tel" class="form-control" id="floatingPassword" placeholder="Telephone prestataire" name="tel">
                         <label for="floatingPassword">Telephone </label>
                       </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-4">
                       <div class="form-floating">
-                        <input type="tel" class="form-control" id="floatingPassword" placeholder="Pays prestataire" name="pays">
+                        <input type="text" class="form-control" id="countrySelect" placeholder="Pays prestataire" name="pays">
                         <label for="floatingPassword">Pays Prestataire</label>
                       </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-4">
                       <div class="form-floating">
                         <input type="tel" class="form-control" id="floatingPassword" placeholder="Banque prestataire" name="banque">
                         <label for="floatingPassword">Banque Prestataire </label>
                       </div>
                     </div>
                    
-                    <div class="col-12">
+                    <div class="col-4">
                       <div class="form-floating">
                         <input type="tel" class="form-control" id="floatingPassword" placeholder="Ville Banque prestataire" name="ville">
                         <label for="floatingPassword">Ville Banque Prestataire </label>
@@ -700,16 +700,53 @@
                     </div>
                    
 
-                    <div class="col-12">
+                    <div class="col-4">
                       <div class="form-floating">
-                        <input type="tel" class="form-control" id="floatingPassword" placeholder="swift Banque prestataire" name="swift">
+                        <input type="text" class="form-control" id="floatingPassword" placeholder="swift Banque prestataire" name="swift">
                         <label for="floatingPassword">Swift Banque Prestataire </label>
                       </div>
                     </div>
                    
                    
-                        
-    
+                    <div class="col-4">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingPassword" placeholder="Registre Commerce" name="registre">
+                        <label for="floatingPassword">Numero Registre Commerce </label>
+                      </div>
+                    </div>
+                   
+                   
+
+                    <div class="col-4">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingPassword" placeholder="Numero Contribuable" name="contribuable">
+                        <label for="floatingPassword">Numero Du Contribuable </label>
+                      </div>
+                    </div>
+                    
+
+                    <div class="col-4">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingPassword" placeholder="Numero Cnps" name="cnps_number">
+                        <label for="floatingPassword">Numero Cnps </label>
+                      </div>
+                    </div>
+
+                    <div class="col-4">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingPassword" placeholder="Boite Postale" name="boite_postale">
+                        <label for="floatingPassword">Boite Postale </label>
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-4">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingPassword" placeholder="localisation" name="localisation">
+                        <label for="floatingPassword">Localisation </label>
+                      </div>
+                    </div>
                 </div>
               </div>
                 
@@ -733,7 +770,7 @@
                 <th >Nom</th>
                 <th >Contacts</th>
                 <th >Email</th>
-                <th >Pays</th>
+                <th >Num Registre Commerce</th>
                 <th >Actions</th>
               </tr>
             </thead>
@@ -749,13 +786,14 @@
                 
                  
                 <td> {{prestataires.ad1}}</td>
+                <td>{{prestataires.registre}}</td>
                  
-                <td> {{prestataires.bqpays}}</td>
+                
                
                
                 <td>
                   <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
-                  <a href="/risques/{{risques.id}}/" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
+                  <!-- <a href="/risques/{{risques.id}}/" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a> -->
                 </td>
               </tr>
               {%endfor%}
@@ -841,4 +879,27 @@ create: true
 });
 </script>
 
+
+
+<script>
+  async function loadCountries() {
+      try {
+          const response = await fetch('https://restcountries.com/v3.1/all');
+          const countries = await response.json();
+          const select = document.getElementById('countrySelect');
+
+          countries.forEach(country => {
+              const option = document.createElement('option');
+              option.value = country.cca2; // Code ISO 3166-1 alpha-2
+              option.textContent = country.name.common; // Nom du pays
+              select.appendChild(option);
+          });
+      } catch (error) {
+          console.error('Erreur lors du chargement des pays:', error);
+      }
+  }
+
+  // Appel de la fonction pour charger les pays au chargement de la page
+  window.onload = loadCountries;
+</script>
 {%endblock%}

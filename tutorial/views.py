@@ -6,20 +6,15 @@ from tutorial.models import Tache
 # Create your views here.
 from django.http import HttpResponse
 from .models import *
-
+from django.contrib.auth.hashers import check_password  # Importez check_password
 import io
 from django.http import HttpResponse
 from django.http import FileResponse
 import os
 def Home(request):
-    institution=Institution.objects.order_by('-id')
-    count=Institution.objects.all().count()
-    context={
-        'institution':institution,
-        'count':count
-    }
+   
     template="../website/authentification/login.html"
-    return render(request,template,context)
+    return render(request,template)
 
 
 
@@ -166,8 +161,8 @@ def operations(request):
     sousprogramme = Sousprogramme.objects.all()
     structure =Structure.objects.all()
     operation=Operation.objects.all()
-
-    context={'sourcefinancement':sourcefinancement,'typefinancement':typefinancement,'risque':risque,'sousprogramme':sousprogramme,'structure':structure,'operation':operation}
+    operation_p = OperationDetail.objects.all()
+    context={'operation_p':operation_p,'sourcefinancement':sourcefinancement,'typefinancement':typefinancement,'risque':risque,'sousprogramme':sousprogramme,'structure':structure,'operation':operation}
   
     template = '../website/operations_list.html'
     return render(request,template,context)
@@ -222,13 +217,14 @@ def nature_tache(request):
             messages.error(request,"Erreur Survenue L'ors de L'enregistrement")
             return redirect('/configurations/')
     return redirect('/configurations/')
+from django.contrib.auth.decorators import login_required
+# @login_required(login_url = '/')  # Décorateur pour restreindre l'accès aux utilisateurs connectés
 def dashboard(request):
-    template ='../website/master.html'
+    template = '../website/master.html'
     boncommande = Boncommande.objects.count()
     ligneboncommande = Ligneboncommande.objects.count()
-    context={'boncommande':boncommande,'ligneboncommande':ligneboncommande}
-    return render(request,template,context)
-
+    context = {'boncommande': boncommande, 'ligneboncommande': ligneboncommande}
+    return render(request, template, context)
 def add_sources_financements(request):
     if request.method == 'POST':
         try:
@@ -405,8 +401,14 @@ def delete_operation(request,id):
     return redirect('/operations/')
 
 def users(request):
+    users=Utilisateur.objects.order_by('-id')
+   
+    context={
+        'users':users,
+        
+    }
     template = '../website/authentification/register.html'
-    return render(request,template)
+    return render(request,template,context)
 
 def rubrique(request):
     template = '../website/rubrique.html'
@@ -740,7 +742,21 @@ def add_prestataire(request):
             swift = request.POST['swift']
             pays = request.POST['pays']
             ville = request.POST['pays']
-            save_prestataire = Societe.objects.create(nom=nom,ad1=email,contact=tel,bqswift=swift,bqpays=pays,bqville=ville,bqnom=banque)
+
+            registre =request.POST['registre']
+            contribuable = request.POST['contribuable']
+            cnps_number = request.POST['cnps_number']
+            boite_postale = request.POST['boite_postale']
+            localisation = request.POST['localisation']
+
+
+            save_prestataire = Societe.objects.create(
+            registre = registre,
+            contribuable=contribuable,
+            cnps_number = cnps_number,
+            boite_postale = boite_postale,
+            localisation =localisation,
+            nom=nom,ad1=email,contact=tel,bqswift=swift,bqpays=pays,bqville=ville,bqnom=banque)
             save_prestataire.save()
             messages.success(request,'Enregistrement Reussi')
             return redirect('/configurations/')
@@ -1000,3 +1016,85 @@ def paragraphe_operation(request):
 
     # Rediriger vers la même page
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def delete_paragraphe_operation(request,id):
+    operation_paragraphe = OperationDetail.objects.get(id=int(id))
+    operation_paragraphe.delete()
+    messages.success(request,"Paragraphe retire de l\'operation")
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.hashers import make_password  # Use Django's password hashing
+from django.contrib.auth import authenticate, login
+from .models import Utilisateur  # Assuming 'Utilisateur' is your user model
+
+
+def add_user(request):
+    if request.method == 'POST':
+        try:
+            nom = request.POST['nom']
+            prenom = request.POST['prenom']
+            email = request.POST['email']
+            password = request.POST['password']
+            re_password = request.POST['re_password']  # Corrected to match the input name
+            sexe = request.POST['sexe']
+            photo = request.FILES.get('photo')  # Use get() to handle optional photo
+
+            # Validate password match
+            if password != re_password:
+                messages.error(request, 'Les mots de passe ne correspondent pas.')
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+
+            # Secure password hashing
+            hashed_password = make_password(password)
+
+            # Create user with validated email
+            user = Utilisateur.objects.create(
+                nom=nom,
+                prenom=prenom,
+                email=email.lower(),  # Normalize email for case-insensitivity
+                password=hashed_password,
+                sexe=sexe,
+                photo=photo,  # Optional photo upload
+            )
+
+            # Success message and redirection
+            messages.success(request, 'Utilisateur créé avec succès.')
+            return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirect to the referring page
+
+        except Exception as e:
+            messages.error(request, f'Une erreur est survenue : {e}')
+            print(f'Une erreur est survenue : {e}')  # Log the error message
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+from django.utils import timezone
+
+def user_login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        users = Utilisateur.objects.filter(email=email.lower())
+
+        if users.exists():
+            user = users.first()
+
+            if check_password(password, user.password):
+                user.last_login = timezone.now()  # Mettez à jour last_login
+                user.save()  # Enregistrez les modifications
+                login(request, user)
+                messages.success(request, 'Connexion réussie.')
+
+                # Vérifiez le paramètre 'next' et redirigez en conséquence
+                next_url = request.GET.get('next', '/dashboard/')  # Par défaut, redirigez vers le tableau de bord  
+                return redirect(next_url)  
+            else:
+                messages.error(request, 'Identifiants invalides. Veuillez réessayer.')
+        else:
+            messages.error(request, 'Identifiants invalides. Veuillez réessayer.')
+
+    return render(request, '../website/authentification/login.html')

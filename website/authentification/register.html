@@ -94,6 +94,8 @@
       margin-right: 10px;
     }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.4/sweetalert2.min.css">  
+
 {%extends 'master.html'%}
 
 {%block content%}
@@ -122,7 +124,9 @@
             <div class="table-wrapper">
               <div class="table-title">
                 <div class="row">
-                  <div class="col-sm-6"></div>
+                  <div class="col-sm-6">
+                    <h5 style="font-weight: bold;font-family: forte;">Liste Des Utilisateurs </h5>
+                  </div>
                   <div class="col-sm-6">
                     <a class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#largeModal"><i class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
                     <a class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
@@ -147,40 +151,74 @@
                             <p class="text-center small">Entrez Les Detatils Personnels De L'utilisateur</p>
                           </div>
         
-                          <form class="row g-3 needs-validation" novalidate="">
-                            <div class="col-12">
-                              <label for="nom" class="form-label">Nom</label>
-                              <input type="text" name="nom" class="form-control" id="nom" required="">
-                              <div class="invalid-feedback">svp saisissez le nom!</div>
-                            </div>
-        
-                            <div class="col-12">
-                              <label for="email" class="form-label">Email</label>
-                              <input type="email" name="email" class="form-control" id="email" required="">
-                              <div class="invalid-feedback">Please enter a valid Email adddress!</div>
-                            </div>
-        
-                            <div class="col-12">
-                              <label for="yourUsername" class="form-label">Prenom</label>
-                              <div class="input-group has-validation">
-                                <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                <input type="text" name="username" class="form-control" id="yourUsername" required="">
-                                <div class="invalid-feedback">Please choose a username.</div>
+                          <form class="row g-3" method="POST" action="/add_user/" enctype="multipart/form-data">
+                            {%csrf_token%}
+                            <div class="col-md-6">
+                              <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingName" placeholder="Your Name" name="nom">
+                                <label for="floatingName">Nom</label>
                               </div>
                             </div>
-        
-                            <div class="col-12">
-                              <label for="yourPassword" class="form-label">Password</label>
-                              <input type="password" name="password" class="form-control" id="yourPassword" required="">
-                              <div class="invalid-feedback">Please enter your password!</div>
+                            <div class="col-md-6">
+                              <div class="col-md-12">
+                                <div class="form-floating">
+                                  <input type="text" class="form-control" id="floatingCity" placeholder="Prenom" name="prenom">
+                                  <label for="floatingCity">Prenom</label>
+                                </div>
+                              </div>
                             </div>
-        
-                         
-                            
-                       
+                            <div class="col-md-6">
+                              <div class="form-floating">
+                                <input type="email" class="form-control" id="floatingEmail" placeholder=" Email" name="email">
+                                <label for="floatingEmail"> Email</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-floating">
+                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+                                <label for="floatingPassword">Password</label>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-floating">
+                                <input type="password" class="form-control" id="floatingPassword" placeholder="Re-password" name="re_password">
+                           
+                                <label for="floatingTextarea">Re-Password</label>
+                              </div>
+                            </div>
+                           
+                            <div class="col-md-6">
+                              <div class="form-floating mb-3">
+                                <select class="form-select" id="floatingSelect" aria-label="State" name="sexe">
+                                  <option selected="">Selectionnez Le Sexe</option>
+                                  <option value="1">Masculin</option>
+                                  <option value="2">Feminin</option>
+                                </select>
+                                <label for="floatingSelect">Sexe</label>
+                              </div>
+                            </div>
+                        
+                            <div class="col-md-6">
+                             
+                                <div class="form-floating">
+                                  <input type="tel" class="form-control" id="floatingCity" placeholder="Telephone" name="telephone">
+                                  <label for="floatingCity">Telephone</label>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6">
+                             
+                                <div class="form-floating">
+                                  <input type="file" class="form-control" id="floatingCity" placeholder="Photos" name="photos">
+                                  <label for="floatingCity">Photo</label>
+                                </div>
+                             
+
+                            </div>
+                           </div>
                         </div>
                       </div>
-                    </div>
+                   
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                       <button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -207,24 +245,27 @@
                   </tr>
                 </thead>
                 <tbody>
-               
+               {%for user in users%}
                   <tr>
                     <td>
                       <span class="custom-checkbox">
-                                         
-                                      </span>
+                                            </span>
                     </td>
-                    <td></td>
+                  
                    
-                    <td></td>
+                    <td>{{user.nom}}</td>
                     
-                    <td></td>
+                    <td>{{user.email}}</td>
                     
                     <td>
-                    
+                    {{user.telephone}}
                     </td>
+                   <td>
+                    <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+       
+                   </td>
                   </tr>
-                
+                {%endfor%}
                 </tbody>
               </table>
               
@@ -235,5 +276,52 @@
     </div>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'success' %}
 
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "success",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 2000
+});
+</script>
+{%endif%}
+{%endfor%}
+</script>
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'error' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "error",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
+
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'info' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "info",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
 {%endblock%}

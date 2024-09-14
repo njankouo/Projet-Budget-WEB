@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budget</title>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.4/sweetalert2.min.css">  
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css" integrity="sha512-17AHGe9uFHHt+QaRYieK7bTdMMHBMi8PeWG99Mf/xEcfBLDCn0Gze8Xcx1KoSZxDnv+KnCC+os/vuQ7jrF/nkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <body>
     <div class="valign-wrapper" style="width:100%;height:100%;position: absolute;">
@@ -16,23 +18,28 @@
                      <div class="card">
                         <div class="card-content">
                            <span class="card-title black-text" style="font-weight: bold;font-family: forte;">AUTHENTIFICATION</span>
-                           <form>
+                           <form method="POST" action="/user_login/">
+                              {%csrf_token%}
                               <div class="row">
                                  <div class="input-field col s12">
-                                    <input placeholder="Username" id="Nom" type="text" class="validate" name="nom">
-                                    <label for="Nom" class="active">Username</label>
+                                    <input placeholder="Username" id="Nom" type="text" class="validate" name="email">
+                                    <label for="Nom" class="active">Email</label>
                                  </div>
                               </div>
                               <div class="row">
                                  <div class="input-field col s12">
-                                    <input placeholder="password" id="password" type="text" class="validate">
+                                    <input placeholder="password" id="password" type="password" class="validate" name="password">
                                     <label for="password" class="active">Password</label>
                                  </div>
                               </div>
-                           </form>
+                      
                         </div>
                         <div class="card-action">
-                           <input type="submit" class="btn" value="connexion">
+                           <button type="submit" class="btn btn-success">
+                              connexion
+                              </button>
+                        </div>
+                     </form>
                         </div>
                      </div>
                   </div>
@@ -40,6 +47,54 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'success' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "success",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 2000
+});
+</script>
+{%endif%}
+{%endfor%}
+</script>
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'error' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "error",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
+
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'info' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "info",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js" integrity="sha512-E9vR5BfN3bwSc45BWl95328hvOcBYjMzKAKgdNM59yQXpTC4glztZyVoFJRp5qPc5A95zUZ8D5N7kEwUtJ9f6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>

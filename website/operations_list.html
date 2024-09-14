@@ -296,7 +296,7 @@
                                   <p>TYPE DE FINANCEMENT: <b>{{operations.idtypefinancement}}</b></p>
                                   <p>SOURCES DE FINANCEMENT: <b>
                     
-                                    {%for operation_source_financements in operation_source_financement%}
+                                    {%for operation_source_financements in operations.idsourcefinancement.all%}
                                     {{ operation_source_financements.nom }}{% if not forloop.last %}, {% endif %}
                                     {%endfor%}
                                   </b></p>
@@ -304,9 +304,33 @@
                                   <p>RESULTATS INDICATEURS: <b>{{operations.indicateurresult}}</b></p>
                                   <p>TACHE: <b>{{operations.idtache}}</b></p>
                                   <p>RISQUE: <b>{{operations.idrisque}}</b></p>
-                                  <h5 style="font-weight: bold;" class="text-primary">MONTANT GLOBAL ENGAGE POUR L'OPERATION {{operations.nom}}</h5>
+                                  <p style="font-weight: bold;" class="text-primary">MONTANT GLOBAL ENGAGE POUR L'OPERATION {{operations.nom}}</p>
                                   <hr class="bg-dark p-2"/>
-
+                                  <!-- <table class="table table-hover table-responsive">
+                                        <thead>
+                                          <tr>
+                                       
+                                            <th scope="col">Paragraphes</th>
+                                            <th scope="col">Annee</th>
+                                            <th scope="col">Montant</th>
+                                          
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {%for operation_paragraphe in operation_p%}
+                                          {%if operation_paragraphe.idoperation_id == operations.id%}
+                                          <tr>
+                                           
+                                            <td>{{operation_paragraphe.idparagraphe.nom}}</td>
+                                            <td>{{operation_paragraphe.idannee.nom}}</td>
+                                            <td>{{operation_paragraphe.montant}}</td>
+                                           
+                                          </tr>
+                                         
+                                     {%endif%}
+                                     {%endfor%}
+                                        </tbody>
+                                      </table> -->
                                 </div>
                               </div>
                         </div>

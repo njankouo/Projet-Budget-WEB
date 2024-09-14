@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.timezone import datetime
-
+from django.contrib.auth.models import User
 
 
 class Statutmatrimonial(models.Model):
@@ -423,19 +423,28 @@ class Utilisateur(models.Model):
     nom=models.CharField(max_length=255,null=True)
     prenom=models.CharField(max_length=255,null=True)
     date_enregistre=models.DateTimeField(null=True,blank=True)
-    etat=models.CharField(max_length=255,null=True)
+    sexe=models.IntegerField(max_length=255,null=True)
     derniere_modif=models.DateTimeField(null=True,blank=True)
     date_naissance=models.DateTimeField(null=True,blank=True)
-    cni=models.CharField(max_length=255,null=True)
-    idarrondissement=models.ForeignKey(Arrondissement, on_delete=models.CASCADE, null=True,blank=True, db_column='idarrondissement')
-    idstatut_matrimonial=models.ForeignKey(Statutmatrimonial, on_delete=models.CASCADE, null=True,blank=True, db_column='idstatut_matrimonial')
-    idpays=models.ForeignKey(Pays, on_delete=models.CASCADE, null=True,blank=True, db_column='idpays')
-    idadresse=models.ForeignKey(Adresse, on_delete=models.CASCADE, null=True,blank=True, db_column='idadresse')
+    email=models.CharField(max_length=255,null=True)
+    password = models.CharField(max_length=255,null=True)
+    photo = models.FileField(null=True)
+    telephone = models.IntegerField(null=True)
+    last_login = models.DateTimeField(null=True, blank=True)  # Ajoutez ce champ
+
+    # idarrondissement=models.ForeignKey(Arrondissement, on_delete=models.CASCADE, null=True,blank=True, db_column='idarrondissement')
+    # idstatut_matrimonial=models.ForeignKey(Statutmatrimonial, on_delete=models.CASCADE, null=True,blank=True, db_column='idstatut_matrimonial')
+    # idpays=models.ForeignKey(Pays, on_delete=models.CASCADE, null=True,blank=True, db_column='idpays')
+    # idadresse=models.ForeignKey(Adresse, on_delete=models.CASCADE, null=True,blank=True, db_column='idadresse')
     class Meta:
         db_table = 'utilisateur'  # Specify the exact table name you want
 
     def __str__(self):
         return self.nom
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Si c'est un nouvel utilisateur
+            self.password = make_password(self.password)  # Hachage du mot de passe
+        super().save(*args, **kwargs)
 
 class Compte(models.Model):
     login=models.CharField(max_length=255,null=True)
@@ -977,6 +986,15 @@ class Societe(models.Model):
     bqville=models.CharField(max_length=255,null=True)
     bqpays=models.CharField(max_length=255,null=True)
     bqswift=models.CharField(max_length=255,null=True)
+
+
+    boite_postale= models.CharField(null=True,blank=True,max_length=255)
+    localisation = models.CharField(max_length=255,null=True)
+    registre = models.CharField(max_length=255,null=True)
+    contribuable = models.CharField(max_length=255,null=True)
+    cnps_number = models.CharField(max_length=255,null=True)
+
+
     class Meta:
         db_table = 'societe'  # Specify the exact table name you want
 
