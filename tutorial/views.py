@@ -11,6 +11,7 @@ import io
 from django.http import HttpResponse
 from django.http import FileResponse
 import os
+from django.contrib.auth.hashers import make_password
 def Home(request):
    
     template="../website/authentification/login.html"
@@ -67,12 +68,13 @@ def add_sous_programme(request):
 def save_Sous_programme(request):  
     if request.method == 'POST':  
         try:  
+            code = request.POST['code']
             nom = request.POST['nom']  
             libelle = request.POST['libelle']  
             indicateur = request.POST['indicateur']  
             print(f"Nom: {nom}, Libelle: {libelle}, Indicateur: {indicateur}")  
 
-            save_sousprogramme = Sousprogramme.objects.create(nom=nom, libelleobjectif=libelle, libelleindicateur=indicateur)  
+            save_sousprogramme = Sousprogramme.objects.create(code=code,nom=nom, libelleobjectif=libelle, libelleindicateur=indicateur)  
             save_sousprogramme.save()  
             messages.success(request, 'Sous-Programme Enregistre Avec Succes!')  
             return redirect('/sous_programme/')  
@@ -97,6 +99,7 @@ def add_activite(request):
 def save_activity(request):
     if request.method == 'POST':
         try:
+            code= request.POST['code']
             nom = request.POST['nom']
             indicateur = request.POST['indicateur']
             objectif = request.POST['objectif']
@@ -104,10 +107,11 @@ def save_activity(request):
 
             # Récupérer l'instance de Sousprogramme
             sous_programme_instance = Sousprogramme.objects.get(id=sous_programme_id)
-            print(sous_programme_instance)
+            
 
             # Créer l'activité avec l'instance de Sousprogramme
             save_activite = Activite.objects.create(
+                code = code,
                 nom=nom,
                 idsousprogramme=sous_programme_instance,
                 libelleindicateur=indicateur,
@@ -183,7 +187,8 @@ def add_annee(request):
          
             nom = request.POST['nom']
             etat = request.POST['etat']
-            save_annee = Annee.objects.create(nom=nom,etat=etat)
+            code= request.POST['code']
+            save_annee = Annee.objects.create(nom=nom,etat=etat,code=code)
             save_annee.save()
             messages.success(request,'Enregistrement Reussi')
             return redirect('/configurations/')
@@ -378,17 +383,23 @@ def add_operation(request):
 
     return redirect('/operations/')
 
-
+from django.shortcuts import render, get_object_or_404  
+from django.db.models import Sum  
 def operation_paragraphe(request,id):
     operation=Operation.objects.get(id=int(id))
     operation_source_financement=operation.idsourcefinancement.all()
     annee = Annee.objects.all()
     paragraphe=Paragraphe.objects.all()
     operation_detail = OperationDetail.objects.all()
-    
+   
+    somme_montants = OperationDetail.objects.filter(idoperation=operation).aggregate(Sum('montant'))  
+
+    # Calculer le montant total (avec gestion de valeurs nulles)  
+    montant_total = somme_montants['montant__sum'] if somme_montants['montant__sum'] is not None else 0  
+
    
     template ='../website/operation_view.html'
-    context={'operation_detail':operation_detail,'operation':operation,'operation_source_financement':operation_source_financement,'annee':annee,'paragraphe':paragraphe}
+    context={'montant_total': montant_total,'operation_detail':operation_detail,'operation':operation,'operation_source_financement':operation_source_financement,'annee':annee,'paragraphe':paragraphe}
 
 
 
@@ -493,7 +504,7 @@ def generate_unique_code():
     # Convertir les groupes en chaîne séparée par des tirets  
     code = '-'.join(groups)  
     return code   
-def add_references(request):
+def add_reference(request):
     if request.method == 'POST':
         try:
 
@@ -639,7 +650,7 @@ def add_article(request):
     if request.method == 'POST':
         try:
             nom = request.POST['nom']
-            code = generate_code()
+            code = request.POST['code']
             print(nom)
             save_article = Article.objects.create(nom=nom,code=code)
             messages.success(request,'Enregistrement Reussi')
@@ -673,7 +684,7 @@ def add_section(request):
             nom = request.POST['nom']
             article = request.POST['article']
             instance_article=Article.objects.get(id=int(article))
-            code=generate_code_section()
+            code=request.POST['code']
             print(nom)
             save_section = Section.objects.create(nom=nom,idarticle=instance_article,code=code)
             messages.success(request,'Enregistrement Reussi')
@@ -715,13 +726,14 @@ def search_section(request):
 def add_paragraphe(request):
     if request.method == 'POST':
         try:
+            code = request.POST['code']
             nom = request.POST['nom']
             secteur = request.POST['secteur']
             article = request.POST['article']
             instance_secteur = Section.objects.get(id=int(secteur))
             instance_article= Article.objects.get(id=int(article))
           
-            save_paragraphe=Paragraphe.objects.create(nom=nom,idsection=instance_secteur,idarticle=instance_article)
+            save_paragraphe=Paragraphe.objects.create(code=code,nom=nom,idsection=instance_secteur,idarticle=instance_article)
             save_paragraphe.save()
             messages.success(request,'Enregistrement Reussi')
             return redirect('/paragraphe/')
@@ -767,9 +779,9 @@ def add_prestataire(request):
 from django.db.models import F  
 
 def search_operations(request):  
-    print("Requête reçue")  
+   
     selected_id = request.GET.get('id')  
-    print(f"ID sélectionné: {selected_id}")  
+   
     
     if not selected_id:  
         return JsonResponse({'error': 'ID non fourni'}, status=400)  
@@ -781,11 +793,14 @@ def search_operations(request):
             'idsousprogramme',   
             'nom',   
             'idactivite',   
-            'idtache'  
+            'idtache',
+            
         ).annotate(  
+            sousprogramme_nom=F('idsousprogramme__nom'),  
             activite_nom=F('idactivite__nom'),  
-            tache_nom=F('idtache__nom')  
-        )  
+            tache_nom=F('idtache__nom'),
+            
+        )
         
         if not sous_programmes:  
             return JsonResponse({'error': 'Aucune opération trouvée pour cet ID'}, status=404)  
@@ -846,8 +861,8 @@ def add_references(request,id, context_dict={}):
     reference = Elementcout.objects.all()
 
     ligneboncommande =Ligneboncommande.objects.all()
-    
-    context={'boncommande':boncommande,'reference':reference,'ligneboncommande':ligneboncommande}
+    operation = Operation.objects.all()
+    context={'operation':operation,'boncommande':boncommande,'reference':reference,'ligneboncommande':ligneboncommande}
   
     return render(request,template,context)
 from django.template import loader
@@ -973,49 +988,57 @@ def engagements(request):
     return render(request,template,context)
 
 
+def paragraphe_operation(request):  
+    if request.method == 'POST':  
+        try:  
+            # Récupération des données du formulaire  
+            operation_id = int(request.POST['operation'])  
+            paragraphe_id = int(request.POST['paragraphe'])  
+            annee_id = int(request.POST['annee'])  
+            montant = float(request.POST['montant'])   
 
-def paragraphe_operation(request):
-    if request.method == 'POST':
-        try:
-            operation = request.POST['operation']
-            paragraphe_ids = request.POST['paragraphe']  # Récupérer plusieurs valeurs
-            annee_ids = request.POST['annee']
-            montant = float(request.POST['montant']) 
+            # Récupération des instances correspondantes  
+            instance_annee = Annee.objects.get(id=annee_id)  
+            instance_paragraphe = Paragraphe.objects.get(id=paragraphe_id)  
+            instance_operation = Operation.objects.get(id=operation_id)  
 
-            # Récupérer l'instance de l'opération
-            instance_annee = Annee.objects.get(id=int(annee_ids))
-            instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe_ids))
-            instance_operation = Operation.objects.get(id=int(operation))
+            # Vérification des détails d'opération existants  
+            existing_details = OperationDetail.objects.filter(  
+                idoperation=instance_operation,  
+                idannee=instance_annee,  
+                idparagraphe=instance_paragraphe  
+            )  
 
-            # Vérifier si l'entrée existe déjà
-            existing_details = OperationDetail.objects.filter(
-                idoperation=instance_operation,
-                idannee=instance_annee,
-                idparagraphe=instance_paragraphe
-            )
+           
+            if existing_details.exists():  
+                # Si des détails existent, mise à jour du montant  
+                for existing_detail in existing_details:  
+                    existing_detail.montant += montant  
+                    existing_detail.save()  
+                messages.success(request, 'Montant mis à jour avec succès')  
+            else:  
+                # Création d'un nouvel enregistrement  
+                OperationDetail.objects.create(  
+                    idoperation=instance_operation,  
+                    idannee=instance_annee,  
+                    idparagraphe=instance_paragraphe,  
+                    montant=montant  
+                )  
+                messages.success(request, 'Enregistrement réussi')  
 
-            if existing_details.exists():
-                # Si elle existe, additionner les montants
-                for existing_detail in existing_details:
-                    existing_detail.montant += montant
-                    existing_detail.save()
-                messages.success(request, 'Montant mis à jour avec succès')
-            else:
-                # Sinon, créer un nouvel enregistrement
-                save_details = OperationDetail.objects.create(
-                    idoperation=instance_operation,
-                    idannee=instance_annee,
-                    idparagraphe=instance_paragraphe,
-                    montant=montant
-                )
-                save_details.save()
-                messages.success(request, 'Enregistrement Réussi')
+        except Annee.DoesNotExist:  
+            messages.error(request, 'L\'année sélectionnée n\'existe pas.')  
+        except Paragraphe.DoesNotExist:  
+            messages.error(request, 'Le paragraphe sélectionné n\'existe pas.')  
+        except Operation.DoesNotExist:  
+            messages.error(request, 'L\'opération sélectionnée n\'existe pas.')  
+        except ValueError:  
+            messages.error(request, 'Veuillez entrer un montant valide.')  
+        except Exception as e:  
+            messages.error(request, f'Erreur: {str(e)}')  
 
-        except Exception as e:
-            messages.error(request, f'Erreur: {str(e)}')
-
-    # Rediriger vers la même page
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+    # Rediriger vers la page précédente  
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
 
 def delete_paragraphe_operation(request,id):
     operation_paragraphe = OperationDetail.objects.get(id=int(id))
@@ -1098,3 +1121,104 @@ def user_login(request):
             messages.error(request, 'Identifiants invalides. Veuillez réessayer.')
 
     return render(request, '../website/authentification/login.html')
+
+
+def search_paragraphe(request):  
+    selected_id = request.GET.get('id')  
+
+    # Validez que l'ID est fourni et qu'il est numérique  
+    if not selected_id or not selected_id.isdigit():  
+        return JsonResponse({'error': 'ID non valide'}, status=400)  
+
+    selected_id = int(selected_id)  # Convertir en entier pour le filtrage  
+    
+    try:  
+        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié  
+        paragraphs = OperationDetail.objects.filter(idoperation=selected_id).select_related('idparagraphe')  
+
+        result = [  
+            {  
+                'idparagraphe': detail.idparagraphe.id,  
+                'nom': detail.idparagraphe.nom,  
+                'idoperation': detail.idoperation  
+            }  
+            for detail in paragraphs  
+        ]  
+
+        return JsonResponse(result, safe=False)  # Retourner la liste des résultats  
+    except Exception as e:  
+        return JsonResponse({'error': str(e)}, status=500)  
+def institution(request):
+    sous_secteur = Soussecteur.objects.all()
+    institution= Institution.objects.all()
+    context= {'sous_secteur':sous_secteur,'institution':institution}
+    template = '../website/institution.html'
+    return render(request,template,context)
+
+
+def add_institution(request):
+    if request.method == 'POST':
+        try:
+            code =request.POST['code']
+            sigle = request.POST['sigle']
+            nom= request.POST['nom']
+            choix_strategique = request.POST['choix_strategique']
+            sous_secteur = request.POST['sous_secteur']
+
+            instance_sous_secteur=  Soussecteur.objects.get(id = int(sous_secteur))
+
+            save_institution = Institution. objects.create(
+                code=code,
+                sigle= sigle,
+                nom= nom,
+                choixstrategique = choix_strategique,
+                idsoussecteur = instance_sous_secteur
+                
+            )
+            save_institution.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,f'une erreur est survenue: {e}')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+def structure(request):
+    template = '../website/structure.html'
+    structure = Structure.objects.all()
+    institution = Institution.objects.all()
+    context ={'structure':structure,'institution':institution}
+    return render(request,template,context)
+
+def add_structure(request):
+    if request.method == 'POST':
+        try:
+            code = request.POST['code']
+            nom = request.POST['nom']
+            sigle = request.POST['sigle']
+            institution = request.POST['institution']
+            arrete_creation = request.POST['arrete_creation']
+            objectif_general = request.POST['objectif_general']
+            objectif_specifique = request.POST['objectif_specifique']
+
+            instance_institution=  Institution.objects.get(id = int(institution))
+            save_structure = Structure.objects.create(
+                code= code,
+                nom = nom,
+                sigle = sigle,
+                idinstitution = instance_institution,
+                arretecreation = arrete_creation,
+                objectifgeneral = objectif_general,
+                objectifspecifique = objectif_specifique
+            )
+            save_structure.save()
+            messages.success(request,'Enregistrement Reussi')
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,f'Une Erreur Est Survenue')
+        except Institution.DoesNotExist:
+            messages.error(request,'Institution Inexistante')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+    
+

@@ -243,6 +243,10 @@
         <thead>
           <tr>
             <th style="width: 25%;">
+              Code
+      
+          </th>
+            <th style="width: 25%;">
                 Libelles
         
             </th>
@@ -264,7 +268,7 @@
         <tbody>
             {%for paragraphes in paragraphe%}
             <tr>
-               
+              <td>{{paragraphes.code}}</td>
                 <td>{{paragraphes.nom}}</td>
                 
                 <td>{{paragraphes.idsection}}</td>
@@ -299,6 +303,12 @@
                   <!-- Floating Labels Form -->
                   <form class="row g-3" method="POST" action="/add_paragraphe/">
                     {%csrf_token%}
+                    <div class="col-md-12">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingName" placeholder="Code" name="code">
+                        <label for="floatingName">Code</label>
+                      </div>
+                    </div>
                     <div class="col-md-12">
                       <div class="form-floating">
                         <input type="text" class="form-control" id="floatingName" placeholder="Libelle" name="nom">

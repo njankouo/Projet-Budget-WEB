@@ -338,18 +338,18 @@
       <div class="modal-body">
           <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Renseignez Les Rubriques</h5>
+                <h5 class="card-title">Renseignez Les Informations Relatives Aux Bons De COmmandes</h5>
   
                 <!-- No Labels Form -->
                 <form class="row g-3" method="POST" action="/add_commande/">
                   {%csrf_token%}
 
                   <div class="col-md-12">
-                    <label >Numero De Commande</label>
+                    <label >Numero De Bon Commande</label>
                 <input type="text" name="numero_commande" class="form-control" placeholder="Numero De Commande">
                 </div>
 
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                       <label >Prestataires</label>
                     <select class="form-control" name="societe" id="prestatires">
                       <option>selectionnez Un Prestataire</option>
@@ -359,7 +359,7 @@
                     </select>
                   </div>
                
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                      
                       <label >Operations</label>
                       <select class="form-control" name="operations" id="operation">
@@ -370,7 +370,7 @@
                       </select>
                 
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                      
                       <label >Sous Programme</label>
                       <select class="form-control" name="sous_programme" id='sous_programme'>
@@ -378,24 +378,24 @@
                       </select>
                     </div>
                     
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                      
                       <label >Activite</label>
                       <select class="form-control" name="activite" id="activite">
 
                       </select>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                      
                       <label >Taches</label>
                       <select class="form-control" name="tache" id="tache">
 
                       </select>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                      
                       <label >Paragraphes</label>
-                      <select class="form-control" name="paragraphes">
+                      <select class="form-control" name="paragraphes" id="paragraphe">
 
                       </select>
                     </div>
@@ -551,31 +551,19 @@ create: true
                 var selectSousProgramme = $('#sous_programme');  
                 var selectActivite = $('#activite');  
                 var selectTache = $('#tache');  
-                
+              
                 console.log('Données récupérées:', data); // Afficher les données dans la console  
                 selectSousProgramme.empty(); // Effacer les anciennes options  
                 selectActivite.empty(); // Effacer les anciennes options  
                 selectTache.empty(); // Effacer les anciennes options  
                 
                 // Ajouter une option par défaut pour chaque sélection  
-                selectSousProgramme.append($('<option>', {  
-                    value: '',  
-                    text: 'Sélectionnez un sous-programme'  
-                }));  
-                selectActivite.append($('<option>', {  
-                    value: '',  
-                    text: 'Sélectionnez une activité'  
-                }));  
-                selectTache.append($('<option>', {  
-                    value: '',  
-                    text: 'Sélectionnez une tâche'  
-                }));  
-
+                
                 // Ajouter les nouvelles options pour les sous-programmes  
                 data.forEach(function(sous_programme) {  
                     selectSousProgramme.append($('<option>', {  
                         value: sous_programme.idsousprogramme,  
-                        text: sous_programme.nom  
+                        text: sous_programme.sousprogramme_nom  
                     }));  
 
                     // Ajouter les options pour les noms d'activités et de tâches  
@@ -588,6 +576,7 @@ create: true
                         value: sous_programme.idtache,  
                         text: sous_programme.tache_nom // Utiliser le nom de la tâche  
                     }));  
+                    
                 });  
             },  
             error: function(xhr, status, error) {  

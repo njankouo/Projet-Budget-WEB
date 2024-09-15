@@ -291,6 +291,10 @@
                         <form class="row g-3" method="POST" action="/add_section/">
                             {%csrf_token%}
                             <div class="col-md-12">
+                              <label >Code Section</label>
+                            <input type="text" name="code" class="form-control">
+                          </div>
+                            <div class="col-md-12">
                                 <label >libelle</label>
                               <input type="text" name="nom" class="form-control">
                             </div>
@@ -335,6 +339,11 @@
                   <!-- No Labels Form -->
                   <form class="row g-3" method="POST" action="/add_article/">
                     {%csrf_token%}
+                    <div class="col-md-12">
+                      <label >Code Article</label>
+                    <input type="text" name="code" class="form-control">
+                  </div>
+               
                     <div class="col-md-12">
                         <label >libelle</label>
                       <input type="text" name="nom" class="form-control">

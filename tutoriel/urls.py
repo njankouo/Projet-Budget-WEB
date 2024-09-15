@@ -85,7 +85,7 @@ urlpatterns = [
 
     path('search_sous_rubrique/',views.search_sous_rubrique,name='search_sous_rubrique'),
 
-    path('add_references/',views.add_references,name='add_references'),
+    path('add_reference/',views.add_reference,name='add_reference'),
 
     path('commandes/',views.commandes,name='commandes'),
     path('configurations_tva/',views.configurations_tva,name='configurations_tva'),
@@ -134,8 +134,16 @@ urlpatterns = [
 
     path('user_login/',views.user_login,name='user_login'),
 
+    path('search_paragraphe/',views.search_paragraphe,name='search_paragraphe'),
 
 
+    path('institution/',views.institution,name='institution'),
+
+    path('add_institution/',views.add_institution,name='add_institution'),
+
+    path('structure/',views.structure,name='structure'),
+
+    path('add_structure/',views.add_structure,name='add_structure')
 
 
 

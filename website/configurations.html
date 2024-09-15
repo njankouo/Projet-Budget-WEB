@@ -173,6 +173,10 @@
                <form class="row g-3" method="POST" action="/add_annee/">
                 {%csrf_token%}
                 <div class="col-md-12">
+                  <label for="nom">Code</label>
+                  <input type="text" class="form-control" placeholder="Code Annee" name="code">
+                </div>
+                <div class="col-md-12">
                   <label for="nom">Nom</label>
                   <input type="text" class="form-control" placeholder="Nom" name="nom">
                 </div>
@@ -206,7 +210,7 @@
                                       <label for="selectAll"></label>
                                   </span>
                 </th>
-           
+                <th style="width: 25%;">Code</th>
                 <th >Nom</th>
                 <th style="width: 25%;">Etat</th>
              
@@ -222,6 +226,7 @@
                                       <label for="checkbox1"></label>
                                   </span>
                 </td>
+                <td>{{annees.code}}</td>
                 <td>{{annees.nom}}</td>
                
                 <td>{{annees.etat}}</td>

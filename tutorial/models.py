@@ -504,8 +504,8 @@ class Institution(models.Model):
     code=models.CharField(max_length=255,null=True)
     choixstrategique=models.CharField(max_length=255,null=True)
     etat=models.CharField(max_length=255,null=True)
-    date_enregistre=models.DateTimeField(null=True,blank=True)
-    derniere_modif=models.DateTimeField(null=True,blank=True)
+    # date_enregistre=models.DateTimeField(null=True,blank=True)
+    # derniere_modif=models.DateTimeField(null=True,blank=True)
     sigle=models.CharField(max_length=255,null=True)
     chapitre=models.CharField(max_length=255,null=True) 
     nom_en=models.CharField(max_length=255,null=True)
@@ -543,8 +543,8 @@ class Statutstructure(models.Model):
 
 class Structure(models.Model):
     nom=models.CharField(max_length=255,null=True)
-    article=models.CharField(max_length=255,null=True)
-    nomrespo=models.CharField(max_length=255,null=True)
+    code=models.CharField(max_length=255,null=True)
+    sigle=models.CharField(max_length=255,null=True)
     arretecreation=models.CharField(max_length=255,null=True)
     designation=models.CharField(max_length=255,null=True)
     cordonex=models.CharField(max_length=255,null=True)
@@ -611,6 +611,7 @@ class Souscritere(models.Model):
         return self.nom
     
 class Sousprogramme(models.Model):
+    code = models.CharField(null=True,max_length=255)
     nom=models.CharField(max_length=255,null=True)
     libelleobjectif=models.CharField(max_length=255,null=True)
     libelleindicateur=models.CharField(max_length=255,null=True)
@@ -673,6 +674,7 @@ class Annee(models.Model):
     budget=models.CharField(max_length=255,null=True)
     defaut=models.CharField(max_length=255,null=True)
     fc=models.CharField(max_length=255,null=True)
+    code = models.CharField(null=True,max_length=255)
     class Meta:
         db_table = 'annee'  # Specify the exact table name you want
 
@@ -860,6 +862,7 @@ class Indicateuraction(models.Model):
         return self.nom
 
 class Activite(models.Model):
+    code = models.CharField(max_length=255,null=True)
     nom=models.CharField(max_length=255,null=True)
     idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True, db_column='idsousprogramme')
     libelleobjectif=models.CharField(max_length=255,null=True)
@@ -1013,6 +1016,7 @@ class Signataire(models.Model):
     def __str__(self):
         return self.nom
 class Paragraphe(models.Model):
+    code = models.CharField(max_length=255,null=True)
     nom=models.CharField(null=True,max_length=255)
     idsection = models.ForeignKey(Section,on_delete=models.CASCADE,null=True)
     idarticle = models.ForeignKey(Article,on_delete=models.CASCADE,null=True)
@@ -1088,6 +1092,11 @@ class OperationDetail(models.Model):
     idannee=models.ForeignKey(Annee,on_delete=models.CASCADE,null=True)
     montant = models.IntegerField(null=True)
     idparagraphe=models.ForeignKey(Paragraphe,on_delete=models.CASCADE,null=True)
+# class OperationDetailMontant(models.Model):
+#     idoperation = models.ForeignKey(Operation,null=True,on_delete=models.CASCADE)
+#     montant_global = models.IntegerField(null=True)
+#     class Meta:
+#         db_table = 'operationdetailmontant'  # Specify the exact table name you want
 
 
 class Ir(models.Model):
