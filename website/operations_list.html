@@ -176,10 +176,11 @@
                 </div>
                 <div class="col-md-6">
                   <label for="structure"> Structure</label>
-                  <select class="form-control" id="structure">
+                  <select class="form-control" id="structure" name="structure">
                     <option value="">Selectionnez La Structure</option>
-                   
-                    <option value=""></option>
+                    {%for structures in structure%}
+                    <option value="{{structures.id}}">{{structures.nom}}</option>
+                    {%endfor%}
               
                   </select>
                 </div>

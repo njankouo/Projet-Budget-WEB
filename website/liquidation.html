@@ -325,12 +325,12 @@ input[type="radio"]:checked + div::before {
    
     <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Gestion des Engagements</h5>
+          <h5 class="card-title">Gestion des Liquidations</h5>
 
           <!-- Bordered Tabs Justified -->
           <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist" style="font-weight: bold;font-family: forte;">
             <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="false" tabindex="-1">Bon De Commande</button>
+              <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="false" tabindex="-1">Liquidations</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
               <button class="nav-link w-100 " id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Lettre Commande</button>
@@ -354,13 +354,13 @@ input[type="radio"]:checked + div::before {
           <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title" style="font-weight: bold;font-family: forte;">GESTION DES BONS DE COMMANDE</h5>
+                  <h5 class="card-title" style="font-weight: bold;font-family: forte;">GESTION DES LIQUIDATIONS</h5>
     
                   <nav>
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                       
-                      <li class="breadcrumb-item active">Bon De Commande</li>
+                      <li class="breadcrumb-item active">Liquidations</li>
                     </ol>
                   </nav>
                 </div>
@@ -374,13 +374,13 @@ input[type="radio"]:checked + div::before {
   <div class="table-wrapper">
     <div class="table-title">
       <div class="row">
-        <div class="col-sm-6">
-         <h5 style="font-weight: bold;" style="font-family:forte">LISTE DES BONS DE COMMANDE</h5>
+        <div class="col-sm-12">
+         <h5 style="font-weight: bold;" style="font-family:forte">LISTE DES BONS DE COMMANDE VALIDE&eacute;s ET LIQUID&eacute;</h5>
         </div>
-        <div class="col-sm-6">
+        <!-- <div class="col-sm-6">
           <a  class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#largeModal"><i class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
           <a href="" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
-        </div>
+        </div> -->
       </div>
     </div>
     <table class="table table-hover table-responsive text-center " >
@@ -420,11 +420,11 @@ input[type="radio"]:checked + div::before {
           <td>
             <label>
               {%if bon.status == 1%}
-              <input type="checkbox" name="checkboxYannis" checked/>  
+              <input type="checkbox" name="checkboxYannis" />  
               <div class="btn btn-sık"><span>Valide</span></div>
-              {%elif bon.status == 0%}  
-              <input type="checkbox" name="checkboxYannis"/>  
-                <div class="btn btn-sık"><span>Non Valide</span></div>
+              {%elif bon.status == 2%}  
+              <input type="checkbox" name="checkboxYannis" checked/>  
+                <div class="btn btn-sık"><span>Liquid&eacute;</span></div>
                 {%endif%}
           </label>
           </td>
@@ -435,19 +435,19 @@ input[type="radio"]:checked + div::before {
            <i class="bi bi-ui-checks"></i>     Outils
               </button>
               <ul class="dropdown-menu">
-                {%if bon.status == 0%}
-                <form method="POST" action="/valid/{{bon.id}}/">
+                {%if bon.status == 1%}
+                <form method="POST" action="/liquide/{{bon.id}}/">
                   {%csrf_token%}
-                <li><button type='submit' class="dropdown-item btn btn-success"><i class="bi bi-check-circle-fill"></i> Valider</button></li>
+                <li><button type='submit' class="dropdown-item btn btn-success"><i class="bi bi-check2-circle"></i> Liquider</button></li>
               </form>
               {%endif%}
-                <li><a class="dropdown-item" href="/add_operations/{{bon.id}}/"><i class="bi bi-plus-square-dotted"></i> Ajouter Operation</a></li>
-              
-                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
-                {%if bon.status == 1%}
-                <li><a class="dropdown-item" href="/fiche_bon/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Generer Bon Commnade</a></li>
+              {%if bon.status == 2%}
+                
+                <li><a class="dropdown-item" href="/fiche_bon/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Certificat De Liquidation</a></li>
                 {%endif%}
+                <li><a class="dropdown-item" href="/facture/{{bon.id}}/"><i class="bi bi-printer-fill"></i> Generer Facture Associee Au Bon</a></li>
+                <li><a class="dropdown-item" href="/autorisation/{{bon.id}}/"><i class="bi bi-printer-fill"></i> Autorisation D'engagement</a></li>
+                <li><a class="dropdown-item" href="/certificat/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Certificat D'engagement</a></li>
               </ul>
             </div>
           

@@ -2,68 +2,34 @@
 <html>
 <head>
 <style>
-table, td, th {  
-  border: 1px solid #ddd;
-  text-align: left;
+table, td, th {
+  border: 1px solid;
 }
 
 table {
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
 }
-
-th, td {
-  padding: 8px;
-}
-
-
-         
 </style>
-{%load static%}
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <body>
-    <div class="header">  
-        <div class="left-info">  
-            <div>REPUBLIQUE DU CAMEROUN</div>   
-            <div>PAIX-TRAVAIL-PATRIE</div>  
-        </div>  
-       <img src="{%static 'img/nasla.jpeg' %}"/> 
-    </div>  
-    
-    <h2 style="font-weight: bold; text-align: center; font-size: 25px;">  
-        FICHE DE BON N<sup>o</sup> {{boncommande.code}}  
-    </h2>  
-    <p style="text-align: center;">(Budget De Fonctionnement)</p>  
-    
-    <p style="font-weight: bold;">EXERCICE BUDGETAIRE:</p>  
-    <p style="font-weight: bold;">NUMERO DU BON: {{boncommande.code}}</p>  
-    <p style="font-weight: bold;">MONTANT TOTAL:</p>  
-    <p style="font-weight: bold;">PROCEDURE ENGAGEMENT:</p>  
-    <p style="font-weight: bold;">GESTIONNAIRE DE CREDIT:</p>  
-    <p style="font-weight: bold;">ETAT DE BON:</p>
-<table style="border: 1px solid black; width: 100%;">
-    <tbody>
-        <tr>
-            <td style="width: 20%; border: 1px solid black;">Imputation Budgétaire</td>
-            <td style="width: 80%; border: 1px solid black;"></td>
-        </tr>
-        <tr>
-            <td class="border border-gray-300 p-2" style="border: 1px solid black;">Sous Programme</td>
-            <td style="border: 1px solid black;">{{ boncommande.idsousprogramme }}</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black;">Activité</td>
-            <td style="border: 1px solid black;">{{ boncommande.idactivite }}</td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid black;">Tâche</td>
-            <td style="border: 1px solid black;">{{ boncommande.idtache }}</td>
-        </tr>
-    </tbody>
+
+<h2>Let the table borders collapse</h2>
+
+<table>
+  <tr>
+    <th>Firstname</th>
+    <th>Lastname</th>
+  </tr>
+  <tr>
+    <td>Peter</td>
+    <td>Griffin</td>
+  </tr>
+  <tr>
+    <td>Lois</td>
+    <td>Griffin</td>
+  </tr>
 </table>
 
 </body>
 </html>
-
-

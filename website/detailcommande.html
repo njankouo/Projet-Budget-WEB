@@ -1,0 +1,502 @@
+
+<style>
+    .table-wrapper {
+            background: #fff;
+            padding: 20px 25px;
+            margin: 30px 0;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+        .table-title {        
+            padding-bottom: 15px;
+            background: #435d7d;
+            color: #fff;
+            padding: 16px 30px;
+            margin: -20px -25px 10px;
+            border-radius: 3px 3px 0 0;
+        }
+        .table-title h2 {
+            margin: 5px 0 0;
+            font-size: 24px;
+        }
+        .table-title .btn-group {
+            float: right;
+        }
+        .table-title .btn {
+            color: #fff;
+            float: right;
+            font-size: 13px;
+            border: none;
+            min-width: 50px;
+            border-radius: 2px;
+            border: none;
+            outline: none !important;
+            margin-left: 10px;
+        }
+        .table-title .btn i {
+            float: left;
+            font-size: 21px;
+            margin-right: 5px;
+        }
+        .table-title .btn span {
+            float: left;
+            margin-top: 2px;
+        }
+        table.table tr th, table.table tr td {
+            border-color: #e9e9e9;
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        table.table tr th:first-child {
+            width: 60px;
+        }
+        table.table tr th:last-child {
+            width: 100px;
+        }
+        table.table-striped tbody tr:nth-of-type(odd) {
+            background-color: #fcfcfc;
+        }
+        table.table-striped.table-hover tbody tr:hover {
+            background: #f5f5f5;
+        }
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }	
+        table.table td:last-child i {
+            opacity: 0.9;
+            font-size: 22px;
+            margin: 0 5px;
+        }
+        table.table td a {
+            font-weight: bold;
+            color: #566787;
+            display: inline-block;
+            text-decoration: none;
+            outline: none !important;
+        }
+        table.table td a:hover {
+            color: #2196F3;
+        }
+        table.table td a.edit {
+            color: #FFC107;
+        }
+        table.table td a.delete {
+            color: #F44336;
+        }
+        table.table td i {
+            font-size: 19px;
+        }
+        table.table .avatar {
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+
+        [type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+}
+
+[type="file"] + label {
+  background: #f15d22;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+	font-family: 'Rubik', sans-serif;
+	font-size: inherit;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 50px;
+  position: relative;
+  transition: all 0.3s;
+  vertical-align: middle;
+  
+  &:hover {
+    background-color: darken(#f15d22, 10%);
+  }
+  
+  &.btn-1 {
+    background-color: #f79159;
+    box-shadow: 0 6px darken(#f79159, 10%);
+    transition: none;
+
+    &:hover {
+      box-shadow: 0 4px darken(#f79159, 10%);
+      top: 2px;
+    }
+  }
+  
+  &.btn-2 {
+    background-color: #99c793;
+    border-radius: 50px;
+    overflow: hidden;
+    
+    &::before {
+      color: #fff;
+      content: "\f382";
+      font-family: "Font Awesome 5 Pro";
+      font-size: 100%;
+      height: 100%;
+      right: 130%;
+      line-height: 3.3;
+      position: absolute;
+      top: 0px;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      background-color: darken(#99c793, 30%);
+        
+      &::before {
+        right: 75%;
+      }
+    }
+  }
+  
+  &.btn-3 {
+    background-color: #ee6d9e;
+    border-radius: 0;
+    overflow: hidden;
+    
+    span {
+      display: inline-block;
+      height: 100%;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    
+    &::before {
+      color: #fff;
+      content: "\f382";
+      font-family: "Font Awesome 5 Pro";
+      font-size: 130%;
+      height: 100%;
+      left: 0;
+      line-height: 2.6;
+      position: absolute;
+      top: -180%;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    &:hover {
+      background-color: darken(#ee6d9e, 30%);
+      
+      span {
+        transform: translateY(300%);
+      }
+        
+      &::before {
+        top: 0;
+      }
+    }
+  }
+}
+
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"> 
+    {%extends 'master.html'%}
+
+    {%block content%}
+   
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">Operations Associees Aux Commandes <b class="text-primary"  style="font-weight: bold;">{{boncommande.code}}</b> </h5>
+      
+                    <nav>
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        
+                        <li class="breadcrumb-item active">Details Bon Commande</li>
+                      </ol>
+                    </nav>
+                  </div>
+                </div>
+  
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Operations Au Bon De Commande {{boncommande.code}}</h5>
+              <form class="row g-3" method="POST" action="/add_operation_commande/">
+                {%csrf_token%}
+                    <input type="text" name="boncommande" value="{{boncommande.id}}" style="display: none;">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <select class="form-control" name="operation" id="operation">
+                            <option></option>
+                            {%for operations in operation%}
+                            <option value='{{operations.id}}'>{{operations.nom}}</option>
+                            {%endfor%}
+                    </select>
+                    <label for="floatingName">Selectionnez Une Operation</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <select class="form-control" name="sous_programme" id='sous_programme'>
+
+                    </select>
+                    <label for="floatingName">Selectionnez Un Sous Programme</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <select class="form-control" name="activite" id="activite">
+
+                    </select>
+                    <label for="floatingName">Selectionnez Une Activite</label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <select class="form-control" name="tache" id="tache">
+
+                    </select>
+                    <label for="floatingName">Selectionnez Une Tache</label>
+                  </div>
+                </div>
+               
+                
+              
+                <div class="col-md-12">
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="prestatires" aria-label="societe" name="prestataire">
+                     {%for prestataires in prestataire%}
+                      <option value="{{prestataires.id}}">{{prestataires.nom}}</option>
+                      {%endfor%}
+                    </select>
+                    <label for="floatingSelect">Prestataire</label>
+                  </div>
+                </div>
+                <hr class="p-2 bg-dark">
+               <p style="font-weight: bold;font-family: forte;"> Listes Des Paragraphes Associees A L'operation Selectionnee</p>
+                <div class="col-md-12">
+                 
+                  <div id="paragraphe">
+                    </div>
+                    
+           
+                </div>
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Ajouter</button>
+                </form>
+                  <a type="button" href="/add_references/{{boncommande.id}}/" class="btn btn-dark"> Lignes De Commandes</a>
+         
+                </div>
+         
+            </div>
+          </div>
+  <div class="card">
+    <div class="card-body">
+<div class="container">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+           <h5 style="font-weight:bold">Liste Des Operations Associees Au Bon De Commande {{boncommande.code}}</h5>
+          </div>
+        <div class="col-sm-6">
+            <a  class="btn btn-success"><i class="bi bi-printer"></i> <span>Supprimer Les Operations De Associees</span></a>
+            <!-- <a href="" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
+          -->
+        </div>  
+        </div>
+      </div>
+      <table class="table table-hover table-responsive text-center" id="myTable">
+        <thead>
+          <tr>
+            <th class="text-primary" style="width: 30%; font-weight: bold;">
+          Operation
+            </th>
+       
+        
+            <th style="width: 50%;">Sous-Programme</th>
+        
+            <th style="width: 20%;">Activite</th>
+            <th style="width: 20%;">Tache</th>
+            <th style="width: 20%;">Paragraphe</th>
+            <th style="width: 20%;">Prestataires</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for detail_bon_commandes in detail_bon_commande%}
+          <tr>
+            <td>{{detail_bon_commandes.idoperation}}</td>
+              <td>{{detail_bon_commandes.idsousprogramme.nom}}</td>
+              <td>{{detail_bon_commandes.idactivite}}</td>
+              <td>{{detail_bon_commandes.idtache}}</td>
+              <td>{{detail_bon_commandes.idparagraphe.nom}}</td>
+              <td>{{detail_bon_commandes.idsociete}}</td>
+            </tr>  
+           {%endfor%}
+         
+        </tbody>
+      </table>
+      
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+  {% for message in messages %}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   {% if message.tags == 'success' %}
+  
+  <script type="text/javascript">
+   Swal.fire({
+   position: "top-end",
+   icon: "success",
+   title: "{{message}}",
+   showConfirmButton: false,
+   timer: 2000
+  });
+  </script>
+  {%endif%}
+  {%endfor%}
+  </script>
+  {% for message in messages %}
+  
+   {% if message.tags == 'error' %}
+  
+  <script type="text/javascript">
+   Swal.fire({
+   position: "top-end",
+   icon: "error",
+   title: "{{message}}",
+   showConfirmButton: false,
+   timer: 5000
+  });
+  </script>
+  {%endif%}
+  {%endfor%}
+  
+  {% for message in messages %}
+  
+   {% if message.tags == 'info' %}
+  
+  <script type="text/javascript">
+   Swal.fire({
+   position: "top-end",
+   icon: "info",
+   title: "{{message}}",
+   showConfirmButton: false,
+   timer: 5000
+  });
+  </script>
+  {%endif%}
+  {%endfor%}
+  
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  <script>
+      new TomSelect("#prestatires",{
+      persist: false,
+      createOnBlur: true,
+      create: true
+  });
+  </script>
+  <script>
+    new TomSelect("#operation",{
+  persist: false,
+  createOnBlur: true,
+  create: true
+  });
+  </script>
+
+<script>  
+    $(document).ready(function() {  
+      $('#operation').on('change', function() {  
+          var selectedId = $(this).val();  
+      
+          $.ajax({  
+              url: '/search_operations/',  
+              method: 'GET',  
+              data: { id: selectedId },  
+              success: function(data) {  
+                  var selectSousProgramme = $('#sous_programme');  
+                  var selectActivite = $('#activite');  
+                  var selectTache = $('#tache');  
+                
+                  console.log('Données récupérées:', data); // Afficher les données dans la console  
+                  selectSousProgramme.empty(); // Effacer les anciennes options  
+                  selectActivite.empty(); // Effacer les anciennes options  
+                  selectTache.empty(); // Effacer les anciennes options  
+                  
+                  // Ajouter une option par défaut pour chaque sélection  
+                  
+                  // Ajouter les nouvelles options pour les sous-programmes  
+                  data.forEach(function(sous_programme) {  
+                      selectSousProgramme.append($('<option>', {  
+                          value: sous_programme.idsousprogramme,  
+                          text: sous_programme.sousprogramme_nom  
+                      }));  
+  
+                      // Ajouter les options pour les noms d'activités et de tâches  
+                      selectActivite.append($('<option>', {  
+                          value: sous_programme.idactivite,  
+                          text: sous_programme.activite_nom // Utiliser le nom de l'activité  
+                      }));  
+  
+                      selectTache.append($('<option>', {  
+                          value: sous_programme.idtache,  
+                          text: sous_programme.tache_nom // Utiliser le nom de la tâche  
+                      }));  
+                      
+                  });  
+              },  
+              error: function(xhr, status, error) {  
+                  console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+              }  
+          });  
+      });  
+  });  
+  </script>
+<script>  
+  $(document).ready(function() {  
+    $('#operation').on('change', function() {  
+        var selectedId = $(this).val();  
+    
+        $.ajax({  
+            url: '/search_operation/',  
+            method: 'GET',  
+            data: { id: selectedId },  
+            success: function(data) {
+    var selectInformations = $('#paragraphe');
+    console.log('Données récupérées:', data);
+    selectInformations.empty(); // Effacer les anciennes options
+
+    // Ajouter les nouvelles cases à cocher
+    data.forEach(function(operation) {
+        var checkbox = $('<input>', {
+            type: 'checkbox',
+            id: operation.idparagraphe_id,
+            name: 'paragraphe', // Ajout de l'attribut name
+            value: operation.idparagraphe_id
+        });
+        var label = $('<label>', {
+            for: operation.idparagraphe_id,
+            text: operation.nom_paragraphe
+        });
+        selectInformations.append(checkbox).append(label).append('<br>');
+    });
+},
+
+            error: function(xhr, status, error) {  
+                console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+            }  
+        });  
+    });  
+});  
+</script>
+
+{%endblock%}

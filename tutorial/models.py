@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import datetime
 from django.contrib.auth.models import User
-
+from django.contrib.auth.hashers import make_password  # Use Django's password hashing
 
 class Statutmatrimonial(models.Model):
     libelle=models.CharField(max_length=255, null=True)
@@ -347,8 +347,8 @@ class Region(models.Model):
 class Departement(models.Model):
     nom=models.CharField(max_length=255,null=True)
     etat=models.CharField(max_length=255,null=True)
-    date_enregistre=models.CharField(null=True,blank=True)
-    derniere_modif=models.CharField(null=True,blank=True)
+    # date_enregistre=models.CharField(null=True,blank=True)
+    # derniere_modif=models.CharField(null=True,blank=True)
     idregion=models.ForeignKey(Region, on_delete=models.CASCADE, null=True,blank=True, db_column='idregion')
     class Meta:
         db_table = 'departement'  # Specify the exact table name you want
@@ -1102,15 +1102,7 @@ class OperationDetail(models.Model):
 class Ir(models.Model):
     nom= models.CharField(null=True,max_length=255)
 class Boncommande(models.Model):
-    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
-    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
-    idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
-    idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True)
-    idoperation=models.ForeignKey(Operation, on_delete=models.CASCADE, null=True,blank=True)
-    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True)
-
-    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
-    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    status= models.IntegerField(default=0)
     idtva=models.ForeignKey(Tva, on_delete=models.CASCADE, null=True,blank=True)
     idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
 
@@ -1155,6 +1147,21 @@ class Boncommande(models.Model):
 
     def __str__(self):
         return self.nom
+class DetailBonCommande(models.Model):
+    idboncommande = models.ForeignKey(Boncommande,on_delete=models.CASCADE,null=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
+    idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
+    idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True)
+    idoperation=models.ForeignKey(Operation, on_delete=models.CASCADE, null=True,blank=True)
+    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True)
+
+    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    
+
+    class Meta:
+        db_table ='detailboncommande'
     
 class Criterestructure(models.Model):
     poids=models.CharField(max_length=255,null=True)
@@ -1476,7 +1483,7 @@ class Exercise_action(models.Model):
     poidaction=models.CharField(max_length=255,null=True)
     date_enregistre=models.DateTimeField(null=True,blank=True)
     etat=models.CharField(max_length=255,null=True)
-    derniere_modif=models.CharField(null=True,blank=True)
+    # derniere_modif=models.CharField(null=True,blank=True)
     class Meta:
         db_table = 'exercice_action'  
 
@@ -1555,7 +1562,7 @@ class Ordre_payement(models.Model):
         return self.nom
 
 class Verifiaction_op(models.Model):
-    date_verification=models.CharField(null=True,blank=True)
+    # date_verification=models.CharField(null=True,blank=True)
     valide=models.CharField(max_length=255,null=True)
     idordre_payement=models.ForeignKey(Ordre_payement, on_delete=models.CASCADE, null=True,blank=True, db_column='idordre_payement')
     class Meta:
@@ -1609,8 +1616,8 @@ class Menu(models.Model):
     shortcut=models.CharField(max_length=255,null=True)
     categorie=models.CharField(max_length=255,null=True)
     etat=models.CharField(max_length=255,null=True)
-    date_enregistre=models.CharField(null=True,blank=True)
-    derniere_modif=models.CharField(null=True,blank=True)
+    # date_enregistre=models.CharField(null=True,blank=True)
+    # derniere_modif=models.CharField(null=True,blank=True)
     id_parent=models.ForeignKey(Parent, on_delete=models.CASCADE, null=True,blank=True, db_column='id_parent')
     class Meta:
         db_table = 'menu'  
@@ -2000,8 +2007,8 @@ class Rubriquedifficulte(models.Model):
 
 class Revue(models.Model):
     idannee=models.ForeignKey(Annee, on_delete=models.CASCADE, null=True,blank=True, db_column='idannee')
-    nom=models.CharField(null=True,blank=True)
-    etat=models.CharField(null=True,blank=True)
+    # nom=models.CharField(null=True,blank=True)
+    # etat=models.CharField(null=True,blank=True)
     date_enregistre=models.DateTimeField(null=True,blank=True)
     derniere_modif=models.DateTimeField(null=True,blank=True)
     class Meta:
@@ -2068,8 +2075,8 @@ class Revueperformance(models.Model):
     valeurcible=models.CharField(max_length=255,null=True)
     valeurrealise=models.CharField(max_length=255,null=True)
     etat=models.CharField(max_length=255,null=True)
-    derniere_modif=models.CharField(null=True,blank=True)
-    date_enregistre=models.CharField(null=True,blank=True)
+    # derniere_modif=models.CharField(null=True,blank=True)
+    # date_enregistre=models.CharField(null=True,blank=True)
     idrevue=models.ForeignKey(Revue, on_delete=models.CASCADE, null=True,blank=True, db_column='idrevue')
     idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True, db_column='idsousprogramme')
     class Meta:
@@ -2086,8 +2093,8 @@ class Revuedifficilte(models.Model):
     idrevue=models.ForeignKey(Revue, on_delete=models.CASCADE, null=True,blank=True, db_column='idrevue')
     idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True, db_column='idsousprogramme')
     etat=models.CharField(max_length=255,null=True)
-    derniere_modif=models.CharField(null=True,blank=True)
-    date_enregistre=models.CharField(null=True,blank=True)
+    # derniere_modif=models.CharField(null=True,blank=True)
+    # date_enregistre=models.CharField(null=True,blank=True)
     class Meta:
         db_table = 'revuedifficilte'  
 

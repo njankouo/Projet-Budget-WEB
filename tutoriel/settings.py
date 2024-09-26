@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'tutoriel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'budget_db',
+        'NAME': 'budget',
         'USER': 'postgres',
         'PASSWORD': 'corporate2019',
         'HOST': 'localhost',

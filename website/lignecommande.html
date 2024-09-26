@@ -223,19 +223,20 @@
                 </div>
   
           </div>
+     
           <div class="card">
             <div class="card-body">
               <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande</h5>
-              <form class="row g-3" method="POST" action="/add_ligne_commande/{{boncommande.id}}/">
+              <form class="row g-3" method="POST" action="/add_ligne_commande/">
                 {%csrf_token%}
 
                 <div class="col-md-4">
                   <div class="form-floating">
                     <select class="form-control" name="operation" id="operation">
-                            <option></option>
-                            {%for operations in operation%}
-                            <option value='{{operations.id}}'>{{operations.nom}}</option>
-                            {%endfor%}
+                      <option></option>
+                      {% for operation in operations_liees %}
+                          <option value="{{ operation.id }}">{{ operation.nom }}</option>
+                      {% endfor %}
                     </select>
                     <label for="floatingName">Selectionnez Une Operation</label>
                   </div>
@@ -272,7 +273,8 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="montant_paragraphe" placeholder="montant paragraphe">
+                    <input type="text" class="form-control" id="montant" placeholder="Montant Du Paragraphe" name="montant" >
+             
                     <label for="floatingZip">Montant Du Paragraphe</label>
                   </div>
                 </div>
@@ -299,21 +301,27 @@
                   <div class="col-md-12">
                     <div class="form-floating">
                       <select class="form-control" name="code" id="code" >
-                        <option value="{{boncommande.id}}">{{boncommande.code}}</option>
+                        {% for commandes in commande %}  
+                        {%if commandes.id == bon_commande_id %}
+                        <option value="{{commandes.id}}" selected>{{commandes.code}}</option>
+                        {%endif%}
+                        {%endfor%}
                       </select>
-                      <label for="floatingCity">COde Commande</label>
+                      <label for="floatingCity">Code Commande</label>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-floating mb-3">
                     <select class="form-select" id="societe" aria-label="State">
-                     
+                      {% for boncommande in boncommandes %}  
                       <option value="{{boncommande.idsociete}}">{{boncommande.idsociete}}</option>
+                      {%endfor%}
                     </select>
                     <label for="floatingSelect">Prestataire</label>
                   </div>
                 </div>
+               
                 <div class="col-md-2">
                   <div class="form-floating">
                     <input type="date" class="form-control" id="date" placeholder="date emission">
@@ -533,43 +541,133 @@ create: true
     }
     </script>
   
-
-
-
   <script>
-    $(document).ready(function() {
-      $('#operation').on('change', function() {
-          var selectedId = $(this).val();
-      
-          $.ajax({
-              url: '/search_paragraphe/',
-              method: 'GET',
-              data: { id: selectedId },
-              success: function(data) {
-                  var selectInformations = $('#paragraphe');
-                  console.log('Données récupérées:', data); // Afficher les données dans la console
-                  selectInformations.empty(); // Effacer les anciennes options
-                  
-                  // Ajouter une option par défaut
-                  // selectInformations.append($('<option>', {
-                  //     value: '',
-                  //     text: 'Sélectionnez une activité'
-                  // }));
-  
-                  // Ajouter les nouvelles options
-                  data.forEach(function(paragraphes) {
-                      selectInformations.append($('<option>', {
-                          value: paragraphes.id,
-                          text: paragraphes.paragraphe__nom
-                      }));
-                  });
-              },
-              error: function(xhr, status, error) {
-                  console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);
-              }
-          });
-      });
-  });
-  
+    $(document).ready(function() {  
+    // Événement lors du changement de l'opération  
+    $('#operation').on('change', function() {  
+        var selectedId = $(this).val();  
+        var selectInformations = $('#paragraphe');  
+        selectInformations.empty();  
+        
+        $('#annee').text('Chargement...');  
+
+        $.ajax({  
+            url: '/search_paragraphe/',  
+            method: 'GET',  
+            data: { id: selectedId },  
+            success: function(data) {  
+                console.log('Données récupérées:', data);  
+                
+                selectInformations.append($('<option>', {  
+                    value: '',  
+                    text: 'Sélectionnez un paragraphe'  
+                }));  
+
+                if (Array.isArray(data) && data.length > 0) {  
+                    data.forEach(function(paragraph) {  
+                        selectInformations.append($('<option>', {  
+                            value: paragraph.idparagraphe,  
+                            text: paragraph.nom  
+                        }));  
+                    });  
+                    
+                    // Activez l'événement de changement de paragraphe pour récupérer les années  
+                    selectInformations.prop("disabled", false);  
+                } else {  
+                    selectInformations.append($('<option>', {  
+                        value: '',  
+                        text: 'Aucun paragraphe disponible'  
+                    }));  
+                }  
+            },  
+            error: function(xhr, status, error) {  
+                console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+                alert("Une erreur est survenue. Veuillez réessayer.");  
+            }  
+        });  
+    });  
+
+    // Événement lors du changement de paragraphe  
+    $('#paragraphe').on('change', function() {  
+        var selectedOperationId = $('#operation').val(); // Récupérer l'ID de l'opération sélectionnée  
+        var selectedParagraphId = $(this).val(); // Récupérer l'ID du paragraphe sélectionné  
+        var selectAnnee = $('#annee'); // Sélecteur pour les années  
+        selectAnnee.empty(); // Vider les options existantes  
+
+        if (selectedParagraphId) {  
+            selectAnnee.append($('<option>', {   
+                value: '',   
+                text: 'Chargement des années...'   
+            }));  
+
+            $.ajax({  
+                url: '/search_annee/', // URL pour récupérer les années  
+                method: 'GET',  
+                data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId },  
+                success: function(data) {  
+                    console.log('Années récupérées:', data);  
+                    selectAnnee.empty(); // Vider l'ancien contenu des années  
+
+                    if (Array.isArray(data) && data.length > 0) {  
+                        selectAnnee.append($('<option>', {   
+                            value: '',   
+                            text: 'Sélectionnez une année'   
+                        }));  
+                        data.forEach(function(year) {  
+                            selectAnnee.append($('<option>', {  
+                                value: year.idannee,  
+                                text: year.annee  
+                            }));  
+                        });  
+                        selectAnnee.prop("disabled", false); // Activer le select des années  
+                    } else {  
+                        selectAnnee.append($('<option>', {   
+                            value: '',   
+                            text: 'Aucune année disponible'   
+                        }));  
+                    }  
+                },  
+                error: function(xhr, status, error) {  
+                    console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+                    alert("Une erreur est survenue. Veuillez réessayer.");  
+                }  
+            });  
+        }  
+    });  
+
+    // Événement lors du changement de l'année  
+    $('#annee').on('change', function() {  
+        var selectedOperationId = $('#operation').val();  
+        var selectedParagraphId = $('#paragraphe').val();  
+        var selectedYearId = $(this).val();  
+        var montantDisplay = $('#montant'); // Sélecteur pour afficher le montant  
+
+        if (selectedYearId) {  
+            montantDisplay.text('Chargement du montant...'); // Indiquer que le montant est en train d'être chargé  
+
+            $.ajax({  
+    url: '/search_montant/', // URL pour récupérer le montant  
+    method: 'GET',  
+    data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId, year_id: selectedYearId },  
+    success: function(data) {  
+        console.log('Montant récupéré:', data);  
+        const montantInput = $('#montant'); // Sélecteur pour l'input  
+
+        if (data.montant !== null) {  
+            montantInput.val(data.montant); // Insère le montant dans l'input  
+            montantDisplay.text("Montant : " + data.montant); // Affiche le montant dans un autre élément si nécessaire  
+        } else {  
+            montantInput.val(''); // Vide l'input si aucun montant n'est trouvé  
+            montantDisplay.text("Aucun montant trouvé pour cette sélection.");  
+        }  
+    },  
+    error: function(xhr, status, error) {  
+        console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+        alert("Une erreur est survenue. Veuillez réessayer.");  
+    }  
+});
+        }  
+    });  
+});
   </script>
 {%endblock%}

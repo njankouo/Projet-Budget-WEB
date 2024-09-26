@@ -11,7 +11,7 @@ import io
 from django.http import HttpResponse
 from django.http import FileResponse
 import os
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password  
 def Home(request):
    
     template="../website/authentification/login.html"
@@ -166,6 +166,8 @@ def operations(request):
     structure =Structure.objects.all()
     operation=Operation.objects.all()
     operation_p = OperationDetail.objects.all()
+    structure= Structure.objects.all()
+    
     context={'operation_p':operation_p,'sourcefinancement':sourcefinancement,'typefinancement':typefinancement,'risque':risque,'sousprogramme':sousprogramme,'structure':structure,'operation':operation}
   
     template = '../website/operations_list.html'
@@ -341,6 +343,7 @@ def add_operation(request):
             risque = request.POST['risque']  
             indicateur = request.POST['indicateur']  
             resultat = request.POST['resultat']  
+            structure = request.POST['structure']
 
             if not sourcefinancement_ids:  # Vérifie si la liste est vide
                 messages.error(request, "Aucune source de financement sélectionnée.")
@@ -352,6 +355,7 @@ def add_operation(request):
             instance_tache = Tache.objects.get(id=int(tache))  
             instance_type_financement = Typefinancement.objects.get(id=int(type_financement))  
             instance_risque = Risque.objects.get(id=int(risque))  
+            instance_structure = Structure.objects.get(id=int(structure))
 
             # Log instances  
             print("Instances retrieved: ", instance_sous_programme, instance_activite, instance_tache, instance_type_financement, instance_risque)  
@@ -365,7 +369,8 @@ def add_operation(request):
                 idtypefinancement=instance_type_financement,  
                 idrisque=instance_risque,  
                 indicateurspoursuivis=indicateur,  
-                indicateurresult=resultat  
+                indicateurresult=resultat,
+                idstructure=instance_structure  
             )  
 
             # Ajout des sources de financement à l'opération
@@ -815,56 +820,78 @@ def search_operations(request):
 def add_commande(request):  
     if request.method == 'POST':  
         try:  
-            societe = request.POST['societe']  
+            # societe = request.POST['societe']  
             numero_commande = request.POST['numero_commande']  
-            operations = request.POST['operations']  
-            sous_programme = request.POST['sous_programme']  
-            activite = request.POST['activite']  
-            tache = request.POST['tache']  
+            # operations = request.POST['operations']  
+            # sous_programme = request.POST['sous_programme']  
+            # activite = request.POST['activite']  
+            # tache = request.POST['tache']  
             tva = request.POST['tva']  
             ir = request.POST['ir']  # Corrigé pour utiliser 'ir' au lieu de 'tva'  
 
             # Récupération des instances  
-            instance_societe = Societe.objects.get(id=int(societe))  
-            instance_operation = Operation.objects.get(id=int(operations))  
-            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
-            instance_activite = Activite.objects.get(id=int(activite))  
-            instance_tache = Tache.objects.get(id=int(tache))  
+            # instance_societe = Societe.objects.get(id=int(societe))  
+            # instance_operation = Operation.objects.get(id=int(operations))  
+            # instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
+            # instance_activite = Activite.objects.get(id=int(activite))  
+            # instance_tache = Tache.objects.get(id=int(tache))  
             instance_tva = Tva.objects.get(id=int(tva))  # Correction ici  
             instance_ir = Ir.objects.get(id=int(ir))  # Correction ici  
 
             # Création de l'instance de Boncommande  
             save_commande = Boncommande(  
                 code=numero_commande,  
-                idsociete=instance_societe,  
-                idoperation=instance_operation,  
-                idsousprogramme=instance_sous_programme,  
-                idactivite=instance_activite,  
-                idtache=instance_tache,  
+                # idsociete=instance_societe,  
+                # idoperation=instance_operation,  
+                # idsousprogramme=instance_sous_programme,  
+                # idactivite=instance_activite,  
+                # idtache=instance_tache,  
                 idtva=instance_tva,  
                 idir=instance_ir  
             )  
             save_commande.save()  
 
             messages.success(request, 'Enregistrement Réussi')  
-            return redirect('/commandes/')  
+            return redirect(request.META.get('HTTP_REFERER','/'))  
         except Exception as e:  
             messages.error(request, f'Une erreur est survenue: {e}')  
             print(f'erreur: {e}')  
-            return redirect('/commandes/')  
-    return redirect('/commandes/')  
+            return redirect(request.META.get('HTTP_REFERER','/'))  
+    return redirect(request.META.get('HTTP_REFERER','/'))  
 
 
-def add_references(request,id, context_dict={}):
-    boncommande =Boncommande.objects.get(id=int(id))
-    template ='../website/lignecommande.html'
+
+def add_references(request, id, context_dict={}):
+    # Récupérer tous les détails de la commande pour l'ID donné
+    boncommandes = DetailBonCommande.objects.filter(idboncommande=int(id))
+    
+    if boncommandes.exists():
+        # Récupérer toutes les opérations liées à ces détails de commande
+        operations_liees = []
+        for boncommande in boncommandes:
+            operations_liees.append(boncommande.idoperation)  # Assurez-vous que idoperation est le bon champ
+            
+    else:
+        messages.info(request, "Vous n\'avez Pas Encore La Possibilite D\'ajouter Les Lignes De Commande")
+        return redirect(request.META.get('HTTP_REFERER','/'))  # Redirigez vers une vue appropriée
+
+    template = '../website/lignecommande.html'
     reference = Elementcout.objects.all()
-
-    ligneboncommande =Ligneboncommande.objects.all()
     operation = Operation.objects.all()
-    context={'operation':operation,'boncommande':boncommande,'reference':reference,'ligneboncommande':ligneboncommande}
-  
-    return render(request,template,context)
+    commande =Boncommande.objects.all()
+    context = {
+        'operations_liees': operations_liees,  # Passez toutes les opérations liées
+        'boncommandes': boncommandes,
+        'reference': reference,
+        'operation': operation,
+        'bon_commande_id': id,
+        'commande':commande
+      
+          # Gardez toutes les opérations disponibles si nécessaire
+    }
+
+    return render(request, template, context)
+
 from django.template import loader
 from io import BytesIO
 from xhtml2pdf import pisa   
@@ -919,37 +946,74 @@ def search_cu(request):
         return JsonResponse(list(cus), safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-
-def add_ligne_commande(request, id):  
+def add_ligne_commande(request):  
     if request.method == 'POST':  
         try:  
             code = request.POST['code']  
             reference = request.POST['reference']  
-            cu = request.POST['cu']  
-            qte = request.POST['qte']  
-            prixT = request.POST['prixT']  
+            cu = float(request.POST['cu'])  # Assurez-vous que c'est un float  
+            qte = int(request.POST['qte'])   # Assurez-vous que c'est un int  
+            prixT = float(request.POST['prixT'])  # Assurez-vous que c'est un float  
+            montant = float(request.POST['montant'])  # Assurez-vous que c'est un float  
+            paragraphe = request.POST.get('paragraphe', '')  
+            operation = request.POST.get('operation', '')  
+            annee = request.POST.get('annee', '')  
+
+            # Vérifiez si les instances correspondantes existent  
             instance_element = Elementcout.objects.get(id=int(reference))  
-            instance_code = Boncommande.objects.get(id=int(code))
-            save_ligne_commande = Ligneboncommande.objects.create(  
-                prixunitaire=cu,  
-                quantite=qte,  
-                total=prixT,  
-                idelementcout=instance_element,  
-                idboncommande=instance_code  
-            )  
-            save_ligne_commande.save()  
-            messages.success(request, 'Enregistrement Réussi')  
-            
-            # Redirection vers l'URL avec l'ID de référence  
-            return redirect(f'/add_references/{id}/')  
+            instance_code = Boncommande.objects.get(id=int(code))  
+            instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe))  
+            instance_operation = Operation.objects.get(id=int(operation))  
+            instance_annee = Annee.objects.get(id=int(annee))  
+
+            if montant < prixT:  
+                messages.info(request, 'Cette référence ne peut être ajoutée car le montant engagé est inférieur au prix total.')  
+            else:  
+                montant_paragraphe = montant - prixT  
+                verified_operation_details = OperationDetail.objects.filter(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idannee=instance_annee  
+                )  
+
+                if verified_operation_details.exists():  
+                    operation_detail = verified_operation_details.first()  # Récupérer la première instance correspondant à la requête  
+                    operation_detail.montant = montant_paragraphe  # Mettre à jour le montant  
+                    operation_detail.save()  # Enregistrer la modification  
+
+                    # Créer la ligne de commande  
+                    save_ligne_commande = Ligneboncommande.objects.create(  
+                        prixunitaire=cu,  
+                        quantite=qte,  
+                        total=prixT,  
+                        idelementcout=instance_element,  
+                        idboncommande=instance_code  
+                    )  
+                    save_ligne_commande.save()  
+                    messages.success(request, 'Enregistrement réussi.')  
+                else:  
+                    messages.warning(request, 'Les détails de l\'opération vérifiée n\'existent pas.')  
+
+            # Redirection vers l'URL d'origine  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        except KeyError as ke:  
+            messages.error(request, f'Erreur: Champ manquant - {str(ke)}')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        except Elementcout.DoesNotExist:  
+            messages.error(request, f'Erreur: Élément de coût avec id {reference} non trouvé.')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        except Boncommande.DoesNotExist:  
+            messages.error(request, f'Erreur: Bon de commande avec id {code} non trouvé.')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        except ValueError as ve:  
+            messages.error(request, f'Erreur: Vérifiez les valeurs entrées. - {str(ve)}')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
         except Exception as e:  
             messages.error(request, f'Erreur: {str(e)}')  
-            return redirect(f'/add_references/{id}/')  # Redirige même en cas d'erreur  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
     else:  
         # Gérer le cas où la méthode n'est pas POST  
-        return redirect(f'/add_references/{reference_id}/')  
-
-
+        return redirect(request.META.get('HTTP_REFERER', '/'))  
 def delete_commande(request, id):  
     # Récupérer l'instance de Ligneboncommande ou renvoyer une 404 si non trouvée  
     lignecommande = get_object_or_404(Ligneboncommande, id=id)  
@@ -978,12 +1042,11 @@ def search_activities(request):
 
 def engagements(request):
     template = '../website/engagement.html'
-    prestataire = Societe.objects.all()
-    operation = Operation.objects.all()
+   
     tva =Tva.objects.all()
     ir=Ir.objects.all()
-    boncommande =Boncommande.objects.all()
-    context={'operation':operation,'prestataire':prestataire,'tva':tva,'ir':ir,'boncommande':boncommande}
+    boncommande =Boncommande.objects.filter(status__in=[0,1])
+    context={'tva':tva,'ir':ir,'boncommande':boncommande}
 
     return render(request,template,context)
 
@@ -1047,82 +1110,90 @@ def delete_paragraphe_operation(request,id):
     return redirect(request.META.get('HTTP_REFERER','/'))
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.hashers import make_password  # Use Django's password hashing
 from django.contrib.auth import authenticate, login
-from .models import Utilisateur  # Assuming 'Utilisateur' is your user model
+from django.contrib.auth.hashers import make_password  
 
+def add_user(request):  
+    if request.method == 'POST':  
+        try:  
+            nom = request.POST['nom']  
+            prenom = request.POST['prenom']  
+            email = request.POST['email'].lower()  # Normalise l'email  
+            password = request.POST['password']  
+            re_password = request.POST['re_password']  
+            sexe = request.POST['sexe']  
+            photo = request.FILES.get('photo')  # Utilisez get() pour gérer un fichier photo optionnel  
 
-def add_user(request):
-    if request.method == 'POST':
-        try:
-            nom = request.POST['nom']
-            prenom = request.POST['prenom']
-            email = request.POST['email']
-            password = request.POST['password']
-            re_password = request.POST['re_password']  # Corrected to match the input name
-            sexe = request.POST['sexe']
-            photo = request.FILES.get('photo')  # Use get() to handle optional photo
+            # Vérifiez si l'utilisateur existe déjà  
+            if Utilisateur.objects.filter(email=email).exists():  
+                messages.error(request, 'Un utilisateur avec cet e-mail existe déjà.')  
+                return redirect(request.META.get('HTTP_REFERER', '/'))  
 
-            # Validate password match
-            if password != re_password:
-                messages.error(request, 'Les mots de passe ne correspondent pas.')
-                return redirect(request.META.get('HTTP_REFERER', '/'))
+            # Validez la correspondance des mots de passe  
+            if password != re_password:  
+                messages.error(request, 'Les mots de passe ne correspondent pas.')  
+                return redirect(request.META.get('HTTP_REFERER', '/'))  
 
-            # Secure password hashing
-            hashed_password = make_password(password)
+            # Hachage sécurisé du mot de passe  
+            hashed_password = make_password(password)  
 
-            # Create user with validated email
-            user = Utilisateur.objects.create(
-                nom=nom,
-                prenom=prenom,
-                email=email.lower(),  # Normalize email for case-insensitivity
-                password=hashed_password,
-                sexe=sexe,
-                photo=photo,  # Optional photo upload
-            )
+            # Création de l'utilisateur  
+            user = Utilisateur.objects.create(  
+                nom=nom,  
+                prenom=prenom,  
+                email=email,  
+                password=hashed_password,  
+                sexe=sexe,  
+                photo=photo,  
+            )  
 
-            # Success message and redirection
-            messages.success(request, 'Utilisateur créé avec succès.')
-            return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirect to the referring page
+            # Message de succès  
+            messages.success(request, 'Utilisateur créé avec succès.')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirection vers la page précédente  
 
-        except Exception as e:
-            messages.error(request, f'Une erreur est survenue : {e}')
-            print(f'Une erreur est survenue : {e}')  # Log the error message
+        except Exception as e:  
+            messages.error(request, f'Une erreur est survenue : {e}')  
+            print(f'Une erreur est survenue : {e}')  # Journalisez le message d'erreur  
 
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirection par défaut  
 
 from django.utils import timezone
 
-def user_login(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
 
-        users = Utilisateur.objects.filter(email=email.lower())
 
-        if users.exists():
-            user = users.first()
-
-            if check_password(password, user.password):
-                user.last_login = timezone.now()  # Mettez à jour last_login
-                user.save()  # Enregistrez les modifications
-                login(request, user)
-                messages.success(request, 'Connexion réussie.')
-
-                # Vérifiez le paramètre 'next' et redirigez en conséquence
-                next_url = request.GET.get('next', '/dashboard/')  # Par défaut, redirigez vers le tableau de bord  
-                return redirect(next_url)  
-            else:
-                messages.error(request, 'Identifiants invalides. Veuillez réessayer.')
-        else:
-            messages.error(request, 'Identifiants invalides. Veuillez réessayer.')
+def user_login(request):  
+    if request.method == 'POST':  
+        email = request.POST.get('email', '').strip().lower()  
+        password = request.POST.get('password', '').strip() 
+        
+        users = Utilisateur.objects.filter(email=email)  
+        print(f'Email recherché : {email}')  
+        print(f'Utilisateurs trouvés : {users}')  # Affiche les utilisateurs trouvés  
+        
+        if users.exists():  
+            user = users.first()  
+            print(f'Utilisateur trouvé : {user}, Mot de passe haché : {user.password}, Email : {user.email}')  
+           
+            # Vérifiez si le mot de passe est correct  
+            if check_password(password, user.password):  
+                user.last_login = timezone.now()  
+                user.save()  
+                login(request, user)  
+                messages.success(request, 'Connexion réussie.')  
+                return redirect('/dashboard/')  
+              
+            else:  
+                print('Mot de passe incorrect.')  # Log pour le mot de passe incorrect  
+                messages.error(request, 'Identifiants invalides. Veuillez réessayer.')  
+        else:  
+            print('Aucun utilisateur trouvé avec cet email.')  # Log si aucun utilisateur n'est trouvé  
+            messages.error(request, 'Identifiants invalides. Veuillez réessayer.')  
 
     return render(request, '../website/authentification/login.html')
-
-
 def search_paragraphe(request):  
     selected_id = request.GET.get('id')  
 
@@ -1133,21 +1204,26 @@ def search_paragraphe(request):
     selected_id = int(selected_id)  # Convertir en entier pour le filtrage  
     
     try:  
-        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié  
-        paragraphs = OperationDetail.objects.filter(idoperation=selected_id).select_related('idparagraphe')  
+        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié, en évitant les doublons
+        paragraphs = OperationDetail.objects.filter(idoperation=selected_id) \
+            .select_related('idparagraphe') \
+            .values('idparagraphe__id', 'idparagraphe__nom') \
+            .distinct()  # Ajout de distinct() pour éviter les doublons
 
         result = [  
             {  
-                'idparagraphe': detail.idparagraphe.id,  
-                'nom': detail.idparagraphe.nom,  
-                'idoperation': detail.idoperation  
+                'idparagraphe': detail['idparagraphe__id'],  
+                'nom': detail['idparagraphe__nom'],  
+                'idoperation': selected_id  
             }  
             for detail in paragraphs  
         ]  
 
         return JsonResponse(result, safe=False)  # Retourner la liste des résultats  
     except Exception as e:  
-        return JsonResponse({'error': str(e)}, status=500)  
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 def institution(request):
     sous_secteur = Soussecteur.objects.all()
     institution= Institution.objects.all()
@@ -1220,5 +1296,205 @@ def add_structure(request):
             messages.error(request,'Institution Inexistante')
     return redirect(request.META.get('HTTP_REFERER','/'))
 
+
+def add_operations(request, id):  
+    # Utiliser get_object_or_404 pour éviter les exceptions si le bon de commande n'existe pas  
+    boncommande = get_object_or_404(Boncommande, id=int(id))  
+
+    # Récupérer uniquement les détails associés à ce bon de commande  
+    detail_bon_commande = DetailBonCommande.objects.filter(idboncommande_id=boncommande)  
+    
+    # Récupérer toutes les sociétés et opérations  
+    prestataire = Societe.objects.all()  
+    operation = Operation.objects.all()  
+
+    context = {  
+        'detail_bon_commande': detail_bon_commande,  # Renommer pour clarté  
+        'boncommande': boncommande,  
+        'operation': operation,  
+        'prestataire': prestataire  
+    }  
+
+    template = '../website/detailcommande.html'  
+    return render(request, template, context)  
+def add_operation_commande(request):  
+    if request.method == 'POST':  
+        try:  
+            operation_id = request.POST['operation']  
+            sous_programme_id = request.POST['sous_programme']  
+            activite_id = request.POST['activite']  
+            tache_id = request.POST['tache']  
+            paragraphes = request.POST.getlist('paragraphe', [])  
+            societe_id = request.POST['prestataire']  
+            boncommande_id = request.POST['boncommande']  
+
+            instance_operation = Operation.objects.get(id=int(operation_id))  
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme_id))  
+            instance_activite = Activite.objects.get(id=int(activite_id))  
+            instance_tache = Tache.objects.get(id=int(tache_id))  
+            instance_boncommande = Boncommande.objects.get(id=int(boncommande_id))  
+            instance_societe = Societe.objects.get(id=int(societe_id))  
+            print(paragraphes)
+            # Création de détails pour chaque paragraphe  
+            for paragraphe_id in paragraphes:  
+                instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe_id))  
+                
+                save_detail_boncommande = DetailBonCommande.objects.create(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idsousprogramme=instance_sous_programme,  
+                    idsociete=instance_societe,  
+                    idtache=instance_tache,  
+                    idactivite=instance_activite,  
+                    idboncommande=instance_boncommande  
+                )  
+                save_detail_boncommande.save()  
+
+            messages.success(request, 'Enregistrement Reussi')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        
+        except Operation.DoesNotExist:  
+            messages.error(request, 'L\'opération spécifiée n\'existe pas.')  
+        except Sousprogramme.DoesNotExist:  
+            messages.error(request, 'Le sous-programme spécifié n\'existe pas.')  
+        except Activite.DoesNotExist:  
+            messages.error(request, 'L\'activité spécifiée n\'existe pas.')  
+        except Tache.DoesNotExist:  
+            messages.error(request, 'La tâche spécifiée n\'existe pas.')  
+        except Paragraphe.DoesNotExist:  
+            messages.error(request, 'Le paragraphe spécifié n\'existe pas.')  
+        except Boncommande.DoesNotExist:  
+            messages.error(request, 'Le bon de commande spécifié n\'existe pas.')  
+        except Societe.DoesNotExist:  
+            messages.error(request, 'La société spécifiée n\'existe pas.')  
+        except Exception as e:  
+            messages.error(request, f'une erreur est survenue: {e}')  
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
     
 
+def search_operation(request):  
+    selected_id = request.GET.get('id')  
+    
+    # Vérifiez si l'ID est valide  
+    if not selected_id:  
+        return JsonResponse({'error': 'ID non fourni'}, status=400)  
+    
+    try:  
+        # Filtrer les opérations et joindre avec le modèle Paragraphe  
+        operations = OperationDetail.objects.filter(idoperation_id=selected_id).select_related('idparagraphe')  
+        
+        results = [  
+            {  
+                'idparagraphe_id': operation.idparagraphe_id,  
+                'nom_paragraphe': operation.idparagraphe.nom  # Récupérer le nom du paragraphe  
+            }  
+            for operation in operations  
+        ]  
+        
+        # Vérifiez s'il y a des résultats  
+        if not results:  
+            return JsonResponse({'error': 'Aucune opération trouvée pour cet ID'}, status=404)  
+
+        # Retourner les résultats au format JSON  
+        return JsonResponse(results, safe=False)  
+    
+    except Exception as e:  
+        # Gérer les exceptions générales  
+        return JsonResponse({'error': str(e)}, status=500)  
+
+def valid(request, id):
+    if request.method == 'POST':
+        try:
+            boncommande = Boncommande.objects.get(id=int(id))
+            boncommande.status = 1  # Assuming 1 represents "validated"
+            boncommande.save()
+
+            messages.success(request, 'Bon Commande Validé')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        except Boncommande.DoesNotExist:
+            messages.error(request, 'Bon Commande introuvable')
+        except Exception as e:
+            messages.error(request, f'Une erreur est survenue: {e}')
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+def liquidation(request):
+    template = '../website/liquidation.html'
+    tva = Tva.objects.all()
+    ir = Ir.objects.all()
+    boncommande = Boncommande.objects.filter(status__in=[1, 2])
+    context = {'tva': tva, 'ir': ir, 'boncommande': boncommande}
+    return render(request, template, context)
+
+def paiement(request):
+    template = '../website/paiement.html'
+    tva = Tva.objects.all()
+    ir = Ir.objects.all()
+    boncommande = Boncommande.objects.filter(status__in=[2, 3])
+    context = {'tva': tva, 'ir': ir, 'boncommande': boncommande}
+    return render(request, template, context)
+
+def liquide(request,id):
+    if request.method == 'POST':
+        try:
+            boncommande = Boncommande.objects.get(id=int(id))
+            boncommande.status = 2  # Assuming 1 represents "validated"
+            boncommande.save()
+
+            messages.success(request, 'Bon Commande Liquidé')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        except Boncommande.DoesNotExist:
+            messages.error(request, 'Bon Commande introuvable')
+        except Exception as e:
+            messages.error(request, f'Une erreur est survenue: {e}')
+
+def valid_paiement(request,id):
+    if request.method == 'POST':
+        try:
+            boncommande = Boncommande.objects.get(id=int(id))
+            boncommande.status = 3  # Assuming 1 represents "validated"
+            boncommande.save()
+
+            messages.success(request, 'Bon Commande Payé')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        except Boncommande.DoesNotExist:
+            messages.error(request, 'Bon Commande introuvable')
+        except Exception as e:
+            messages.error(request, f'Une erreur est survenue: {e}')
+
+
+def search_annee(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    
+    try:  
+        # Récupérer les années en fonction de l'opération et du paragraphe  
+        annees = Annee.objects.filter(  
+            operationdetail__idoperation_id=operation_id,  
+            operationdetail__idparagraphe_id=paragraph_id  
+        ).distinct()  # Utilise distinct() pour éviter les doublons  
+
+        data = [{'idannee': annee.id, 'annee': annee.nom} for annee in annees]  # Renvoie le nom de l'année  
+    except Exception as e:  
+        data = []  
+
+    return JsonResponse(data, safe=False)  
+
+
+def search_montant(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    year_id = request.GET.get('year_id')  
+
+    try:  
+        # Récupérer le montant en fonction de l'opération, du paragraphe, et de l'année  
+        montant_detail = OperationDetail.objects.get(  
+            idoperation_id=operation_id,  
+            idparagraphe_id=paragraph_id,  
+            idannee_id=year_id  
+        )  
+        montant = montant_detail.montant  
+    except OperationDetail.DoesNotExist:  
+        montant = None  # Aucun enregistrement correspondant trouvé  
+
+    return JsonResponse({'montant': montant})

@@ -120,7 +120,7 @@ urlpatterns = [
     path('add_references/<int:id>/',views.add_references,name='add_references'),
     path('fiche_bon/<int:id>/',views.fiche_bon,name='fiche_bon'),
     path('search_cu/',views.search_cu,name='search_cu'),
-    path('add_ligne_commande/<int:id>/',views.add_ligne_commande,name='add_ligne_commande'),
+    path('add_ligne_commande/',views.add_ligne_commande,name='add_ligne_commande'),
     path('delete_commande/<int:id>/',views.delete_commande,name='delete_commande'),
 
     path('search_activities/',views.search_activities,name='search_activities'),
@@ -143,8 +143,21 @@ urlpatterns = [
 
     path('structure/',views.structure,name='structure'),
 
-    path('add_structure/',views.add_structure,name='add_structure')
+    path('add_structure/',views.add_structure,name='add_structure'),
+    path('add_operations/<int:id>/',views.add_operations,name='add_operations'),
 
+    path('add_operation_commande/',views.add_operation_commande,name='add_operation_commande'),
+
+    path('search_operation/',views.search_operation,name='search_operation'),
+    path('valid/<int:id>/',views.valid,name='valid')
+,
+    path('liquidation/',views.liquidation,name='liquidation'),
+    path('paiement/',views.paiement,name='paiement'),
+    path('liquide/<int:id>/',views.liquide,name='liquide'),
+    path('valid_paiement/<int:id>/',views.valid_paiement,name='valid_paiement'),
+
+    path('search_annee/',views.search_annee,name='search_annee'),
+    path('search_montant/',views.search_montant,name='search_montant')
 
 
 
