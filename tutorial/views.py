@@ -868,6 +868,7 @@ def add_commande(request):
 def add_references(request, id, context_dict={}):
     # Récupérer tous les détails de la commande pour l'ID donné
     boncommandes = DetailBonCommande.objects.filter(idboncommande=int(id))
+    lignecommande = Ligneboncommande.objects.filter(idboncommande=id)
     
     if boncommandes.exists():
         # Récupérer toutes les opérations liées à ces détails de commande
@@ -889,20 +890,38 @@ def add_references(request, id, context_dict={}):
         'reference': reference,
         'operation': operation,
         'bon_commande_id': id,
+        'lignecommande':lignecommande,
         'commande':commande
       
           # Gardez toutes les opérations disponibles si nécessaire
     }
 
     return render(request, template, context)
+import qrcode
 
+def generate_qr_code(data, file_path):
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    img.save(file_path)
+def serve_qr_code(request):
+    file_path = os.path.join(settings.BASE_DIR, '../website/pdf/qr_code.png')
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), content_type='image/png')
+    else:
+        raise Http404("Image not found")
 from django.template import loader
 from io import BytesIO
 from xhtml2pdf import pisa   
 import io
 from django.template.loader import get_template
+from django.utils.translation import gettext as _
+import num2words
+
 def fiche_bon(request, id):
     template_path = "../website/pdf/fiche_bon.html"
+    
 
     try:
         template = get_template(template_path)
@@ -915,12 +934,19 @@ def fiche_bon(request, id):
         boncommande = Boncommande.objects.get(id=int(id))
         ligneboncommande = Ligneboncommande.objects.filter(idboncommande=boncommande)
         detail_bon_commande=DetailBonCommande.objects.filter(idboncommande=boncommande)
+        somme_montants = Ligneboncommande.objects.filter(idboncommande=id).aggregate(Sum('total'))
+
+
+    # Calculer le montant total (avec gestion de valeurs nulles)  
+        montant_total = somme_montants['total__sum'] if somme_montants['total__sum'] is not None else 0  
+        montant_lettres = num2words.num2words(montant_total, lang='fr')  # Remplacer 'fr' par le code de la langue souhaitée
+
     except Boncommande.DoesNotExist:
         return HttpResponse("Boncommande not found.", status=404)
 
     # Prepare context
-    context = {'boncommande': boncommande,'ligneboncommande':ligneboncommande,'detail_bon_commande':detail_bon_commande}
-
+    context = {'montant_lettres':montant_lettres,'montant_total':montant_total,'boncommande': boncommande,'ligneboncommande':ligneboncommande,'detail_bon_commande':detail_bon_commande}
+     
     # Render the template with the context
     html = template.render(context)
 
@@ -1135,6 +1161,8 @@ def add_user(request):
             password = request.POST['password']  
             re_password = request.POST['re_password']  
             sexe = request.POST['sexe']  
+            matricule = request.POST.get('matricule','')
+            grade= request.POST.get('grade','')
             photo = request.FILES.get('photo')  # Utilisez get() pour gérer un fichier photo optionnel  
 
             # Vérifiez si l'utilisateur existe déjà  
@@ -1158,6 +1186,8 @@ def add_user(request):
                 password=hashed_password,  
                 sexe=sexe,  
                 photo=photo,  
+                matricule= matricule,
+                grade=grade
             )  
 
             # Message de succès  

@@ -65,12 +65,7 @@ table::before {
           color: white;
       }
 
-      .container {
-            display: flex; /* Utilise Flexbox pour l'alignement */
-            justify-content: space-between; /* Espace entre les éléments */
-            align-items: flex-start; /* Aligne les éléments en haut */
-            margin: 10px; /* Espace autour du conteneur */
-        }
+     
 
         
         h4 {
@@ -80,9 +75,7 @@ table::before {
            /* Supprime les marges par défaut */
         }
 
-        .service-info {
-            text-align: right; /* Aligne le texte à droite */
-        }
+   
         .card {
     position: relative; /* Nécessaire pour le pseudo-élément */
     border: 1px solid black; /* Contour intérieur */
@@ -102,33 +95,56 @@ table::before {
     border-radius: 12px; /* Arrondi des coins */
     z-index: -1; /* Positionne le contour derrière la carte */
 }
+.service-block, .republique-block {
+  display: inline-block;
+  width: 30%; /* Chaque bloc occupera 30% de la largeur disponible */
+  vertical-align: top;
+  padding: 10px;
+}
+
+
+
 
   </style>
+  {%load static%}
     <title>Bon De Commande</title>
 </head>
+
 <body>
-  
-  <div class="container">
-  
-    <h4 class="service-info">
-        REPUBLIC OF CAMEROON <br>&nbsp;
-        <small>Peace-Work-Fatherland</small><br>
-        REPUBLIQUE DU CAMEROUN <br>&nbsp;
-        <small>Paix-Travail-Patrie</small><br>
-        APO No. / BCA N<sup>o</sup>.
-    </h4>
- <p> SERVICE:   {{boncommande.idinstitution}}<br><br>
-  {{boncommande.code}}</p>
-</div>
+  <img src="{% url 'serve_qr_code' %}" alt="QR Code" style="width: 128px; height: 128px;" />
+<table>
+  <thead>
+    <tr>
+      <th> <div class="service-block" style="display: inline-block; margin-right: 20px;"></div>
+        <p>
+            SERVICE: {{ boncommande.idinstitution }}<br><br>
+            {{ boncommande.code }}
+        </p>
+    </div></th>
+    <!-- <th><img src="{% static 'img/nasla.jpeg' %}" alt="Description de l'image" height="90"> </th> -->
+    <th><div class="republique-block" style="display: inline-block;">
+      <h4 class="service-info">
+          REPUBLIC OF CAMEROON <br>&nbsp;
+          <small>Peace-Work-Fatherland</small><br>
+          REPUBLIQUE DU CAMEROUN <br>&nbsp;
+          <small>Paix-Travail-Patrie</small><br>
+          APO No. / BCA N<sup>o</sup>.
+      </h4>
+  </div></th>
+    </tr>
+  </thead>
+</table>
+
+
 <div class="card">
 
     <h3>ADMINISTRATIVE PURCHASE ORDER / BON DE COMMANDE ADMINISTRATIF <br> <br>
       <small>Undermentioned Equipments And Items. Pour Les Matieres Et Objects Ci-Apres :</small>
     </h3>
   </div>
-    <p>Service Provider's Or Corporate Name: {{boncommande.idsociete}}  <br><br><small>Nom Ou Raison Sociale Du Prestataire:</small></p>
-    <p>Address: {{boncommande.idsociete.boite_postale}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Tel:  {{boncommande.idsociete.contact}}  <br><small>Adresse</small></p>
-    <p>Taxe Payer N<sup>o</sup>:.<br><small>N<sup>o</sup> Contribuable</small></p>
+    <p>Service Provider's Or Corporate Name: {{boncommande.idsociete}}  <br><br><small>Nom Ou Raison Sociale Du Prestataire:</small><br><br>
+    Address: {{boncommande.idsociete.boite_postale}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Tel:  {{boncommande.idsociete.contact}}  <br><small>Adresse</small><br><br>
+    Taxe Payer N<sup>o</sup>:.<br><small>N<sup>o</sup> Contribuable</small></p>
  
 
     <table>
@@ -161,11 +177,26 @@ table::before {
         <tfoot>
           <tr>
             <td scope="row" colspan="4" > <p style="text-align: center;font-family: bold;">Montant Total:</p></td>
-            <td>...............</td>
+            <td>{{montant_total}}</td>
           </tr>
         </tfoot>
     </table>
-    <p>The Parties Adopt This Order At: <br><small>Les Parties Arretent La Presente Commande a:</small></p>
-
-  </body>
+    <p style="font-style: italic;">The Parties Adopt This Order At: ...................................................................................................................................................................................................<br><small>Les Parties Arretent La Presente Commande a:</small><br><br>
+    Total Price ET: ....................................................................................................................................................................................................<br><small>Prix Total HT:</small><br><br>
+    VAT: <br><small>TVA: {{boncommande.idtva.nom}}.........................................................................................................................................................................................................................................................</small><br><br>
+    Total Price IT :&nbsp; {{montant_lettres }}.....................................................................................................................................................................................<br><small>Prix Total TTC:</small><br><br>
+    Supply Date Line: ....................................................................................................................................................................................................<br><small>Date De Livraison:</small></p>
+<h6 style="font-weight: bold; text-align: center;font-size: 12px;">Date At.....................................................................................................................................  This .............................</h6>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $('#qrcode').qrcode({
+      text: "{{boncommande.code}}", // Remplacez par l'URL ou le texte que vous souhaitez encoder
+      width: 128,
+      height: 128
+    });
+  });
+</script> 
+</body>
 </html>

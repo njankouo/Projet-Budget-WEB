@@ -175,6 +175,18 @@
                             </div>
                             <div class="col-md-6">
                               <div class="form-floating">
+                                <input type="Matricule" class="form-control" id="floatingEmail" placeholder=" Matricule" name="matricule">
+                                <label for="floatingEmail"> Matricule</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-floating">
+                                <input type="Grade" class="form-control" id="floatingEmail" placeholder=" Grade" name="grade">
+                                <label for="floatingEmail"> Grade</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-floating">
                                 <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
                                 <label for="floatingPassword">Password</label>
                               </div>
@@ -240,7 +252,8 @@
                     <th style="width: 25%;">Nom</th>
                     <th style="width: 25%;">Email</th>
                     <th style="width: 25%;">Telephone</th>
-                   
+                    <th style="width: 25%;">Matricule</th>
+                    <th style="width: 25%;">Grade</th>
                     <th style="width: 25%;">Actions</th>
                   </tr>
                 </thead>
@@ -260,6 +273,12 @@
                     <td>
                     {{user.telephone}}
                     </td>
+                    <td>
+                      {{user.matricule}}
+                      </td>
+                      <td>
+                        {{user.grade}}
+                        </td>
                    <td>
                     <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
        

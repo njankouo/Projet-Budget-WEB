@@ -418,8 +418,19 @@ class Adresse(models.Model):
 
     def __str__(self):
         return self.nom
+class Role(models.Model):
+    NOM_ROLES={
+        'SA':'SuperAdministrateur',
+        'A':'Administrateur',
+        'SU':'Simple Utilisateur'
+    }
+    nom=models.CharField(null=True,max_length=255,choices=NOM_ROLES)
 
+    class META:
+        db_table='role'
 class Utilisateur(models.Model):
+    grade = models.CharField(null=True,max_length=255)
+    matricule= models.CharField(null=True,max_length=255)
     nom=models.CharField(max_length=255,null=True)
     prenom=models.CharField(max_length=255,null=True)
     date_enregistre=models.DateTimeField(null=True,blank=True)
@@ -431,6 +442,7 @@ class Utilisateur(models.Model):
     photo = models.FileField(null=True)
     telephone = models.IntegerField(null=True)
     last_login = models.DateTimeField(null=True, blank=True)  # Ajoutez ce champ
+    idrole = models.ManyToManyField(Role,null=True)
 
     # idarrondissement=models.ForeignKey(Arrondissement, on_delete=models.CASCADE, null=True,blank=True, db_column='idarrondissement')
     # idstatut_matrimonial=models.ForeignKey(Statutmatrimonial, on_delete=models.CASCADE, null=True,blank=True, db_column='idstatut_matrimonial')
@@ -1590,7 +1602,7 @@ class Ligne_decision(models.Model):
 class Ligneboncommande(models.Model):
     prixunitaire=models.CharField(max_length=255,null=True)
     quantite=models.CharField(max_length=255,null=True)
-    total=models.CharField(max_length=255,null=True)
+    total=models.IntegerField(null=True)
     prixmercurial=models.CharField(max_length=255,null=True)
     verif=models.CharField(max_length=255,null=True)
     references=models.CharField(max_length=255,null=True)
@@ -2180,7 +2192,14 @@ class Sousrogramme1(models.Model):
 
     def __str__(self):
         return self.nom
-    
+
+class Decision(models.Model):
+    numero = models.CharField(null=True,max_length=255)
+    date = models.DateField(null=True)
+    objet= models.CharField(max_length=255,null=True)
+    montant=models.CharField(null=True)
+    iduser = models.ForeignKey(Utilisateur,on_delete=models.CASCADE,null=True)
+
 
 
 

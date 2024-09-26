@@ -157,7 +157,8 @@ urlpatterns = [
     path('valid_paiement/<int:id>/',views.valid_paiement,name='valid_paiement'),
 
     path('search_annee/',views.search_annee,name='search_annee'),
-    path('search_montant/',views.search_montant,name='search_montant')
+    path('search_montant/',views.search_montant,name='search_montant'),
+    path('serve_qr_code/',views.serve_qr_code,name='serve_qr_code')
 
 
 

@@ -226,7 +226,7 @@
      
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande</h5>
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande {{bon_commande_id}}</h5>
               <form class="row g-3" method="POST" action="/add_ligne_commande/">
                 {%csrf_token%}
 
@@ -369,9 +369,8 @@
         </thead>
         <tbody>
      
-            {%for ligneboncommandes in ligneboncommande%}
-            {%if boncommande.id == ligneboncommandes.idboncommande_id%}
-
+            {%for ligneboncommandes in lignecommande%}
+           
             <tr>
                
                 <td>{{ligneboncommandes.idelementcout}}
@@ -387,7 +386,7 @@
                        <a href='/delete_commande/{{ligneboncommandes.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
                 </td>
               </tr>
-              {%endif%}
+             
             {%endfor%}
             <tr>  
                 <td colspan="3" style="text-align: right;"><strong>Total Général :</strong></td>  
