@@ -517,11 +517,12 @@ def add_reference(request):
             cu = request.POST['cu']
             rubrique = request.POST['rubrique']
             sous_rubrique = request.POST['sous_rubrique']
+            conditionnement = request.POST['conditionnement']
             instance_rubrique = Rubrique.objects.get(id=int(rubrique))
             instance_sous_rubrique = Sousrubrique.objects.get(id=int(sous_rubrique))
            
             concatene=concatene = generate_unique_code()  
-            save_element = Elementcout.objects.create(code=concatene,nom=libelle,prixunitaire=cu,idrubriquemercurial=instance_rubrique,idsousrubriquemercurial=instance_sous_rubrique)
+            save_element = Elementcout.objects.create(conditionnement=conditionnement,code=concatene,nom=libelle,prixunitaire=cu,idrubriquemercurial=instance_rubrique,idsousrubriquemercurial=instance_sous_rubrique)
             save_element.save()
             messages.success(request,'Enregistrement Reussi')
             return redirect('/references/')
@@ -820,7 +821,8 @@ def search_operations(request):
 def add_commande(request):  
     if request.method == 'POST':  
         try:  
-            # societe = request.POST['societe']  
+            societe = request.POST['societe']  
+            institution = request.POST['institution']
             numero_commande = request.POST['numero_commande']  
             # operations = request.POST['operations']  
             # sous_programme = request.POST['sous_programme']  
@@ -830,7 +832,8 @@ def add_commande(request):
             ir = request.POST['ir']  # Corrigé pour utiliser 'ir' au lieu de 'tva'  
 
             # Récupération des instances  
-            # instance_societe = Societe.objects.get(id=int(societe))  
+            instance_institution=Institution.objects.get(id=int(institution))
+            instance_societe = Societe.objects.get(id=int(societe))  
             # instance_operation = Operation.objects.get(id=int(operations))  
             # instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
             # instance_activite = Activite.objects.get(id=int(activite))  
@@ -841,7 +844,8 @@ def add_commande(request):
             # Création de l'instance de Boncommande  
             save_commande = Boncommande(  
                 code=numero_commande,  
-                # idsociete=instance_societe,  
+                idsociete=instance_societe,  
+                idinstitution=instance_institution,
                 # idoperation=instance_operation,  
                 # idsousprogramme=instance_sous_programme,  
                 # idactivite=instance_activite,  
@@ -909,11 +913,13 @@ def fiche_bon(request, id):
     # Fetch Boncommande data
     try:
         boncommande = Boncommande.objects.get(id=int(id))
+        ligneboncommande = Ligneboncommande.objects.filter(idboncommande=boncommande)
+        detail_bon_commande=DetailBonCommande.objects.filter(idboncommande=boncommande)
     except Boncommande.DoesNotExist:
         return HttpResponse("Boncommande not found.", status=404)
 
     # Prepare context
-    context = {'boncommande': boncommande}
+    context = {'boncommande': boncommande,'ligneboncommande':ligneboncommande,'detail_bon_commande':detail_bon_commande}
 
     # Render the template with the context
     html = template.render(context)
@@ -1045,8 +1051,11 @@ def engagements(request):
    
     tva =Tva.objects.all()
     ir=Ir.objects.all()
+    institution = Institution.objects.all()
+    societe=Societe.objects.all()
+
     boncommande =Boncommande.objects.filter(status__in=[0,1])
-    context={'tva':tva,'ir':ir,'boncommande':boncommande}
+    context={'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
 
     return render(request,template,context)
 
@@ -1325,7 +1334,7 @@ def add_operation_commande(request):
             activite_id = request.POST['activite']  
             tache_id = request.POST['tache']  
             paragraphes = request.POST.getlist('paragraphe', [])  
-            societe_id = request.POST['prestataire']  
+            # societe_id = request.POST['prestataire']  
             boncommande_id = request.POST['boncommande']  
 
             instance_operation = Operation.objects.get(id=int(operation_id))  
@@ -1333,7 +1342,7 @@ def add_operation_commande(request):
             instance_activite = Activite.objects.get(id=int(activite_id))  
             instance_tache = Tache.objects.get(id=int(tache_id))  
             instance_boncommande = Boncommande.objects.get(id=int(boncommande_id))  
-            instance_societe = Societe.objects.get(id=int(societe_id))  
+            # instance_societe = Societe.objects.get(id=int(societe_id))  
             print(paragraphes)
             # Création de détails pour chaque paragraphe  
             for paragraphe_id in paragraphes:  
@@ -1343,7 +1352,7 @@ def add_operation_commande(request):
                     idoperation=instance_operation,  
                     idparagraphe=instance_paragraphe,  
                     idsousprogramme=instance_sous_programme,  
-                    idsociete=instance_societe,  
+                    # idsociete=instance_societe,  
                     idtache=instance_tache,  
                     idactivite=instance_activite,  
                     idboncommande=instance_boncommande  

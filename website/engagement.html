@@ -555,6 +555,26 @@ input[type="radio"]:checked + div::before {
                       </select>
                     
               </div>
+              <div class="col-md-6">
+                <label >Institution</label>
+                <select class="form-control" name="institution" id="institution">
+                  <option>selectionnez Une Institution</option>
+                  {%for institutions in institution%}
+                    <option value="{{institutions.id}}">{{institutions.nom}}</option>
+                    {%endfor%}
+                </select>
+              
+        </div>
+        <div class="col-md-6">
+          <label >Prestataire</label>
+          <select class="form-control" name="societe" id="prestataire">
+            <option>selectionnez Un Prestataire</option>
+            {%for societes in societe%}
+              <option value="{{societes.id}}">{{societes.nom}}</option>
+              {%endfor%}
+          </select>
+        
+  </div>
           </div>
             </div>
       
@@ -669,8 +689,20 @@ create: true
 });
 </script>
 
-
-
+<script>
+  new TomSelect("#institution",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+<script>
+  new TomSelect("#prestataire",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
 <script>  
   $(document).ready(function() {  
     $('#operation').on('change', function() {  

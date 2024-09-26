@@ -139,6 +139,7 @@
             <th style="width: 5%;">Code</th>
             <th style="width: 30%;">Libelle</th>
             <th style="width: 15%;">Cu</th>
+            <th style="width: 15%;">Conditionnement</th>
             <th style="width: 30%;">Rubrique</th>
             <th style="width: 35%;">Sous-Rubrique</th>
             <th style="width: 25%;">Actions</th>
@@ -153,7 +154,7 @@
             <td>{{references.nom}}</td>
            
             <td>{{references.prixunitaire}}</td>
-            
+            <td>{{references.conditionnement}}</td>
             <td>{{references.idrubriquemercurial}}</td>
             <td>{{references.idsousrubriquemercurial}}</td>
             <td>
@@ -184,7 +185,7 @@
                   <!-- No Labels Form -->
                   <form class="row g-3" method="POST" action="/add_reference/">
                     {%csrf_token%}
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label for="libelle">Libelle</label>
                       <input type="text" class="form-control" placeholder="Libelle" name="libelle">
                     </div>
@@ -192,6 +193,10 @@
                         <label for="Cu">Cout Unitaire</label>
                       <input type="text" class="form-control" placeholder="Cout Unitaire" name="cu">
                     </div>
+                    <div class="col-md-6">
+                      <label for="Conditionnement">Conditionnement</label>
+                    <input type="text" class="form-control" placeholder="Conditionnement" name="conditionnement">
+                  </div>
                     <div class="col-md-6">
                         <label for="rubrique">Rubrique</label>
                       <select class="form-control" name="rubrique" id="rubrique">

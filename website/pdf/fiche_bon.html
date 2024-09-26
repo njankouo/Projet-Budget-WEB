@@ -1,35 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-<style>
-table, td, th {
-  border: 1px solid;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+
+      h2 {
+          text-align: center;
+          color: #333;
+          margin-bottom: 5px; /* Réduit l'espace sous le titre */
+      }
+
+      h3 {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1; 
+    margin-top: 5px; /* Ajustez cette valeur pour remonter le titre */
+    margin-bottom: 5px; /* Ajustez également l'espace en bas si nécessaire */
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+
+      p {
+        margin: 2px 0; /* Ajustez les valeurs ici pour réduire l'espace */
+    line-height: 1; /* Ajustez également la hauteur de ligne si nécessaire */
+    font-size: 13px;
+    font-weight: bold;
+    font-family: forte;
+      }
+
+      table {
+    width: 80%; /* Ajusté pour centrer le tableau */
+    margin: 10px auto; /* Centre le tableau */
+    border-collapse: collapse;
+    border: 3px double black; /* Double contour */
+    position: relative; /* Nécessaire pour le pseudo-élément */
 }
-</style>
+
+table::before {
+    content: '';
+    position: absolute;
+    top: -5px; /* Ajustez pour l'espacement */
+    left: -5px; /* Ajustez pour l'espacement */
+    right: -5px; /* Ajustez pour l'espacement */
+    bottom: -5px; /* Ajustez pour l'espacement */
+    border: 3px double rgb(33, 13, 145); /* Double contour extérieur */
+    pointer-events: none; /* Ignore les événements de souris */
+}
+
+
+      th, td {
+          padding: 6px;
+          text-align: center;
+          border: 1px solid #e0e0e0;
+      }
+
+      th {
+          background-color: #123563;
+          color: white;
+      }
+
+      .container {
+            display: flex; /* Utilise Flexbox pour l'alignement */
+            justify-content: space-between; /* Espace entre les éléments */
+            align-items: flex-start; /* Aligne les éléments en haut */
+            margin: 10px; /* Espace autour du conteneur */
+        }
+
+        
+        h4 {
+            font-weight: bold;
+            font-size: 10px;
+            margin: 0; 
+           /* Supprime les marges par défaut */
+        }
+
+        .service-info {
+            text-align: right; /* Aligne le texte à droite */
+        }
+        .card {
+    position: relative; /* Nécessaire pour le pseudo-élément */
+    border: 1px solid black; /* Contour intérieur */
+    border-radius: 12px; /* Arrondi des coins */
+    padding: 10px; /* Ajoutez du padding si nécessaire */
+    z-index: 1; /* Assure que le contenu est au-dessus du contour */
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -5px; /* Ajustez pour l'espacement */
+    left: -5px; /* Ajustez pour l'espacement */
+    right: -5px; /* Ajustez pour l'espacement */
+    bottom: -5px; /* Ajustez pour l'espacement */
+    border: 3px solid black; /* Contour extérieur */
+    border-radius: 12px; /* Arrondi des coins */
+    z-index: -1; /* Positionne le contour derrière la carte */
+}
+
+  </style>
+    <title>Bon De Commande</title>
 </head>
 <body>
+  
+  <div class="container">
+  
+    <h4 class="service-info">
+        REPUBLIC OF CAMEROON <br>&nbsp;
+        <small>Peace-Work-Fatherland</small><br>
+        REPUBLIQUE DU CAMEROUN <br>&nbsp;
+        <small>Paix-Travail-Patrie</small><br>
+        APO No. / BCA N<sup>o</sup>.
+    </h4>
+ <p> SERVICE:   {{boncommande.idinstitution}}<br><br>
+  {{boncommande.code}}</p>
+</div>
+<div class="card">
 
-<h2>Let the table borders collapse</h2>
+    <h3>ADMINISTRATIVE PURCHASE ORDER / BON DE COMMANDE ADMINISTRATIF <br> <br>
+      <small>Undermentioned Equipments And Items. Pour Les Matieres Et Objects Ci-Apres :</small>
+    </h3>
+  </div>
+    <p>Service Provider's Or Corporate Name: {{boncommande.idsociete}}  <br><br><small>Nom Ou Raison Sociale Du Prestataire:</small></p>
+    <p>Address: {{boncommande.idsociete.boite_postale}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Tel:  {{boncommande.idsociete.contact}}  <br><small>Adresse</small></p>
+    <p>Taxe Payer N<sup>o</sup>:.<br><small>N<sup>o</sup> Contribuable</small></p>
+ 
 
-<table>
-  <tr>
-    <th>Firstname</th>
-    <th>Lastname</th>
-  </tr>
-  <tr>
-    <td>Peter</td>
-    <td>Griffin</td>
-  </tr>
-  <tr>
-    <td>Lois</td>
-    <td>Griffin</td>
-  </tr>
-</table>
+    <table>
 
-</body>
+        <thead>
+            <tr>
+                <th>QTY <br><small>QTES</small></th>
+                <th>PACKAGING<br> <small>CONDITIONNEMENT</small></th>
+                <th>ITEM <br> <small>DESIGNATION</small></th>
+                <th class="number-right">UP<br> <small>PU</small></th>
+                <th class="number-right">T.P.ET<br> <small>P.T.HT</small></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in ligneboncommande %}
+            {%if boncommande.status == 1%}
+                <tr>
+                    <td>{{ line.quantite }}</td>
+                    <td>-</td>
+                    <td>{{ line.idelementcout }}</td>
+                    <td class="number-right">{{ line.prixunitaire }}</td>
+                    <td class="number-right">{{ line.total }}</td>
+                </tr>
+                {%endif%}
+            {% endfor %}
+           
+            
+          
+        </tbody>
+        <tfoot>
+          <tr>
+            <td scope="row" colspan="4" > <p style="text-align: center;font-family: bold;">Montant Total:</p></td>
+            <td>...............</td>
+          </tr>
+        </tfoot>
+    </table>
+    <p>The Parties Adopt This Order At: <br><small>Les Parties Arretent La Presente Commande a:</small></p>
+
+  </body>
 </html>
