@@ -34,7 +34,7 @@
     font-family: forte;
       }
 
-      table {
+      .tabs {
     width: 80%; /* Ajusté pour centrer le tableau */
     margin: 10px auto; /* Centre le tableau */
     border-collapse: collapse;
@@ -42,7 +42,7 @@
     position: relative; /* Nécessaire pour le pseudo-élément */
 }
 
-table::before {
+.tabs::before {
     content: '';
     position: absolute;
     top: -5px; /* Ajustez pour l'espacement */
@@ -121,7 +121,11 @@ table::before {
             {{ boncommande.code }}
         </p>
     </div></th>
-    <!-- <th><img src="{% static 'img/nasla.jpeg' %}" alt="Description de l'image" height="90"> </th> -->
+    <th>
+      <img src="{{ image_url }}" alt="Description de l'image" height="90" style="border-radius: 15px;">
+
+    </th>
+  
     <th><div class="republique-block" style="display: inline-block;">
       <h4 class="service-info">
           REPUBLIC OF CAMEROON <br>&nbsp;
@@ -147,7 +151,7 @@ table::before {
     Taxe Payer N<sup>o</sup>:.<br><small>N<sup>o</sup> Contribuable</small></p>
  
 
-    <table>
+    <table class="tabs">
 
         <thead>
             <tr>

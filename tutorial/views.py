@@ -919,6 +919,7 @@ from django.template.loader import get_template
 from django.utils.translation import gettext as _
 import num2words
 
+from django.templatetags.static import static
 def fiche_bon(request, id):
     template_path = "../website/pdf/fiche_bon.html"
     
@@ -931,6 +932,7 @@ def fiche_bon(request, id):
 
     # Fetch Boncommande data
     try:
+        image_url = 'website/static/img/nasla.jpeg'
         boncommande = Boncommande.objects.get(id=int(id))
         ligneboncommande = Ligneboncommande.objects.filter(idboncommande=boncommande)
         detail_bon_commande=DetailBonCommande.objects.filter(idboncommande=boncommande)
@@ -945,7 +947,7 @@ def fiche_bon(request, id):
         return HttpResponse("Boncommande not found.", status=404)
 
     # Prepare context
-    context = {'montant_lettres':montant_lettres,'montant_total':montant_total,'boncommande': boncommande,'ligneboncommande':ligneboncommande,'detail_bon_commande':detail_bon_commande}
+    context = {'image_url':image_url,'montant_lettres':montant_lettres,'montant_total':montant_total,'boncommande': boncommande,'ligneboncommande':ligneboncommande,'detail_bon_commande':detail_bon_commande}
      
     # Render the template with the context
     html = template.render(context)
