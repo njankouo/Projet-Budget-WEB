@@ -158,7 +158,15 @@ urlpatterns = [
 
     path('search_annee/',views.search_annee,name='search_annee'),
     path('search_montant/',views.search_montant,name='search_montant'),
-    path('serve_qr_code/',views.serve_qr_code,name='serve_qr_code')
+    path('serve_qr_code/',views.serve_qr_code,name='serve_qr_code'),
+    path('certificat/<int:id>/',views.certificat,name='certificat'),
+    path('fiche/<int:id>/',views.fiche,name='fiche'),
+    path('add_lettre_commande/',views.add_lettre_commande,name='add_lettre_commande'),
+
+    path('add_operation_lettre/<int:id>/',views.add_operation_lettre,name='add_operation_lettre'),
+    path('add_operation_lettre_commande/',views.add_operation_lettre_commande,name='add_operation_lettre_commande'),
+
+    path('add_references_lettre/<int:id>/',views.add_references_lettre,name='add_references_lettre')
 
 
 

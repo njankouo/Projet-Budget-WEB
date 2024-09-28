@@ -1081,9 +1081,10 @@ def engagements(request):
     ir=Ir.objects.all()
     institution = Institution.objects.all()
     societe=Societe.objects.all()
+    lettrecommande=LettreCommande.objects.all()
 
     boncommande =Boncommande.objects.filter(status__in=[0,1])
-    context={'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
+    context={'lettrecommande':lettrecommande,'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
 
     return render(request,template,context)
 
@@ -1539,3 +1540,234 @@ def search_montant(request):
         montant = None  # Aucun enregistrement correspondant trouvé  
 
     return JsonResponse({'montant': montant})
+
+from xhtml2pdf import pisa  
+from django.http import HttpResponse  
+from django.template.loader import get_template  
+from django.core.exceptions import ObjectDoesNotExist  
+import io  
+
+def certificat(request, id):  
+    template_path = "../website/pdf/certificat.html"  
+
+    # Essayer de récupérer le modèle  
+    try:  
+        template = get_template(template_path)  
+    except TemplateDoesNotExist:  
+        print(f"Error: Template '{template_path}' not found.")  
+        return HttpResponse("Template not found.", status=404)  
+
+    # Récupérer les données de Boncommande  
+    try:  
+        image_url = 'website/static/img/nasla.jpeg'  
+        boncommande = Boncommande.objects.get(id=int(id))  
+        detail = DetailBonCommande.objects.filter(idboncommande=id).distinct('idsousprogramme','idactivite','idtache')
+    except Boncommande.DoesNotExist:  
+        return HttpResponse("Boncommande not found.", status=404)  
+
+    # Préparer le contexte  
+    context = {'detail':detail,'image_url': image_url, 'boncommande': boncommande}  
+
+    # Rendre le modèle avec le contexte  
+    html = template.render(context)  
+
+    # Créer un objet BytesIO pour contenir le contenu PDF  
+    result = io.BytesIO()  
+
+    # Convertir HTML en PDF avec pisa  
+    try:  
+        # Définir une taille de page personnalisée (par exemple, 1200x600 points)  
+        page_size = (1200, 600)  # Largeur, hauteur en points  
+
+        pisa_status = pisa.CreatePDF(  
+            html.encode("UTF-8"),  
+            dest=result,  
+            show_page_numbers=True,  
+            page_size=page_size,  
+            inline_css=True,  
+        )  
+
+        # Vérifier les erreurs  
+        if pisa_status.err:  
+            return HttpResponse("Error generating PDF.", status=500)  
+
+        return HttpResponse(result.getvalue(), content_type='application/pdf')  
+
+    except Exception as e:  
+        print(f"Error generating PDF: {e}")  
+        return HttpResponse("Error generating PDF.", status=500)  
+
+    return HttpResponse("No content generated.", status=204)  
+
+
+
+def fiche(request, id):  
+    template_path = "../website/pdf/facture.html"  
+
+    # Essayer de récupérer le modèle  
+    try:  
+        template = get_template(template_path)  
+    except TemplateDoesNotExist:  
+        print(f"Error: Template '{template_path}' not found.")  
+        return HttpResponse("Template not found.", status=404)  
+
+    # Récupérer les données de Boncommande  
+    try:  
+        image_url = 'website/static/img/nasla.jpeg'  
+        boncommande = Boncommande.objects.get(id=int(id))  
+        detail = DetailBonCommande.objects.filter(idboncommande=id).distinct('idsousprogramme','idactivite','idtache')
+
+    except Boncommande.DoesNotExist:  
+        return HttpResponse("Boncommande not found.", status=404)  
+
+    # Préparer le contexte  
+    context = {'detail':detail,'image_url': image_url, 'boncommande': boncommande}  
+
+    # Rendre le modèle avec le contexte  
+    html = template.render(context)  
+
+    # Créer un objet BytesIO pour contenir le contenu PDF  
+    result = io.BytesIO()  
+
+    # Convertir HTML en PDF avec pisa  
+    try:  
+        # Définir une taille de page personnalisée (par exemple, 1200x600 points)  
+        page_size = (1200, 600)  # Largeur, hauteur en points  
+
+        pisa_status = pisa.CreatePDF(  
+            html.encode("UTF-8"),  
+            dest=result,  
+            show_page_numbers=True,  
+            page_size=page_size,  
+            inline_css=True,  
+        )  
+
+        # Vérifier les erreurs  
+        if pisa_status.err:  
+            return HttpResponse("Error generating PDF.", status=500)  
+
+        return HttpResponse(result.getvalue(), content_type='application/pdf')  
+
+    except Exception as e:  
+        print(f"Error generating PDF: {e}")  
+        return HttpResponse("Error generating PDF.", status=500)  
+
+    return HttpResponse("No content generated.", status=204)  
+
+def add_lettre_commande(request):
+    if request.method == 'POST':
+        try:
+            tva = request.POST['tva']
+            ir = request.POST['ir']
+            societe=request.POST['societe']
+            institution=request.POST['institution']
+            numero_lettre = request.POST['numero_lettre']
+
+            instance_tva= Tva.objects.get(id=int(tva))
+            instance_ir=Ir.objects.get(id=int(ir))
+            instance_societe=Societe.objects.get(id=int(societe))
+            instance_institution=Institution.objects.get(id=int(institution))
+
+            save_lettre=LettreCommande.objects.create(
+                idtva=instance_tva,
+                idir=instance_ir,
+                idsociete=instance_societe,
+                idinstitution=instance_institution,
+                numero_lettre=numero_lettre
+            )
+            save_lettre.save()
+            messages.success(request,'Enregistrement Reussi')
+        except Exception as e:
+            messages.error(request,f'Erreur Survenue: {e}')
+        return redirect(request.META.get('HTTP_REFERER','/'))
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def add_operation_lettre(request,id):
+    template ='../website/lettrecommande.html'
+    operation = Operation.objects.all()
+    lettre =LettreCommande.objects.get(id=int(id))
+    detail_lettre_commande = DetailLettreCommande.objects.filter(idlettrecommande=id)
+    context={
+        'lettre':lettre,
+        'operation':operation,
+        'detail_lettre_commande':detail_lettre_commande
+    }
+    return render(request,template,context)
+
+def add_operation_lettre_commande(request):
+    if request.method == 'POST':  
+        try:  
+            operation_id = request.POST['operation']  
+            sous_programme_id = request.POST['sous_programme']  
+            activite_id = request.POST['activite']  
+            tache_id = request.POST['tache']  
+            paragraphes = request.POST.getlist('paragraphe', [])  
+            # societe_id = request.POST['prestataire']  
+            lettre = request.POST['lettre']  
+
+            instance_operation = Operation.objects.get(id=int(operation_id))  
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme_id))  
+            instance_activite = Activite.objects.get(id=int(activite_id))  
+            instance_tache = Tache.objects.get(id=int(tache_id))  
+            instance_lettre_commande = LettreCommande.objects.get(id=int(lettre))  
+            # instance_societe = Societe.objects.get(id=int(societe_id))  
+            print(paragraphes)
+            # Création de détails pour chaque paragraphe  
+            for paragraphe_id in paragraphes:  
+                instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe_id))  
+                
+                save_lettrecommande = DetailLettreCommande.objects.create(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idsousprogramme=instance_sous_programme,  
+                    # idsociete=instance_societe,  
+                    idtache=instance_tache,  
+                    idactivite=instance_activite,  
+                    idlettrecommande=instance_lettre_commande  
+                )  
+                save_lettrecommande.save()  
+
+            messages.success(request, 'Enregistrement Reussi')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        
+        except Operation.DoesNotExist:  
+            messages.error(request, 'L\'opération spécifiée n\'existe pas.')  
+        except Sousprogramme.DoesNotExist:  
+            messages.error(request, 'Le sous-programme spécifié n\'existe pas.')  
+        except Activite.DoesNotExist:  
+            messages.error(request, 'L\'activité spécifiée n\'existe pas.')  
+        except Tache.DoesNotExist:  
+            messages.error(request, 'La tâche spécifiée n\'existe pas.')  
+        except Paragraphe.DoesNotExist:  
+            messages.error(request, 'Le paragraphe spécifié n\'existe pas.')  
+        except Boncommande.DoesNotExist:  
+            messages.error(request, 'Le bon de commande spécifié n\'existe pas.')  
+        except Societe.DoesNotExist:  
+            messages.error(request, 'La société spécifiée n\'existe pas.')  
+        except Exception as e:  
+            messages.error(request, f'une erreur est survenue: {e}')  
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
+   
+def add_references_lettre(request, id):
+    # Récupérer la lettre de commande
+    try:
+        lettre = LettreCommande.objects.get(id=int(id))
+    except LettreCommande.DoesNotExist:
+        return HttpResponse("Lettre de commande non trouvée.", status=404)
+
+    # Récupérer les détails de la lettre de commande
+    detail_lettre_commande = DetailLettreCommande.objects.filter(idlettrecommande=lettre)
+    
+    # Rassembler les opérations liées
+    operation_liee = [detail.idoperation for detail in detail_lettre_commande]
+
+    # Préparer le contexte pour le rendu
+    context = {
+        'lettre': lettre,
+        'operation_liee': operation_liee
+    }
+
+    # Spécifier le modèle à utiliser pour le rendu
+    template = '../website/ligneLettrecommande.html'
+    return render(request, template, context)

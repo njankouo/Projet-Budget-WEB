@@ -450,6 +450,13 @@ input[type="radio"]:checked + div::before {
                 <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
                 {%if bon.status == 1%}
                 <li><a class="dropdown-item" href="/fiche_bon/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Generer Bon Commnade</a></li>
+
+                <li><a class="dropdown-item" href="/fiche/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Generer Fiche De Bon </a></li>
+             
+                <li><a class="dropdown-item" href="/certificat/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
+             
+                <li><a class="dropdown-item" href="/autorisation/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Generer Autorisation D'engagement</a></li>
+             
                 {%endif%}
               </ul>
             </div>
@@ -477,7 +484,7 @@ input[type="radio"]:checked + div::before {
                 <h5 class="card-title">Renseignez Les Informations Relatives Aux Bons De COmmandes</h5>
   
                 <!-- No Labels Form -->
-                <form class="row g-3" method="POST" action="/add_commande/">
+                <form class="row g-3" method="POST" action="/add_lettrecommande/">
                   {%csrf_token%}
 
                   <div class="col-md-12">
@@ -653,25 +660,25 @@ input[type="radio"]:checked + div::before {
           </thead>
           <tbody>
     
-            {%for bon in boncommande%}
+            {%for lettre in lettrecommande%}
             <tr>
              
               <td style="font-weight: bold;">
                 
-                <a href="/add_references/{{bon.id}}/"> <i class="bi bi-journal-text"></i>   {{bon.code}}      </a>
+                <a href="/add_references/{{bon.id}}/"> <i class="bi bi-journal-text"></i>   {{lettre.numero_lettre}}      </a>
               </td>
               <!-- <td>{{bon.idoperation}}</td>
              
               <td>{{bon.idsousprogramme}}</td>
               <td>{{bon.idactivite}}</td> -->
-              <td>{{bon.idtva.nom}}</td>
-              <td>{{bon.idir.nom}}</td>
+              <td>{{lettre.idtva.nom}}</td>
+              <td>{{lettre.idir.nom}}</td>
               <td>
                 <label>
-                  {%if bon.status == 1%}
+                  {%if lettre.status == 1%}
                   <input type="checkbox" name="checkboxYannis" checked/>  
                   <div class="btn btn-sık"><span>Valide</span></div>
-                  {%elif bon.status == 0%}  
+                  {%elif lettre.status == 0%}  
                   <input type="checkbox" name="checkboxYannis"/>  
                     <div class="btn btn-sık"><span>Non Valide</span></div>
                     {%endif%}
@@ -684,18 +691,18 @@ input[type="radio"]:checked + div::before {
                <i class="bi bi-ui-checks"></i>     Outils
                   </button>
                   <ul class="dropdown-menu">
-                    {%if bon.status == 0%}
-                    <form method="POST" action="/valid/{{bon.id}}/">
+                    {%if lettre.status == 0%}
+                    <form method="POST" action="/valid/{{lettre.id}}/">
                       {%csrf_token%}
                     <li><button type='submit' class="dropdown-item btn btn-success"><i class="bi bi-check-circle-fill"></i> Valider</button></li>
                   </form>
                   {%endif%}
-                    <li><a class="dropdown-item" href="/add_operations/{{bon.id}}/"><i class="bi bi-plus-square-dotted"></i> Ajouter Operation</a></li>
+                    <li><a class="dropdown-item" href="/add_operation_lettre/{{lettre.id}}/"><i class="bi bi-plus-square-dotted"></i> Ajouter Operation</a></li>
                   
                     <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
                     <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
-                    {%if bon.status == 1%}
-                    <li><a class="dropdown-item" href="/fiche_bon/{{bon.id}}/"> <i class="bi bi-printer-fill"></i>Generer Bon Commnade</a></li>
+                    {%if lettre.status == 1%}
+                    <li><a class="dropdown-item" href="/fiche_bon/{{lettre.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
                     {%endif%}
                   </ul>
                 </div>
@@ -728,7 +735,7 @@ input[type="radio"]:checked + div::before {
     
                       <div class="col-md-12">
                         <label >Numero De Lettre Commande</label>
-                    <input type="text" name="numero_commande" class="form-control" placeholder="Numero De Commande">
+                    <input type="text" name="numero_lettre" class="form-control" placeholder="Numero De Commande">
                     </div>
     
                       <!-- <div class="col-md-6">

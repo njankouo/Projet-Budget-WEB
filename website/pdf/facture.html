@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+
+      h2 {
+          text-align: center;
+          color: #333;
+          margin-bottom: 5px; /* Réduit l'espace sous le titre */
+      }
+
+      h3 {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1; 
+    margin-top: 5px; /* Ajustez cette valeur pour remonter le titre */
+    margin-bottom: 5px; /* Ajustez également l'espace en bas si nécessaire */
+}
+
+
+      p {
+        margin: 2px 0; /* Ajustez les valeurs ici pour réduire l'espace */
+    line-height: 1; /* Ajustez également la hauteur de ligne si nécessaire */
+    font-size: 13px;
+    font-weight: bold;
+    font-family: forte;
+      }
+
+      .tabs {
+    width: 100%; /* Ajusté pour centrer le tableau */
+    margin: 10px auto; /* Centre le tableau */
+    border-collapse: collapse;
+    border: 3px double black; /* Double contour */
+    position: relative; /* Nécessaire pour le pseudo-élément */
+}
+
+.tabs::before {
+    content: '';
+    position: absolute;
+    top: -5px; /* Ajustez pour l'espacement */
+    left: -5px; /* Ajustez pour l'espacement */
+    right: -5px; /* Ajustez pour l'espacement */
+    bottom: -5px; /* Ajustez pour l'espacement */
+    border: 3px double rgb(33, 13, 145); /* Double contour extérieur */
+    pointer-events: none; /* Ignore les événements de souris */
+}
+
+
+      th, td {
+          padding: 6px;
+          text-align: center;
+          border: 1px solid #e0e0e0;
+      }
+
+      .ths {
+          background-color: #123563;
+          color: white;
+      }
+
+     
+
+        
+        h4 {
+            font-weight: bold;
+            font-size: 10px;
+            margin: 0; 
+           /* Supprime les marges par défaut */
+        }
+
+   
+        .card {
+    position: relative; /* Nécessaire pour le pseudo-élément */
+    border: 1px solid black; /* Contour intérieur */
+    border-radius: 12px; /* Arrondi des coins */
+    padding: 10px; /* Ajoutez du padding si nécessaire */
+    z-index: 1; /* Assure que le contenu est au-dessus du contour */
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -5px; /* Ajustez pour l'espacement */
+    left: -5px; /* Ajustez pour l'espacement */
+    right: -5px; /* Ajustez pour l'espacement */
+    bottom: -5px; /* Ajustez pour l'espacement */
+    border: 3px solid black; /* Contour extérieur */
+    border-radius: 12px; /* Arrondi des coins */
+    z-index: -1; /* Positionne le contour derrière la carte */
+}
+.service-block, .republique-block {
+  display: inline-block;
+  width: 30%; /* Chaque bloc occupera 30% de la largeur disponible */
+  vertical-align: top;
+  padding: 10px;
+}
+
+
+
+
+  </style>
+  {%load static%}
+    <title>CERTIFICAT D'ENGAGEMENT</title>
+</head>
+
+<body>
+ 
+<table>
+  <thead>
+    <tr>
+      <th class="ths"> <div class="service-block" style="display: inline-block; margin-right: 20px;"></div>
+        <p>
+            SERVICE: {{ boncommande.idinstitution }}<br><br>
+            {{ boncommande.code }}
+        </p>
+    </div></th>
+    <th class="ths">
+      <img src="{{ image_url }}" alt="Description de l'image" height="90" style="border-radius: 15px;">
+
+    </th>
+  
+    <th class="ths"><div class="republique-block" style="display: inline-block;">
+      <h4 class="service-info">
+          REPUBLIC OF CAMEROON <br>&nbsp;
+          <small>Peace-Work-Fatherland</small><br>
+          REPUBLIQUE DU CAMEROUN <br>&nbsp;
+          <small>Paix-Travail-Patrie</small><br>
+          APO No. / BCA N<sup>o</sup>.
+      </h4>
+  </div></th>
+    </tr>
+  </thead>
+</table>
+
+
+<div class="card">
+
+    <h3>FICHE DE BON N<sup>o</sup>{{boncommande.code}}<br> <br>
+        <small>Budget De Fonctionnement :</small>
+    </h3>
+  </div>
+ 
+  <div style="display: flex; justify-content: space-between;">
+
+   
+
+</div>
+
+<table style="border-collapse: collapse; width: 100%;">  
+    <thead>  
+        <tr>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">EXERCICE BUDGETAIRE</th>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">------------</th>  
+        </tr>  
+        <tr>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">NUMERO DE BON</th>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">{{boncommande.code}}</th>  
+        </tr>  
+        <tr>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">PROCEDURE D'ENGAGEMENT</th>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">------------</th>  
+        </tr>  
+        <tr>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">BENEFICIAIRE</th>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">------------</th>  
+        </tr>  
+        <tr>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">GESTIONNAIRE DE CREDIT</th>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">------------</th>  
+        </tr>  
+        <tr>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">ETAT DE BON</th>  
+            <th style="border: 1px solid black; padding: 8px; text-align: left;">VALID&eacute;</th>  
+        </tr>  
+    </thead>  
+    <tbody>  
+        <!-- Additional rows can be added here if required -->  
+    </tbody>  
+</table>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th class="ths">IMPUTATION BUDGETAIRE</th>
+                <th>------------</th>
+               
+          
+            </tr>
+            <tr>
+                <th class="ths">SOUS PROGRAMME</th>
+                <th>
+                    {%for details in detail%}
+                            {{details.idsousprogramme}}
+                    {%endfor%}
+                </th>
+               
+          
+            </tr>
+            <tr>
+                <th class="ths">ACTIVITE</th>
+                <th>
+                    {%for details in detail%}
+                    {{details.idactivite}}
+            {%endfor%}
+                </th>
+               
+            </tr>
+            <tr>
+                <th class="ths">TACHE</th>
+                <th>
+                    {%for details in detail%}
+                    {{details.idtache}}
+            {%endfor%}
+                </th>
+            </tr>
+        </thead>
+       
+       
+    </table>
+   
+</body>
+</html>

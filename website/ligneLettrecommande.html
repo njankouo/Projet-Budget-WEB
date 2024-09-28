@@ -1,0 +1,672 @@
+
+<style>
+    .table-wrapper {
+            background: #fff;
+            padding: 20px 25px;
+            margin: 30px 0;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+        .table-title {        
+            padding-bottom: 15px;
+            background: #435d7d;
+            color: #fff;
+            padding: 16px 30px;
+            margin: -20px -25px 10px;
+            border-radius: 3px 3px 0 0;
+        }
+        .table-title h2 {
+            margin: 5px 0 0;
+            font-size: 24px;
+        }
+        .table-title .btn-group {
+            float: right;
+        }
+        .table-title .btn {
+            color: #fff;
+            float: right;
+            font-size: 13px;
+            border: none;
+            min-width: 50px;
+            border-radius: 2px;
+            border: none;
+            outline: none !important;
+            margin-left: 10px;
+        }
+        .table-title .btn i {
+            float: left;
+            font-size: 21px;
+            margin-right: 5px;
+        }
+        .table-title .btn span {
+            float: left;
+            margin-top: 2px;
+        }
+        table.table tr th, table.table tr td {
+            border-color: #e9e9e9;
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        table.table tr th:first-child {
+            width: 60px;
+        }
+        table.table tr th:last-child {
+            width: 100px;
+        }
+        table.table-striped tbody tr:nth-of-type(odd) {
+            background-color: #fcfcfc;
+        }
+        table.table-striped.table-hover tbody tr:hover {
+            background: #f5f5f5;
+        }
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }	
+        table.table td:last-child i {
+            opacity: 0.9;
+            font-size: 22px;
+            margin: 0 5px;
+        }
+        table.table td a {
+            font-weight: bold;
+            color: #566787;
+            display: inline-block;
+            text-decoration: none;
+            outline: none !important;
+        }
+        table.table td a:hover {
+            color: #2196F3;
+        }
+        table.table td a.edit {
+            color: #FFC107;
+        }
+        table.table td a.delete {
+            color: #F44336;
+        }
+        table.table td i {
+            font-size: 19px;
+        }
+        table.table .avatar {
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+
+        [type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+}
+
+[type="file"] + label {
+  background: #f15d22;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+	font-family: 'Rubik', sans-serif;
+	font-size: inherit;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 50px;
+  position: relative;
+  transition: all 0.3s;
+  vertical-align: middle;
+  
+  &:hover {
+    background-color: darken(#f15d22, 10%);
+  }
+  
+  &.btn-1 {
+    background-color: #f79159;
+    box-shadow: 0 6px darken(#f79159, 10%);
+    transition: none;
+
+    &:hover {
+      box-shadow: 0 4px darken(#f79159, 10%);
+      top: 2px;
+    }
+  }
+  
+  &.btn-2 {
+    background-color: #99c793;
+    border-radius: 50px;
+    overflow: hidden;
+    
+    &::before {
+      color: #fff;
+      content: "\f382";
+      font-family: "Font Awesome 5 Pro";
+      font-size: 100%;
+      height: 100%;
+      right: 130%;
+      line-height: 3.3;
+      position: absolute;
+      top: 0px;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      background-color: darken(#99c793, 30%);
+        
+      &::before {
+        right: 75%;
+      }
+    }
+  }
+  
+  &.btn-3 {
+    background-color: #ee6d9e;
+    border-radius: 0;
+    overflow: hidden;
+    
+    span {
+      display: inline-block;
+      height: 100%;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    
+    &::before {
+      color: #fff;
+      content: "\f382";
+      font-family: "Font Awesome 5 Pro";
+      font-size: 130%;
+      height: 100%;
+      left: 0;
+      line-height: 2.6;
+      position: absolute;
+      top: -180%;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    &:hover {
+      background-color: darken(#ee6d9e, 30%);
+      
+      span {
+        transform: translateY(300%);
+      }
+        
+      &::before {
+        top: 0;
+      }
+    }
+  }
+}
+
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"> 
+    {%extends 'master.html'%}
+
+    {%block content%}
+   
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES DE LA  Lettre COMMANDES <b class="text-primary"  style="font-weight: bold;">{{lettre.numero_lettre}}</b> </h5>
+      
+                    <nav>
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        
+                        <li class="breadcrumb-item active">Ligne Lettre Commande</li>
+                      </ol>
+                    </nav>
+                  </div>
+                </div>
+  
+          </div>
+     
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande {{lettre.numero_lettre}}</h5>
+              <form class="row g-3" method="POST" action="/add_ligne_lettre/">
+                {%csrf_token%}
+
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-control" name="operation" id="operation">
+                      <option></option>
+                      {% for operation in operation_liee %}
+                          <option value="{{ operation.id }}">{{ operation.nom }}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="floatingName">Selectionnez Une Operation</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-control" name="paragraphe" id="paragraphe">
+                            
+                    </select>
+                    <label for="floatingName">Selectionnez Un Paragraphe</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-control" name="annee" id="annee">
+                          
+                    </select>
+                    <label for="floatingName">Selectionnez Une Annee</label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <select class="form-control" name="reference" id="reference">
+                            <option></option>
+                            {%for references in reference%}
+                            <option value="{{references.id}}">{{references.code}}-{{references.nom}}</option>
+                            {%endfor%}
+                    </select>
+                    <label for="floatingName">Selectionnez Une References</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="montant" placeholder="Montant Du Paragraphe" name="montant" >
+             
+                    <label for="floatingZip">Montant Du Paragraphe</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="cu" placeholder="Cout Unitaire " name="cu"oninput="calculateTotal()">
+                    <label for="floatingEmail">Cout Unitaire</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="qte" placeholder="Quantite" oninput="calculateTotal()" name="qte">
+                    <label for="floatingPassword">Qte</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="prixTotal" placeholder="prixT" name="prixT">
+                      <label for="floatingZip">Prix Total</label>
+                    </div>
+                  </div>
+                
+                <div class="col-md-6">
+                  <div class="col-md-12">
+                    <div class="form-floating">
+                      <select class="form-control" name="code" id="code" >
+                        {% for commandes in commande %}  
+                        {%if commandes.id == bon_commande_id %}
+                        <option value="{{commandes.id}}" selected>{{commandes.code}}</option>
+                        {%endif%}
+                        {%endfor%}
+                      </select>
+                      <label for="floatingCity">Code Commande</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="societe" aria-label="State">
+                      {% for boncommande in boncommandes %}  
+                      <option value="{{boncommande.idsociete}}">{{boncommande.idsociete}}</option>
+                      {%endfor%}
+                    </select>
+                    <label for="floatingSelect">Prestataire</label>
+                  </div>
+                </div>
+               
+                <div class="col-md-2">
+                  <div class="form-floating">
+                    <input type="date" class="form-control" id="date" placeholder="date emission">
+                    <label for="floatingZip">Date Emission</label>
+                  </div>
+                </div>
+              
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Ajouter</button>
+         
+                </div>
+              </form>
+            </div>
+          </div>
+  <div class="card">
+    <div class="card-body">
+<div class="container">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+           <h5 style="font-weight:bold">References Ajoutee</h5>
+          </div>
+        <div class="col-sm-6">
+            <a  class="btn btn-success"><i class="bi bi-printer"></i> <span>Imprimer Le Bon De Commande</span></a>
+            <!-- <a href="" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
+          -->
+        </div>  
+        </div>
+      </div>
+      <table class="table table-hover table-responsive text-center" id="myTable">
+        <thead>
+          <tr>
+            <th class="text-primary" style="width: 30%; font-weight: bold;">
+          Designation
+            </th>
+       
+        
+            <th style="width: 50%;">Qte</th>
+        
+            <th style="width: 20%;">Cu</th>
+            <th style="width: 20%;">Prix Total</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+     
+            {%for ligneboncommandes in lignecommande%}
+           
+            <tr>
+               
+                <td>{{ligneboncommandes.idelementcout}}
+               
+                  
+                </td>
+                
+                <td>{{ligneboncommandes.quantite}}</td>
+                <td>{{ligneboncommandes.prixunitaire}}</td>
+                
+                <td>{{ligneboncommandes.total}}</td>
+                <td>
+                       <a href='/delete_commande/{{ligneboncommandes.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
+                </td>
+              </tr>
+             
+            {%endfor%}
+            <tr>  
+                <td colspan="3" style="text-align: right;"><strong>Total Général :</strong></td>  
+                <td><strong>{{ total_sum }}</strong></td>  
+                <td></td>  
+            </tr>  
+        </tbody>
+      </table>
+      
+    </div>
+  </div>
+
+ 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>  
+<script>  
+    $(document).ready(function() {  
+        $('#myTable').DataTable();  
+    });  
+</script>  
+
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'success' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "success",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 2000
+});
+</script>
+{%endif%}
+{%endfor%}
+</script>
+{% for message in messages %}
+
+ {% if message.tags == 'error' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "error",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
+
+{% for message in messages %}
+
+ {% if message.tags == 'info' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "info",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+    new TomSelect("#reference",{
+	persist: false,
+	createOnBlur: true,
+	create: true
+});
+</script>
+<script>
+    new TomSelect("#code",{
+	persist: false,
+	createOnBlur: true,
+	create: true
+});
+</script>
+<script>
+    new TomSelect("#societe",{
+	persist: false,
+	createOnBlur: true,
+	create: true
+});
+</script>
+
+
+
+
+<script>
+  new TomSelect("#operation",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+<!-- <script>
+  new TomSelect("#paragraphe",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+<script>
+  new TomSelect("#annee",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script> -->
+<script>
+    $(document).ready(function() {  
+        $('#reference').on('change', function() {  
+            var selectedId = $(this).val();  
+        
+            $.ajax({  
+                url: '/search_cu/',  
+                method: 'GET',  
+                data: { id: selectedId },  
+                success: function(data) {  
+                    console.log('Données récupérées:', data); // Afficher les données dans la console  
+                    
+                    // Supposons que 'data' est un tableau d'objets avec 'id' et 'prixunitaire'  
+                    if (data.length > 0) {  
+                        // Mettre à jour le champ de texte avec le prix unitaire  
+                        $('#cu').val(data[0].prixunitaire); // Utiliser le premier élément du tableau  
+                    } else {  
+                        $('#cu').val(''); // Effacer le champ si aucune donnée n'est trouvée  
+                    }  
+                },  
+                error: function(xhr, status, error) {  
+                    console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+                }  
+            });  
+        });  
+    });  
+  </script>
+  <script>
+    function calculateTotal() {
+        const cu = parseFloat(document.getElementById('cu').value) || 0;
+        const qte = parseFloat(document.getElementById('qte').value) || 0;
+        const total = cu * qte;
+        document.getElementById('prixTotal').value = total.toFixed(2); // Affiche le total avec 2 décimales
+        console.log('prix total:', total)
+    }
+    </script>
+  
+  <script>
+    $(document).ready(function() {  
+    // Événement lors du changement de l'opération  
+    $('#operation').on('change', function() {  
+        var selectedId = $(this).val();  
+        var selectInformations = $('#paragraphe');  
+        selectInformations.empty();  
+        
+        $('#annee').text('Chargement...');  
+
+        $.ajax({  
+            url: '/search_paragraphe/',  
+            method: 'GET',  
+            data: { id: selectedId },  
+            success: function(data) {  
+                console.log('Données récupérées:', data);  
+                
+                selectInformations.append($('<option>', {  
+                    value: '',  
+                    text: 'Sélectionnez un paragraphe'  
+                }));  
+
+                if (Array.isArray(data) && data.length > 0) {  
+                    data.forEach(function(paragraph) {  
+                        selectInformations.append($('<option>', {  
+                            value: paragraph.idparagraphe,  
+                            text: paragraph.nom  
+                        }));  
+                    });  
+                    
+                    // Activez l'événement de changement de paragraphe pour récupérer les années  
+                    selectInformations.prop("disabled", false);  
+                } else {  
+                    selectInformations.append($('<option>', {  
+                        value: '',  
+                        text: 'Aucun paragraphe disponible'  
+                    }));  
+                }  
+            },  
+            error: function(xhr, status, error) {  
+                console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+                alert("Une erreur est survenue. Veuillez réessayer.");  
+            }  
+        });  
+    });  
+
+    // Événement lors du changement de paragraphe  
+    $('#paragraphe').on('change', function() {  
+        var selectedOperationId = $('#operation').val(); // Récupérer l'ID de l'opération sélectionnée  
+        var selectedParagraphId = $(this).val(); // Récupérer l'ID du paragraphe sélectionné  
+        var selectAnnee = $('#annee'); // Sélecteur pour les années  
+        selectAnnee.empty(); // Vider les options existantes  
+
+        if (selectedParagraphId) {  
+            selectAnnee.append($('<option>', {   
+                value: '',   
+                text: 'Chargement des années...'   
+            }));  
+
+            $.ajax({  
+                url: '/search_annee/', // URL pour récupérer les années  
+                method: 'GET',  
+                data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId },  
+                success: function(data) {  
+                    console.log('Années récupérées:', data);  
+                    selectAnnee.empty(); // Vider l'ancien contenu des années  
+
+                    if (Array.isArray(data) && data.length > 0) {  
+                        selectAnnee.append($('<option>', {   
+                            value: '',   
+                            text: 'Sélectionnez une année'   
+                        }));  
+                        data.forEach(function(year) {  
+                            selectAnnee.append($('<option>', {  
+                                value: year.idannee,  
+                                text: year.annee  
+                            }));  
+                        });  
+                        selectAnnee.prop("disabled", false); // Activer le select des années  
+                    } else {  
+                        selectAnnee.append($('<option>', {   
+                            value: '',   
+                            text: 'Aucune année disponible'   
+                        }));  
+                    }  
+                },  
+                error: function(xhr, status, error) {  
+                    console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+                    alert("Une erreur est survenue. Veuillez réessayer.");  
+                }  
+            });  
+        }  
+    });  
+
+    // Événement lors du changement de l'année  
+    $('#annee').on('change', function() {  
+        var selectedOperationId = $('#operation').val();  
+        var selectedParagraphId = $('#paragraphe').val();  
+        var selectedYearId = $(this).val();  
+        var montantDisplay = $('#montant'); // Sélecteur pour afficher le montant  
+
+        if (selectedYearId) {  
+            montantDisplay.text('Chargement du montant...'); // Indiquer que le montant est en train d'être chargé  
+
+            $.ajax({  
+    url: '/search_montant/', // URL pour récupérer le montant  
+    method: 'GET',  
+    data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId, year_id: selectedYearId },  
+    success: function(data) {  
+        console.log('Montant récupéré:', data);  
+        const montantInput = $('#montant'); // Sélecteur pour l'input  
+
+        if (data.montant !== null) {  
+            montantInput.val(data.montant); // Insère le montant dans l'input  
+            montantDisplay.text("Montant : " + data.montant); // Affiche le montant dans un autre élément si nécessaire  
+        } else {  
+            montantInput.val(''); // Vide l'input si aucun montant n'est trouvé  
+            montantDisplay.text("Aucun montant trouvé pour cette sélection.");  
+        }  
+    },  
+    error: function(xhr, status, error) {  
+        console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+        alert("Une erreur est survenue. Veuillez réessayer.");  
+    }  
+});
+        }  
+    });  
+});
+  </script>
+{%endblock%}
