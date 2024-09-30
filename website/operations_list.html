@@ -150,9 +150,15 @@
               <form class="row g-3" method="POST" action="/add_operation/">
                 {%csrf_token%}
                 <div class="col-md-12">
-                  <label for="Nom">Nom Operation</label>
-                  <input type="text" class="form-control" placeholder="Nom Operation ........." name="nom">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="floatingPassword" placeholder="Nom Operation" name="nom">
+                    <label for="floatingPassword">Nom Operation</label>
+                  </div>
                 </div>
+                <hr class="p-2" style="background: #360033;  /* fallback for old browsers */
+                background: -webkit-linear-gradient(to right, #0b8793, #360033);  /* Chrome 10-25, Safari 5.1-6 */
+                background: linear-gradient(to right, #0b8793, #360033); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+                ">
                 <div class="col-md-6">
                   <label for="programme">Sous-Programme</label>
                   <select class="form-control" name="sousprogramme" id="sousprogramme">
@@ -216,9 +222,15 @@
                   <label for="indicateur">Indicateur</label>
                   <input type="text" class="form-control" name="indicateur">
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <label for="resultat">Resultat Attendue</label>
                   <input type="text" class="form-control" name="resultat">
+                </div>
+                <div class="col-md-6">
+                  <label for="annee">Ann&eacute;e</label>
+                  <select class="form-control" name="annee" id="annee">
+
+                  </select>
                 </div>
             </div>
           </div>

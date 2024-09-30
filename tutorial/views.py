@@ -87,7 +87,9 @@ def save_Sous_programme(request):
 def activites(request):
     template ='../website/activite.html'
     activite=Activite.objects.all()
-    context={'activite':activite}
+    sous_programme=Sousprogramme.objects.all()
+
+    context={'activite':activite,'sous_programme':sous_programme}
     return render(request,template,context)
 
 def add_activite(request):
@@ -1771,3 +1773,39 @@ def add_references_lettre(request, id):
     # Spécifier le modèle à utiliser pour le rendu
     template = '../website/ligneLettrecommande.html'
     return render(request, template, context)
+
+def delete_sous_programme(request, id):
+    sous_programme = get_object_or_404(Sousprogramme, id=id)
+
+    # Liste des modèles à vérifier
+    models_to_check = [Activite, Tache, Operation]
+    
+    # Vérifiez si le sous-programme est référencé par d'autres modèles
+    is_referenced = any(model.objects.filter(idsousprogramme=sous_programme).exists() for model in models_to_check)
+
+    if is_referenced:
+        messages.info(request, 'Impossible de supprimer ce sous-programme car il est référencé par d\'autres entités.')
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Si aucune référence n'existe, procédez à la suppression
+    sous_programme.delete()
+    messages.success(request, 'Suppression réussie')
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def edit_sousprogramme(request,id):
+    if request.method == 'POST':
+        nom=request.POST['nom']
+        indicateurs=request.POST['indicateurs']
+        objectifs = request.POST['indicateurs']
+        code = request.POST['code']
+
+        sousprogramme = Sousprogramme.objects.get(id=int(id))
+
+        sousprogramme.nom=nom
+        sousprogramme.libelleobjectif=objectifs
+        sousprogramme.libelleindicateur=indicateurs
+        sousprogramme.code=code
+
+        sousprogramme.save()
+        messages.success(request,'Mise A Jour Reussi')
+        return redirect(request.META.get('HTTP_REFERER','/'))

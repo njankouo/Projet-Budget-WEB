@@ -166,7 +166,9 @@ urlpatterns = [
     path('add_operation_lettre/<int:id>/',views.add_operation_lettre,name='add_operation_lettre'),
     path('add_operation_lettre_commande/',views.add_operation_lettre_commande,name='add_operation_lettre_commande'),
 
-    path('add_references_lettre/<int:id>/',views.add_references_lettre,name='add_references_lettre')
+    path('add_references_lettre/<int:id>/',views.add_references_lettre,name='add_references_lettre'),
+    path('delete_sous_programme/<int:id>/',views.delete_sous_programme,name='delete_sous_programme'),
+    path('edit_sousprogramme/<int:id>/',views.edit_sousprogramme,name='edit_sousprogramme')
 
 
 
