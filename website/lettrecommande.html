@@ -228,14 +228,21 @@
               <h5 class="card-title"style='font-weight:bold'>Ajouter Des Lettre Operations A la Lettre {{lettre.numero_lettre}}</h5>
               <form class="row g-3" method="POST" action="/add_operation_lettre_commande/">
                 {%csrf_token%}
+                <h5 style="font-weight: bold; font-family: forte;">Selectionnez L'annee Budgetaire
+                  <select name="annee_budget" id="annee" class="form-control">
+                    <option >Veuillez Selectionner Une Annee Budgetaire</option>
+                    {%for annees in annee%}
+
+                    <option value="{{annees.id}}">{{annees.nom}}</option>
+                    {%endfor%}
+                  </select>
+                </h5>
                     <input type="text" name="lettre" value="{{lettre.id}}" style="display: none;">
                 <div class="col-md-6">
                   <div class="form-floating">
                     <select class="form-control" name="operation" id="operation">
                             <option></option>
-                            {%for operations in operation%}
-                            <option value='{{operations.id}}'>{{operations.nom}}</option>
-                            {%endfor%}
+                            
                     </select>
                     <label for="floatingName">Selectionnez Une Operation</label>
                   </div>
@@ -406,7 +413,7 @@
   });
   </script>
   <script>
-    new TomSelect("#operation",{
+    new TomSelect("#annee",{
   persist: false,
   createOnBlur: true,
   create: true
@@ -499,4 +506,57 @@
 });  
 </script>
 
+<script>  
+
+  $(document).ready(function() {  
+      // Événement lors du changement de l'année  
+      $('#annee').on('change', function() {  
+          var selectedId = $(this).val();  
+          var selectInformations = $('#operation');  
+          selectInformations.empty();  
+
+          // Afficher le message de chargement  
+          
+
+          $.ajax({  
+              url: '/search_annee/',  
+              method: 'GET',  
+              data: { id: selectedId },  
+              success: function(data) {  
+                  console.log('Données récupérées:', data);  
+              
+                  
+                  // Vérifie si les données sont un tableau et contiennent des éléments  
+                  if (Array.isArray(data) && data.length > 0) {  
+                      selectInformations.append($('<option>', {   
+                          value: '',   
+                          text: 'Sélectionnez une Opération'   
+                      }));  
+
+                      data.forEach(function(annee) {  
+                          selectInformations.append($('<option>', {  
+                              value: annee.id,  
+                              text: annee.nom  
+                          }));  
+                      });  
+
+                      // Activez l'événement de changement de paragraphe pour récupérer les années  
+                      selectInformations.prop("disabled", false);  
+                  } else {  
+                      selectInformations.append($('<option>', {  
+                          value: '',  
+                          text: 'Aucun paragraphe disponible'  
+                      }));  
+                      selectInformations.prop("disabled", true); // Désactiver le sélecteur si aucun élément  
+                  }  
+              },  
+              error: function(xhr, status, error) {  
+                  console.error('Une erreur s\'est produite lors de la requête AJAX :', status, error);  
+                  alertify.dismissAll(); // Fermer le message de chargement  
+                  alertify.error("Une erreur est survenue. Veuillez réessayer.");  
+              }  
+          });  
+      });  
+  });  
+</script>
 {%endblock%}

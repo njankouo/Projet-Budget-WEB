@@ -28,7 +28,9 @@ def list_taches(request):
 def tache(request):
     template = "../website/tache.html"
     tache = Tache.objects.all()
-    context= {'tache':tache}
+    sous_programme= Sousprogramme.objects.all()
+    activite = Activite.objects.all()
+    context= {'tache':tache,'sous_programme':sous_programme,'activite':activite}
     return render(request,template,context)
 
 def delete_tache(request,id):
@@ -169,8 +171,9 @@ def operations(request):
     operation=Operation.objects.all()
     operation_p = OperationDetail.objects.all()
     structure= Structure.objects.all()
+    annee = Annee.objects.all()
     
-    context={'operation_p':operation_p,'sourcefinancement':sourcefinancement,'typefinancement':typefinancement,'risque':risque,'sousprogramme':sousprogramme,'structure':structure,'operation':operation}
+    context={'annee':annee,'operation_p':operation_p,'sourcefinancement':sourcefinancement,'typefinancement':typefinancement,'risque':risque,'sousprogramme':sousprogramme,'structure':structure,'operation':operation}
   
     template = '../website/operations_list.html'
     return render(request,template,context)
@@ -346,6 +349,8 @@ def add_operation(request):
             indicateur = request.POST['indicateur']  
             resultat = request.POST['resultat']  
             structure = request.POST['structure']
+            annee = request.POST['annee']
+            # return HttpResponse(annee)
 
             if not sourcefinancement_ids:  # Vérifie si la liste est vide
                 messages.error(request, "Aucune source de financement sélectionnée.")
@@ -358,6 +363,7 @@ def add_operation(request):
             instance_type_financement = Typefinancement.objects.get(id=int(type_financement))  
             instance_risque = Risque.objects.get(id=int(risque))  
             instance_structure = Structure.objects.get(id=int(structure))
+            instance_annee = Annee.objects.get(id=int(annee))
 
             # Log instances  
             print("Instances retrieved: ", instance_sous_programme, instance_activite, instance_tache, instance_type_financement, instance_risque)  
@@ -372,7 +378,9 @@ def add_operation(request):
                 idrisque=instance_risque,  
                 indicateurspoursuivis=indicateur,  
                 indicateurresult=resultat,
-                idstructure=instance_structure  
+                idstructure=instance_structure,
+                idannee=instance_annee
+
             )  
 
             # Ajout des sources de financement à l'opération
@@ -385,7 +393,7 @@ def add_operation(request):
         
         except Exception as e:  
             print("An error occurred:", str(e))  
-            messages.error(request, "Erreur lors de l'enregistrement.")  
+            messages.error(request, f"Erreur lors de l'enregistrement.{e}")  
             return redirect('/operations/')  
 
     return redirect('/operations/')
@@ -1084,9 +1092,11 @@ def engagements(request):
     institution = Institution.objects.all()
     societe=Societe.objects.all()
     lettrecommande=LettreCommande.objects.all()
-
+    ordonancement = Ordonancement.objects.all()
     boncommande =Boncommande.objects.filter(status__in=[0,1])
-    context={'lettrecommande':lettrecommande,'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
+    decision = Decision.objects.all()
+    marche = Marche.objects.all()
+    context={'marche':marche,'decision':decision,'ordonancement':ordonancement,'lettrecommande':lettrecommande,'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
 
     return render(request,template,context)
 
@@ -1351,12 +1361,13 @@ def add_operations(request, id):
     # Récupérer toutes les sociétés et opérations  
     prestataire = Societe.objects.all()  
     operation = Operation.objects.all()  
-
+    annee= Annee.objects.all()
     context = {  
         'detail_bon_commande': detail_bon_commande,  # Renommer pour clarté  
         'boncommande': boncommande,  
         'operation': operation,  
-        'prestataire': prestataire  
+        'prestataire': prestataire,
+        'annee':annee  
     }  
 
     template = '../website/detailcommande.html'  
@@ -1688,11 +1699,14 @@ def add_operation_lettre(request,id):
     template ='../website/lettrecommande.html'
     operation = Operation.objects.all()
     lettre =LettreCommande.objects.get(id=int(id))
+    annee=Annee.objects.all()
+
     detail_lettre_commande = DetailLettreCommande.objects.filter(idlettrecommande=id)
     context={
         'lettre':lettre,
         'operation':operation,
-        'detail_lettre_commande':detail_lettre_commande
+        'detail_lettre_commande':detail_lettre_commande,
+        'annee':annee
     }
     return render(request,template,context)
 
@@ -1809,3 +1823,220 @@ def edit_sousprogramme(request,id):
         sousprogramme.save()
         messages.success(request,'Mise A Jour Reussi')
         return redirect(request.META.get('HTTP_REFERER','/'))
+
+def edit_activite(request,id):
+    activite = Activite.objects.get(id=int(id))
+    if request.method == 'POST':
+        code=request.POST['code']
+
+        nom = request.POST['nom']
+
+        sous_programme = request.POST['sous_programme']
+
+        objectifs = request.POST['objectifs']
+
+        indicateurs = request.POST['indicateurs']
+
+        instance_sous_programme=Sousprogramme.objects.get(id=int(sous_programme))
+
+        try:
+            activite.nom=nom
+            activite.code=code
+            activite.libelleobjectif=objectifs
+            activite.libelleindicateur=indicateurs
+            activite.idsousprogramme=instance_sous_programme
+
+            activite.save()
+            messages.success(request,'Mise A Jour Reussi')
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,'Une Erreur est Survenue')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def edit_tache(request,id):
+    tache = Tache.objects.get(id=int(id))
+    if request.method == 'POST':
+        code = request.POST['code']
+        nom = request.POST['nom']
+        indicateur = request.POST['indicateurs']
+        objectifs = request.POST['objectifs']
+
+        sous_programme = request.POST['sous_programme']
+
+        activite = request.POST['activite']
+
+        instance_activite= Activite.objects.get(id=int(activite))
+
+        instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))
+
+        try:
+            tache.code=code
+            tache.nom=nom
+            tache.idsousprogramme=instance_sous_programme
+            tache.idactivite=instance_activite
+            tache.libelleobjectif=objectifs
+            tache.libelleindicateur=indicateur
+
+            tache.save()
+            messages.success(request,'Mise A Jour Reussi')
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,'Erreur Survenue')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def edit_details_operations(request,id):
+    operation_detail = OperationDetail.objects.get(id=int(id))
+    if request.method == 'POST':
+        paragraphe = request.POST['paragraphe']
+        annee = request.POST['annee']
+        montant = request.POST['montant']
+
+        instance_paragraphe= Paragraphe.objects.get(id=int(paragraphe))
+        instance_annee = Annee.objects.get(id=int(annee))
+        try:
+
+            operation_detail.idparagraphe=instance_paragraphe
+            operation_detail.montant=montant
+            operation_detail.idannee=instance_annee
+            operation_detail.save()
+            messages.success(request,'Mise A jour Reussie')
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,f'Erreur survue: {e}')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+    
+def add_ordonancement(request):
+    if request.method == 'POST':
+        try:
+            tva = request.POST['tva']
+            ir = request.POST['ir']
+            societe=request.POST['societe']
+            institution=request.POST['institution']
+            numero = request.POST['numero']
+
+            instance_tva= Tva.objects.get(id=int(tva))
+            instance_ir=Ir.objects.get(id=int(ir))
+            instance_societe=Societe.objects.get(id=int(societe))
+            instance_institution=Institution.objects.get(id=int(institution))
+
+            save_lettre=Ordonancement.objects.create(
+                idtva=instance_tva,
+                idir=instance_ir,
+                idsociete=instance_societe,
+                idinstitution=instance_institution,
+                numero_ordonancement=numero
+            )
+            save_lettre.save()
+            messages.success(request,'Enregistrement Reussi')
+        except Exception as e:
+            messages.error(request,f'Erreur Survenue: {e}')
+        return redirect(request.META.get('HTTP_REFERER','/'))
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def add_operation_ordonancement(request,id):
+    ordonancement = Ordonancement.objects.get(id=int(id))
+    annee = Annee.objects.all()
+    prestataire=Societe.objects.all()
+    context={
+        'ordonancement':ordonancement,
+        'annee':annee,
+        'prestataire':prestataire
+    }
+    template= '../website/detailordonancement.html'
+    return render(request,template,context)
+
+
+def add_decision(request):
+    if request.method == 'POST':
+        try:
+            tva = request.POST['tva']
+            ir = request.POST['ir']
+            societe=request.POST['societe']
+            institution=request.POST['institution']
+            numero = request.POST['numero']
+
+            instance_tva= Tva.objects.get(id=int(tva))
+            instance_ir=Ir.objects.get(id=int(ir))
+            instance_societe=Societe.objects.get(id=int(societe))
+            instance_institution=Institution.objects.get(id=int(institution))
+
+            save_lettre=Decision.objects.create(
+                idtva=instance_tva,
+                idir=instance_ir,
+                idsociete=instance_societe,
+                idinstitution=instance_institution,
+                numero_decision=numero
+            )
+            save_lettre.save()
+            messages.success(request,'Enregistrement Reussi')
+        except Exception as e:
+            messages.error(request,f'Erreur Survenue: {e}')
+        return redirect(request.META.get('HTTP_REFERER','/'))
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def decisions_operations(request,id):
+    decision = Decision.objects.get(id=int(id))
+    annee = Annee.objects.all()
+    prestataire=Societe.objects.all()
+    context={
+        'decision':decision,
+        'annee':annee,
+        'prestataire':prestataire
+    }
+    template= '../website/detaildecision.html'
+    return render(request,template,context)
+
+
+
+def add_marche(request):
+    if request.method == 'POST':
+        try:
+            tva = request.POST['tva']
+            ir = request.POST['ir']
+            societe=request.POST['societe']
+            institution=request.POST['institution']
+            numero = request.POST['numero']
+
+            instance_tva= Tva.objects.get(id=int(tva))
+            instance_ir=Ir.objects.get(id=int(ir))
+            instance_societe=Societe.objects.get(id=int(societe))
+            instance_institution=Institution.objects.get(id=int(institution))
+
+            save_lettre=Marche.objects.create(
+                idtva=instance_tva,
+                idir=instance_ir,
+                idsociete=instance_societe,
+                idinstitution=instance_institution,
+                numero_marche=numero
+            )
+            save_lettre.save()
+            messages.success(request,'Enregistrement Reussi')
+        except Exception as e:
+            messages.error(request,f'Erreur Survenue: {e}')
+        return redirect(request.META.get('HTTP_REFERER','/'))
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+def add_operation_marche(request,id):
+    marche = Marche.objects.get(id=int(id))
+    annee = Annee.objects.all()
+    prestataire=Societe.objects.all()
+    context={
+        'marche':marche,
+        'annee':annee,
+        'prestataire':prestataire
+    }
+    template= '../website/detailmarche.html'
+    return render(request,template,context)
+
+def search_annee(request):
+    selected_id = request.GET.get('id')
+    
+    # Vérifiez si l'ID est valide
+    if not selected_id:
+        return JsonResponse({'error': 'ID non fourni'}, status=400)
+    
+    try:
+        annee = Operation.objects.filter(idannee=selected_id).values('id', 'nom')
+        return JsonResponse(list(annee), safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

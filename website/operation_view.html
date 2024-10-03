@@ -19,7 +19,12 @@
         </nav>
       </div>
 
-
+     
+      
+        <h5 style="font-weight: bold; font-family: forte;" class="mx-2">Montant Global De L'operation <b class="text-primary" style="font-weight: bold;">{{operation.nom}}  Pour L'ann&eacute;e {{operation.idannee.nom}}:</b> 
+{{montant_total}} Fcfa
+        </h5>
+     
       <div class="card">
         <div class="card-body">
           <h5 class="card-title" style="font-weight:bold">Associez Des Paragraphes A L'operation: {{operation.nom}}</h5>
@@ -64,12 +69,10 @@
               <button type="submit" class="btn btn-primary">Enregistrer</button>
               
             </div>
-              <h5 style="font-weight: bold; font-family: forte;">Montant Global De L'operation <b class="text-primary" style="font-weight: bold;">{{operation.nom}}:</b> 
-{{montant_total}} Fcfa
-              </h5>
+           
           </form>
         <hr class="p-2 bg-dark">
-          <table class="table table-striped table-responsive">
+          <table class="table table-striped table-responsive datatable">
             <thead>
               <tr>
          
@@ -96,10 +99,81 @@
                 <td></td>
           
                 <td>
-                <a href="/delete_paragraphe_operation/{{operation_details.id}}/" class="delete btn btn-danger" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
+                <a href="/delete_paragraphe_operation/{{operation_details.id}}/" class="delete btn btn-danger" ><i class="bi bi-trash" data-toggle="tooltip" title="Delete"></i></a>
+                <a  class="delete btn btn-primary"data-bs-toggle="modal" data-bs-target="#largeModal{{operation_details.id}}" ><i class="bi bi-pencil-square" data-toggle="tooltip" title="edit"></i></a>
+              
+
+
+
+               
+                    </div>
+                  </div>
+                </div>
               </td>
             </tr>
             {%endif%}
+            <div class="modal fade" id="largeModal{{operation_details.id}}" tabindex="-1" style="display: none;" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Mise A Jour Des Paragraphes {{operation_details.idparagraphe.nom}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="row g-3" method="POST" action="/edit_details_operations/{{operation_details.id}}/">
+
+                      {%csrf_token%}
+                     <input type="text" value="{{operation.id}}" name="operation" style="display: none;">
+                      <div class="col-md-12">
+                        <div class="form-floating mb-2">
+                          <select class="form-control" name="paragraphe" id="paragraphe"> 
+                              <option></option>
+                              {%for paragraphes in paragraphe%}
+                              {%if operation_details.idparagraphe_id == paragraphes.id%}
+                              <option value="{{paragraphes.id}}" selected>{{paragraphes.nom}}</option>
+                              {%else%}
+                              <option value="{{paragraphes.id}}" >{{paragraphes.nom}}</option>
+                          
+                              {%endif%}
+                              {%endfor%}
+                          </select>
+                          <label for="floatingEmail"> Selectionnez Un Paragraphes</label>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-floating mb-2">
+                            <select name="annee" id="annee" class="form-control">
+                              <option></option>
+                              {%for annees in annee%}
+                              {%if operation_details.idannee_id == annees.id%}
+                              <option value="{{annees.id}}" selected>{{annees.nom}}</option>
+                              {%else%}
+                              <option value="{{annees.id}}" >{{annees.nom}}</option>
+                              {%endif%}
+                              {%endfor%}
+                            </select>
+                          <label for="floatingPassword">Etablissez Une Annee</label>
+                        </div>
+                      </div>
+                   
+                      <div class="col-md-12">
+                     
+                          <div class="form-floating mb-2">
+                            <input type="number" class="form-control" id="montant" placeholder="Montant" name="montant"step="0.01" value="{{operation_details.montant}}">
+                            <label for="floatingCity">Montant  Paragraphe</label>
+                        
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">MISE A JOUR</button>
+                  </div>
+                </form>
+                  </div>
+                  </div>
+                  </div>
+              
                {%endfor%}
             
             </tbody>

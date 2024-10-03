@@ -168,7 +168,21 @@ urlpatterns = [
 
     path('add_references_lettre/<int:id>/',views.add_references_lettre,name='add_references_lettre'),
     path('delete_sous_programme/<int:id>/',views.delete_sous_programme,name='delete_sous_programme'),
-    path('edit_sousprogramme/<int:id>/',views.edit_sousprogramme,name='edit_sousprogramme')
+    path('edit_sousprogramme/<int:id>/',views.edit_sousprogramme,name='edit_sousprogramme'),
+
+    path('edit_activite/<int:id>/',views.edit_activite,name='edit_activite'),
+    path('edit_tache/<int:id>/',views.edit_tache,name='edit_tache'),
+    path('edit_details_operations/<int:id>/',views.edit_details_operations,name='edit_details_operations'),
+    path('add_ordonancement/',views.add_ordonancement,name='add_ordonancement'),
+
+    path('add_operation_ordonancement/<int:id>/',views.add_operation_ordonancement,name='add_operation_ordonancement'),
+
+    path('add_decision/',views.add_decision,name='add_decision'),
+    path('decisions_operations/<int:id>/',views.decisions_operations,name='decisions_operations'),
+    path('add_marche/',views.add_marche,name='add_marche'),
+    path('add_operation_marche/<int:id>/',views.add_operation_marche,name='add_operation_marche'),
+
+    path('search_annee/',views.search_annee,name='search_annee')
 
 
 

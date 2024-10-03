@@ -887,6 +887,7 @@ class Activite(models.Model):
 
     
 class Tache(models.Model):
+   code = models.CharField(max_length=255,null=True)
    nom=models.CharField(max_length=255,null=True)
    libelleobjectif=models.CharField(max_length=255,null=True)
    libelleindicateur=models.CharField(max_length=255,null=True)
@@ -1034,6 +1035,7 @@ class Paragraphe(models.Model):
     idarticle = models.ForeignKey(Article,on_delete=models.CASCADE,null=True)
 
 class Operation(models.Model):
+    idannee=models.ForeignKey(Annee,on_delete=models.CASCADE,null=True)
     idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True, db_column='idtache')
     nom=models.CharField(max_length=255,null=True)
     numordre=models.CharField(max_length=255,null=True)
@@ -2197,11 +2199,13 @@ class Sousrogramme1(models.Model):
         return self.nom
 
 class Decision(models.Model):
-    numero = models.CharField(null=True,max_length=255)
-    date = models.DateField(null=True)
-    objet= models.CharField(max_length=255,null=True)
-    montant=models.CharField(null=True)
-    iduser = models.ForeignKey(Utilisateur,on_delete=models.CASCADE,null=True)
+    numero_decision = models.CharField(null=True,max_length=255)
+    status= models.IntegerField(default=0)
+    idtva=models.ForeignKey(Tva, on_delete=models.CASCADE, null=True,blank=True)
+    idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
+    idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
+    idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
+
 
 class Signataire(models.Model):
     libelle= models.CharField(null=True,max_length=255)
@@ -2229,9 +2233,37 @@ class DetailLettreCommande(models.Model):
     idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
 
   
+class Ordonancement(models.Model):
+    numero_ordonancement = models.CharField(null=True,max_length=255)
+    status= models.IntegerField(default=0)
+    idtva=models.ForeignKey(Tva, on_delete=models.CASCADE, null=True,blank=True)
+    idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
+    idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
+    idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
 
 
+class DetailOrdonancement(models.Model):
+    idlettrecommande = models.ForeignKey(LettreCommande,on_delete=models.CASCADE,null=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
+    # idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
+    idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True)
+    idoperation=models.ForeignKey(Operation, on_delete=models.CASCADE, null=True,blank=True)
+    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True)
 
+    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure,on_delete=models.CASCADE,null=True)
+    idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
+
+
+class Marche(models.Model):
+    numero_marche = models.CharField(null=True,max_length=255)
+    status= models.IntegerField(default=0)
+    idtva=models.ForeignKey(Tva, on_delete=models.CASCADE, null=True,blank=True)
+    idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
+    idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
+    idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
 
 
 
