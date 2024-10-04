@@ -229,7 +229,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title"style='font-weight:bold'>Ajouter Des Operations Au Bon De Commande {{ordonancement.numero_ordonancement}}</h5>
-              <form class="row g-3" method="POST" action="/add_operation_commande/">
+              <form class="row g-3" method="POST" action="/add_detail_ordonancement/">
                 {%csrf_token%}
                 <h5 style="font-weight: bold; font-family: forte;">Selectionnez L'annee Budgetaire
                   <select name="annee_budget" id="annee" class="form-control">
@@ -240,7 +240,7 @@
                     {%endfor%}
                   </select>
                 </h5>
-                    <input type="text" name="boncommande" value="{{ordonancement.id}}" style="display: none;">
+                    <input type="text" name="code" value="{{ordonancement.id}}" style="display: none;">
                 <div class="col-md-6">
                   <div class="form-floating">
                     <select class="form-control" name="operation" id="operation">
@@ -303,7 +303,7 @@
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Ajouter</button>
                 </form>
-                  <a type="button" href="/add_references/{{ordonancement.id}}/" class="btn btn-dark"> Lignes Ordonancement</a>
+                  <a type="button" href="/add_references_ordonancement/{{ordonancement.id}}/" class="btn btn-dark"> Lignes Ordonancement</a>
          
                 </div>
          
@@ -342,14 +342,14 @@
           </tr>
         </thead>
         <tbody>
-          {%for detail_bon_commandes in detail_bon_commande%}
+          {%for detail_ordonancements in detail_ordonancement%}
           <tr>
-            <td>{{detail_bon_commandes.idoperation}}</td>
-              <td>{{detail_bon_commandes.idsousprogramme.nom}}</td>
-              <td>{{detail_bon_commandes.idactivite}}</td>
-              <td>{{detail_bon_commandes.idtache}}</td>
-              <td>{{detail_bon_commandes.idparagraphe.nom}}</td>
-              <td>{{detail_bon_commandes.idsociete}}</td>
+            <td>{{detail_ordonancements.idoperation}}</td>
+              <td>{{detail_ordonancements.idsousprogramme.nom}}</td>
+              <td>{{detail_ordonancements.idactivite}}</td>
+              <td>{{detail_ordonancements.idtache}}</td>
+              <td>{{detail_ordonancements.idparagraphe.nom}}</td>
+              <td>{{detail_ordonancements.idsociete}}</td>
             </tr>  
            {%endfor%}
          
@@ -529,7 +529,7 @@
           
 
           $.ajax({  
-              url: '/search_annee/',  
+              url: '/search_annee_simple/',  
               method: 'GET',  
               data: { id: selectedId },  
               success: function(data) {  

@@ -1777,11 +1777,16 @@ def add_references_lettre(request, id):
     
     # Rassembler les opérations liées
     operation_liee = [detail.idoperation for detail in detail_lettre_commande]
+    ligne_lettre = LigneLettreCommande.objects.filter(idlettrecommande = id)
 
     # Préparer le contexte pour le rendu
+    reference = Elementcout.objects.all()
+
     context = {
         'lettre': lettre,
-        'operation_liee': operation_liee
+        'operation_liee': operation_liee,
+        'reference':reference,
+        'ligne_lettre':ligne_lettre
     }
 
     # Spécifier le modèle à utiliser pour le rendu
@@ -1937,10 +1942,12 @@ def add_operation_ordonancement(request,id):
     ordonancement = Ordonancement.objects.get(id=int(id))
     annee = Annee.objects.all()
     prestataire=Societe.objects.all()
+    detail_ordonancement = DetailOrdonancement.objects.filter(idordonancement=id)
     context={
         'ordonancement':ordonancement,
         'annee':annee,
-        'prestataire':prestataire
+        'prestataire':prestataire,
+        'detail_ordonancement':detail_ordonancement
     }
     template= '../website/detailordonancement.html'
     return render(request,template,context)
@@ -2028,7 +2035,7 @@ def add_operation_marche(request,id):
     template= '../website/detailmarche.html'
     return render(request,template,context)
 
-def search_annee(request):
+def search_annee_simple(request):
     selected_id = request.GET.get('id')
     
     # Vérifiez si l'ID est valide
@@ -2040,3 +2047,445 @@ def search_annee(request):
         return JsonResponse(list(annee), safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+def edit_operation(request,id):
+    operation = Operation.objects.get(id=int(id))
+    annee=Annee.objects.all()
+    sous_programme=Sousprogramme.objects.all()
+    activite= Activite.objects.all()
+    tache = Tache.objects.all()
+    source_financement = Sourcefinacement.objects.all()
+    type_financement = Typefinancement.objects.all()
+    structure = Structure.objects.all()
+    institution = Institution.objects.all()
+    source_financement_operation = operation.idsourcefinancement.all()
+    source_finance_no_operation = source_financement.exclude(id__in=source_financement_operation.values_list('id',flat=True))
+ 
+    context={
+        'operation':operation,
+        'annee':annee,
+        'sous_programme':sous_programme,
+        'activite':activite,
+        'tache':tache,
+        'type_financement':type_financement,
+        'source_financement':source_financement,
+        'source_financement_operation':source_financement_operation,
+        'source_finance_no_operation':source_finance_no_operation,
+        'structure':structure,
+        'institution':institution
+       
+
+    }
+    template ='../website/edit_operation.html'
+    return render(request,template,context)
+
+def edit_operation_list(request, id):
+    operation = Operation.objects.get(id=int(id))
+    
+    if request.method == 'POST':
+        nom = request.POST['nom']
+        annee = request.POST['annee']
+        sous_programme = request.POST['sous_programme']
+        activite = request.POST['activite']
+        tache = request.POST['tache']
+        structure = request.POST['structure']
+        institution = request.POST['institution']
+        type = request.POST['type']
+        source_financement = request.POST.getlist('source_financement')
+
+        instance_activite = Activite.objects.get(id=int(activite))
+        instance_annee = Annee.objects.get(id=int(annee))
+        instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))
+        instance_tache = Tache.objects.get(id=int(tache))
+        instance_institution = Institution.objects.get(id=int(institution))
+        instance_structure = Structure.objects.get(id=int(structure))
+        instance_type = Typefinancement.objects.get(id=int(type))
+
+        try:
+            operation.nom = nom
+            operation.idannee = instance_annee
+            operation.idsousprogramme = instance_sous_programme
+            operation.idtache = instance_tache
+            operation.idactivite = instance_activite
+            operation.idinstitution = instance_institution
+            operation.idstructure = instance_structure
+            operation.idtypefinancement = instance_type
+
+            operation.save()
+
+            # Handle multiple source financements
+            operation.idsourcefinancement.clear()  # Clear existing sources if needed
+            for source_id in source_financement:
+                source_instance = Sourcefinacement.objects.get(id=int(source_id))
+                operation.idsourcefinancement.add(source_instance)
+
+            messages.success(request, 'Mise A Jour Reussi')
+        except Exception as e:
+            messages.error(request, f'Erreur Survenue: {e}')
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+def search_paragraphe_lettre(request):  
+    selected_id = request.GET.get('id')  
+
+    # Validez que l'ID est fourni et qu'il est numérique  
+    if not selected_id or not selected_id.isdigit():  
+        return JsonResponse({'error': 'ID non valide'}, status=400)  
+
+    selected_id = int(selected_id)  # Convertir en entier pour le filtrage  
+    
+    try:  
+        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié, en évitant les doublons
+        paragraphs = OperationDetail.objects.filter(idoperation=selected_id) \
+            .select_related('idparagraphe') \
+            .values('idparagraphe__id', 'idparagraphe__nom') \
+            .distinct()  # Ajout de distinct() pour éviter les doublons
+
+        result = [  
+            {  
+                'idparagraphe': detail['idparagraphe__id'],  
+                'nom': detail['idparagraphe__nom'],  
+                'idoperation': selected_id  
+            }  
+            for detail in paragraphs  
+        ]  
+
+        return JsonResponse(result, safe=False)  # Retourner la liste des résultats  
+    except Exception as e:  
+        return JsonResponse({'error': str(e)}, status=500)
+
+def search_annee_lettre(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    
+    try:  
+        # Récupérer les années en fonction de l'opération et du paragraphe  
+        annees = Annee.objects.filter(  
+            operationdetail__idoperation_id=operation_id,  
+            operationdetail__idparagraphe_id=paragraph_id  
+        ).distinct()  # Utilise distinct() pour éviter les doublons  
+
+        data = [{'idannee': annee.id, 'annee': annee.nom} for annee in annees]  # Renvoie le nom de l'année  
+    except Exception as e:  
+        data = []  
+
+    return JsonResponse(data, safe=False)  
+
+
+def search_montant_lettre(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    year_id = request.GET.get('year_id')  
+
+    try:  
+        # Retrieve the amount based on the operation, paragraph, and year  
+        montant_detail = OperationDetail.objects.get(  
+            idoperation_id=operation_id,  
+            idparagraphe_id=paragraph_id,  
+            idannee_id=year_id  
+        )  
+        montant = montant_detail.montant_restant 
+
+        # If montant_restant is None, retrieve the alternative montant
+        if montant is None:
+            montant = montant_detail.montant  # Assuming 'montant' is the alternative field
+    except OperationDetail.DoesNotExist:  
+        montant = None  # No matching record found  
+
+    return JsonResponse({'montant': montant})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
+def add_ligne_lettre(request):
+    if request.method == 'POST':  
+        try:  
+            # Retrieve and validate input data
+            code = request.POST['code']  
+            reference = request.POST['reference']  
+            cu = float(request.POST['cu'])  
+            qte = int(request.POST['qte'])  
+            prixT = float(request.POST['prixT'])  
+            montant = float(request.POST['montant'])  
+            paragraphe = request.POST.get('paragraphe', '')  
+            operation = request.POST.get('operation', '')  
+            annee = request.POST.get('annee', '')  
+
+            # Retrieve instances, using get_object_or_404 for better error handling
+            instance_element = get_object_or_404(Elementcout, id=int(reference))  
+            instance_code = get_object_or_404(LettreCommande, id=int(code))  
+            instance_paragraphe = get_object_or_404(Paragraphe, id=int(paragraphe))  
+            instance_operation = get_object_or_404(Operation, id=int(operation))  
+            instance_annee = get_object_or_404(Annee, id=int(annee))  
+
+            if montant < prixT:  
+                messages.info(request, 'Cette référence ne peut être ajoutée car le montant engagé est inférieur au prix total.')  
+            else:  
+                montant_paragraphe = montant - prixT  
+                verified_operation_details = OperationDetail.objects.filter(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idannee=instance_annee  
+                )  
+
+                if verified_operation_details.exists():  
+                    operation_detail = verified_operation_details.first()  
+                    if operation_detail.montant_engage is None:
+                        operation_detail.montant_engage = 0.0  
+                    operation_detail.montant_engage += prixT  
+                    operation_detail.montant_restant = montant_paragraphe
+                    operation_detail.save()  
+
+                    # Create the line item
+                    save_ligne_commande = LigneLettreCommande.objects.create(  
+                        prixunitaire=cu,  
+                        quantite=qte,  
+                        total=prixT,  
+                        idelementcout=instance_element,  
+                        idlettrecommande=instance_code  
+                    )  
+                    messages.success(request, 'Enregistrement réussi.')  
+                else:  
+                    messages.warning(request, 'Les détails de l\'opération vérifiée n\'existent pas.')  
+
+            redirect_url = request.META.get('HTTP_REFERER', '/')  
+            return redirect(redirect_url)  
+
+        except KeyError as ke:  
+            messages.error(request, f'Erreur: Champ manquant - {str(ke)}')  
+        except ValueError as ve:  
+            messages.error(request, f'Erreur: Vérifiez les valeurs entrées. - {str(ve)}')  
+        except Exception as e:  
+            messages.error(request, f'Erreur: {str(e)}')  
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+def add_detail_ordonancement(request):
+    if request.method == 'POST':  
+        try:  
+            operation_id = request.POST['operation']  
+            sous_programme_id = request.POST['sous_programme']  
+            activite_id = request.POST['activite']  
+            tache_id = request.POST['tache']  
+            paragraphes = request.POST.getlist('paragraphe', [])  
+            # societe_id = request.POST['prestataire']  
+            lettre = request.POST['code']  
+
+            instance_operation = Operation.objects.get(id=int(operation_id))  
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme_id))  
+            instance_activite = Activite.objects.get(id=int(activite_id))  
+            instance_tache = Tache.objects.get(id=int(tache_id))  
+            instance_lettre_commande = Ordonancement.objects.get(id=int(lettre))  
+            # instance_societe = Societe.objects.get(id=int(societe_id))  
+            print(paragraphes)
+            # Création de détails pour chaque paragraphe  
+            for paragraphe_id in paragraphes:  
+                instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe_id))  
+                
+                save_lettrecommande = DetailOrdonancement.objects.create(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idsousprogramme=instance_sous_programme,  
+                    # idsociete=instance_societe,  
+                    idtache=instance_tache,  
+                    idactivite=instance_activite,  
+                    idordonancement=instance_lettre_commande  
+                )  
+                save_lettrecommande.save()  
+
+            messages.success(request, 'Enregistrement Reussi')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        
+        except Operation.DoesNotExist:  
+            messages.error(request, 'L\'opération spécifiée n\'existe pas.')  
+        except Sousprogramme.DoesNotExist:  
+            messages.error(request, 'Le sous-programme spécifié n\'existe pas.')  
+        except Activite.DoesNotExist:  
+            messages.error(request, 'L\'activité spécifiée n\'existe pas.')  
+        except Tache.DoesNotExist:  
+            messages.error(request, 'La tâche spécifiée n\'existe pas.')  
+        except Paragraphe.DoesNotExist:  
+            messages.error(request, 'Le paragraphe spécifié n\'existe pas.')  
+        except Boncommande.DoesNotExist:  
+            messages.error(request, 'Le bon de commande spécifié n\'existe pas.')  
+        except Societe.DoesNotExist:  
+            messages.error(request, 'La société spécifiée n\'existe pas.')  
+        except Exception as e:  
+            messages.error(request, f'une erreur est survenue: {e}')  
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+
+
+   
+def add_references_ordonancement(request, id):
+    # Récupérer la lettre de commande
+    try:
+        ordonancement = Ordonancement.objects.get(id=int(id))
+    except Ordonancement.DoesNotExist:
+        return HttpResponse("Ordonancement  non trouvée.", status=404)
+
+    # Récupérer les détails de la lettre de commande
+    detail_ordonancement = DetailOrdonancement.objects.filter(idordonancement=id)
+    
+    # Rassembler les opérations liées
+    operation_liee = [detail.idoperation for detail in detail_ordonancement]
+    ligne_ordonancement = LigneOrdonancement.objects.filter(idordonancement = id)
+
+    # Préparer le contexte pour le rendu
+    reference = Elementcout.objects.all()
+
+    context = {
+        'detail_ordonancement': detail_ordonancement,
+        'operation_liee': operation_liee,
+        'reference':reference,
+        'ligne_ordonancement':ligne_ordonancement
+    }
+
+    # Spécifier le modèle à utiliser pour le rendu
+    template = '../website/ligneordonancement.html'
+    return render(request, template, context)
+
+
+
+
+
+
+def search_paragraphe_ordonancement(request):  
+    selected_id = request.GET.get('id')  
+
+    # Validez que l'ID est fourni et qu'il est numérique  
+    if not selected_id or not selected_id.isdigit():  
+        return JsonResponse({'error': 'ID non valide'}, status=400)  
+
+    selected_id = int(selected_id)  # Convertir en entier pour le filtrage  
+    
+    try:  
+        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié, en évitant les doublons
+        paragraphs = OperationDetail.objects.filter(idoperation=selected_id) \
+            .select_related('idparagraphe') \
+            .values('idparagraphe__id', 'idparagraphe__nom') \
+            .distinct()  # Ajout de distinct() pour éviter les doublons
+
+        result = [  
+            {  
+                'idparagraphe': detail['idparagraphe__id'],  
+                'nom': detail['idparagraphe__nom'],  
+                'idoperation': selected_id  
+            }  
+            for detail in paragraphs  
+        ]  
+
+        return JsonResponse(result, safe=False)  # Retourner la liste des résultats  
+    except Exception as e:  
+        return JsonResponse({'error': str(e)}, status=500)
+
+def search_annee_ordonancement(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    
+    try:  
+        # Récupérer les années en fonction de l'opération et du paragraphe  
+        annees = Annee.objects.filter(  
+            operationdetail__idoperation_id=operation_id,  
+            operationdetail__idparagraphe_id=paragraph_id  
+        ).distinct()  # Utilise distinct() pour éviter les doublons  
+
+        data = [{'idannee': annee.id, 'annee': annee.nom} for annee in annees]  # Renvoie le nom de l'année  
+    except Exception as e:  
+        data = []  
+
+    return JsonResponse(data, safe=False)  
+
+
+def search_montant_ordonancement(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    year_id = request.GET.get('year_id')  
+
+    try:  
+        # Retrieve the amount based on the operation, paragraph, and year  
+        montant_detail = OperationDetail.objects.get(  
+            idoperation_id=operation_id,  
+            idparagraphe_id=paragraph_id,  
+            idannee_id=year_id  
+        )  
+        montant = montant_detail.montant_restant 
+
+        # If montant_restant is None, retrieve the alternative montant
+        if montant is None:
+            montant = montant_detail.montant  # Assuming 'montant' is the alternative field
+    except OperationDetail.DoesNotExist:  
+        montant = None  # No matching record found  
+
+    return JsonResponse({'montant': montant})
+def add_ligne_ordonancement(request):
+    if request.method == 'POST':  
+        try:  
+            # Retrieve and validate input data
+            code = request.POST['code']  
+            # reference = request.POST['reference']  
+            cu = float(request.POST['cu'])  
+            qte = int(request.POST['qte'])  
+            prixT = float(request.POST['prixT'])  
+            montant = float(request.POST['montant'])  
+            paragraphe = request.POST.get('paragraphe', '')  
+            operation = request.POST.get('operation', '')  
+            annee = request.POST.get('annee', '')  
+
+            # Retrieve instances, using get_object_or_404 for better error handling
+            # instance_element = get_object_or_404(Elementcout, id=int(reference))  
+            instance_code = get_object_or_404(Ordonancement, id=int(code))  
+            instance_paragraphe = get_object_or_404(Paragraphe, id=int(paragraphe))  
+            instance_operation = get_object_or_404(Operation, id=int(operation))  
+            instance_annee = get_object_or_404(Annee, id=int(annee))  
+
+            if montant < prixT:  
+                messages.info(request, 'Cette référence ne peut être ajoutée car le montant engagé est inférieur au prix total.')  
+            else:  
+                montant_paragraphe = montant - prixT  
+                verified_operation_details = OperationDetail.objects.filter(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idannee=instance_annee  
+                )  
+
+                if verified_operation_details.exists():  
+                    operation_detail = verified_operation_details.first()  
+                    if operation_detail.montant_engage is None:
+                        operation_detail.montant_engage = 0.0  
+                    operation_detail.montant_engage += prixT  
+                    operation_detail.montant_restant = montant_paragraphe
+                    operation_detail.save()  
+
+                    # Create the line item
+                    save_ligne_commande = LigneOrdonancement.objects.create(  
+                        prixunitaire=cu,  
+                        quantite=qte,  
+                        total=prixT,  
+                        
+                        idordonancement=instance_code  
+                    )  
+                    messages.success(request, 'Enregistrement réussi.')  
+                else:  
+                    messages.warning(request, 'Les détails de l\'opération vérifiée n\'existent pas.')  
+
+            redirect_url = request.META.get('HTTP_REFERER', '/')  
+            return redirect(redirect_url)  
+
+        except KeyError as ke:  
+            messages.error(request, f'Erreur: Champ manquant - {str(ke)}')  
+        except ValueError as ve:  
+            messages.error(request, f'Erreur: Vérifiez les valeurs entrées. - {str(ve)}')  
+        except Exception as e:  
+            messages.error(request, f'Erreur: {str(e)}')  
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))  

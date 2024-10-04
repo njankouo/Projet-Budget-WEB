@@ -156,7 +156,7 @@ urlpatterns = [
     path('liquide/<int:id>/',views.liquide,name='liquide'),
     path('valid_paiement/<int:id>/',views.valid_paiement,name='valid_paiement'),
 
-    path('search_annee/',views.search_annee,name='search_annee'),
+    path('search_annee_simple/',views.search_annee_simple,name='search_annee'),
     path('search_montant/',views.search_montant,name='search_montant'),
     path('serve_qr_code/',views.serve_qr_code,name='serve_qr_code'),
     path('certificat/<int:id>/',views.certificat,name='certificat'),
@@ -182,7 +182,24 @@ urlpatterns = [
     path('add_marche/',views.add_marche,name='add_marche'),
     path('add_operation_marche/<int:id>/',views.add_operation_marche,name='add_operation_marche'),
 
-    path('search_annee/',views.search_annee,name='search_annee')
+    path('search_annee/',views.search_annee,name='search_annee'),
+    path('edit_operation/<int:id>/',views.edit_operation,name='edit_operation'),
+
+    path('edit_operation_list/<int:id>/',views.edit_operation_list,name='edit_operation_list'),
+    path('search_paragraphe_lettre/',views.search_paragraphe_lettre,name='search_paragraphe_lettre'),
+    path('search_annee_lettre/',views.search_annee_lettre,name='search_annee_lettre'),
+    path('search_montant_lettre/',views.search_montant_lettre,name='search_montant_lettre'),
+    path('add_ligne_lettre/',views.add_ligne_lettre,name='add_ligne_lettre'),
+    path('add_detail_ordonancement/',views.add_detail_ordonancement,name='add_detail_ordonancement'),
+    path('add_references_ordonancement/<int:id>/',views.add_references_ordonancement,name='add_references_ordonancement'),
+
+
+    path('search_paragraphe_ordonancement/',views.search_paragraphe_ordonancement,name='search_paragraphe_ordonancement'),
+    path('search_annee_ordonancement/',views.search_annee_ordonancement,name='search_annee_ordonancement'),
+    path('search_montant_ordonancement/',views.search_montant_ordonancement,name='search_montant_ordonancement'),
+
+    path('add_ligne_ordonancement/',views.add_ligne_ordonancement,name='add_ligne_ordonancement')
+
 
 
 

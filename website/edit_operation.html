@@ -1,0 +1,271 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.4/sweetalert2.min.css">  
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+
+{%extends 'master.html'%}
+{%block content%}
+<div class="row">
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">MISE A JOUR DE L'OPERATION {{operation.nom}}</h5>
+
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+              <li class="breadcrumb-item"><a href="#">Operation</a></li>
+              
+            </ol>
+          </nav>
+        </div>
+      </div>
+
+      
+
+
+
+
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Veuillez Mettre A Jour Les Informations Relatives Aux Operations</h5>
+
+          <!-- Advanced Form Elements -->
+          <form method="POST" action="/edit_operation_list/{{operation.id}}/">
+            {%csrf_token%}
+          
+            
+
+            <div class="row mb-3">
+
+              <div class="col-sm-12">
+                
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInput" placeholder="Nom Operation" value="{{operation.nom}}" name="nom">
+                  <label for="floatingInput">Nom Operation</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <select class="form-control" name="annee" id="annee">
+                   
+                    {%for annees in annee%}
+                    {%if operation.idannee_id == annees.id%}
+                        <option value="{{annees.id}}" selected>{{annees.nom}}</option>
+                        {%else%}
+                        <option value="{{annees.id}}" >{{annees.nom}}</option>
+                        {%endif%}
+                    {%endfor%}
+                  </select>
+                  <label for="floatingPassword">Annee Budgetaire</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-control" name="sous_programme" id="sous_programme">
+                      <option>Selectionnez Un Sous Programme</option>
+                      {%for sous_programmes in sous_programme%}
+                      {%if operation.idsousprogramme_id == sous_programmes.id%}
+                          <option value="{{sous_programmes.id}}" selected>{{sous_programmes.nom}}</option>
+                          {%else%}
+                          <option value="{{sous_programmes.id}}" >{{sous_programmes.nom}}</option>
+                          {%endif%}
+                      {%endfor%}
+                    </select>
+                    <label for="floatingPassword">Sous Programme</label>
+                  </div>
+                
+                  <div class="form-floating mb-3">
+                    <select class="form-control" name="activite" id="activite">
+                      <option>Selectionnez Une Activite</option>
+                      {%for activites in activite%}
+                      {%if operation.idactivite_id == activites.id%}
+                          <option value="{{activites.id}}" selected>{{activites.nom}}</option>
+                          {%else%}
+                          <option value="{{activites.id}}" >{{activites.nom}}</option>
+                          {%endif%}
+                      {%endfor%}
+                    </select>
+                    <label for="floatingPassword">Activite</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <select class="form-control" name="tache" id="tache">
+                      <option>Selectionnez Une Tache</option>
+                      {%for taches in tache%}
+                      {%if operation.idtache_id == taches.id%}
+                          <option value="{{taches.id}}" selected>{{taches.nom}}</option>
+                          {%else%}
+                          <option value="{{taches.id}}" >{{taches.nom}}</option>
+                          {%endif%}
+                      {%endfor%}
+                    </select>
+                    <label for="floatingPassword">Tache</label>
+                  </div>
+
+                  <div class="form-floating mb-3">
+                    <select class="form-control" name="type" id="type">
+                      <option>Selectionnez Un Type De Financement</option>
+                      {%for type in type_financement%}
+                      {%if operation.idtypefinancement_id == type.id%}
+                          <option value="{{type.id}}" selected>{{type.nom}}</option>
+                          {%else%}
+                          <option value="{{type.id}}" >{{type.nom}}</option>
+                          {%endif%}
+                      {%endfor%}
+                    </select>
+                    <label for="floatingPassword">Type Financement</label>
+                  </div>
+
+                  <div class="form-floating mb-3">
+                    <h5 class="mx-2">Les Sources De Financements</h5>
+                    {%for source_financement_operations in source_financement_operation%}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck1" value="{{source_financement_operations.id}}" checked  name="source_financement" >
+                        <label class="form-check-label" for="gridCheck1">
+                         {{source_financement_operations.nom}}
+                        </label>
+                      </div>
+                    {%endfor%}
+                    {%for source_finance_no_operations in source_finance_no_operation%}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck1" value="{{source_finance_no_operations.id}}" name="source_financement" >
+                        <label class="form-check-label" for="gridCheck1">
+                         {{source_finance_no_operations.nom}}
+                        </label>
+                      </div>
+                    {%endfor%}
+                  </div>
+
+
+
+                  <div class="form-floating mb-3">
+                    <select class="form-control" name="structure" id="structure">
+                      <option>Selectionnez Une structure</option>
+                      {%for structures in structure%}
+                      {%if operation.idstructure_id == structures.id%}
+                          <option value="{{structures.id}}" selected>{{structures.nom}}</option>
+                          {%else%}
+                          <option value="{{structures.id}}" >{{structures.nom}}</option>
+                          {%endif%}
+                      {%endfor%}
+                    </select>
+                    <label for="floatingPassword">Structure</label>
+                  </div>
+
+                  <div class="form-floating mb-3">
+                    <select class="form-control" name="institution" id="institution">
+                      
+                      {%for institutions in institution%}
+                      {%if operation.idinstitution_id == institutions.id%}
+                          <option value="{{institutions.id}}" selected>{{institutions.nom}}</option>
+                          {%else%}
+                          <option value="{{institutions.id}}" >{{institutions.nom}}</option>
+                          {%endif%}
+                      {%endfor%}
+                    </select>
+                    <label for="floatingPassword">Institution</label>
+                  </div>
+              </div>
+            </div>
+
+          
+
+             <button type="submit" class="btn btn-primary" style="float: right;">MISE A JOUR </button>
+
+          </form><!-- End General Form Elements -->
+
+        </div>
+      </div>
+      </div>
+
+    </div>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+  
+    <script>  
+    
+        new TomSelect("#annee",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+       <script>  
+    
+        new TomSelect("#sous_programme",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+      <script>  
+    
+        new TomSelect("#activite",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+     <script>  
+    
+        new TomSelect("#tache",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+      <script>  
+    
+        new TomSelect("#type",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+      <script>  
+    
+        new TomSelect("#institution",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+      <script>  
+    
+        new TomSelect("#structure",{
+        persist: false,
+        createOnBlur: true,
+        create: true
+    });
+    </script>
+    {% for message in messages %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     {% if message.tags == 'success' %}
+    
+    <script type="text/javascript">
+     Swal.fire({
+     position: "top-end",
+     icon: "success",
+     title: "{{message}}",
+     showConfirmButton: false,
+     timer: 2000
+    });
+    </script>
+    {%endif%}
+    {%endfor%}
+    </script>
+    {% for message in messages %}
+    
+     {% if message.tags == 'error' %}
+    
+    <script type="text/javascript">
+     Swal.fire({
+     position: "top-end",
+     icon: "error",
+     title: "{{message}}",
+     showConfirmButton: false,
+     timer: 5000
+    });
+    </script>
+    {%endif%}
+    {%endfor%}
+    
+{%endblock%}

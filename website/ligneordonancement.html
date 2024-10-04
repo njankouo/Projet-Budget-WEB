@@ -210,13 +210,13 @@
           <div class="col-md-12">
               <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES DE LA  Lettre COMMANDES <b class="text-primary"  style="font-weight: bold;">{{lettre.numero_lettre}}</b> </h5>
+                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES D'ORDONANCEMENT <b class="text-primary"  style="font-weight: bold;">{{lettre.numero_lettre}}</b> </h5>
       
                     <nav>
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                         
-                        <li class="breadcrumb-item active">Ligne Lettre Commande</li>
+                        <li class="breadcrumb-item active">Ligne Ordonancement</li>
                       </ol>
                     </nav>
                   </div>
@@ -226,8 +226,8 @@
      
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande {{lettre.numero_lettre}}</h5>
-              <form class="row g-3" method="POST" action="/add_ligne_lettre/">
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Montants L'ordonancement {{detail_ordonancement.numero_ordonancement}}</h5>
+              <form class="row g-3" method="POST" action="/add_ligne_ordonancement/">
                 {%csrf_token%}
 
                 <div class="col-md-4">
@@ -260,7 +260,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                   <div class="form-floating">
                     <select class="form-control" name="reference" id="reference">
                             <option></option>
@@ -270,8 +270,8 @@
                     </select>
                     <label for="floatingName">Selectionnez Une References Mercuriale</label>
                   </div>
-                </div>
-                <div class="col-md-6">
+                </div> -->
+                <div class="col-md-4" >
                   <div class="form-floating">
                     <input type="text" class="form-control" id="montant" placeholder="Montant Du Paragraphe" name="montant" >
              
@@ -281,12 +281,12 @@
                 <div class="col-md-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="cu" placeholder="Cout Unitaire " name="cu"oninput="calculateTotal()">
-                    <label for="floatingEmail">Cout Unitaire</label>
+                    <label for="floatingEmail">Salaire</label>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4"style="display: none;">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="qte" placeholder="Quantite" oninput="calculateTotal()" name="qte">
+                    <input type="text" class="form-control" id="qte" placeholder="Quantite" oninput="calculateTotal()" name="qte" value="1">
                     <label for="floatingPassword">Qte</label>
                   </div>
                 </div>
@@ -301,11 +301,11 @@
                   <div class="col-md-12">
                     <div class="form-floating">
                       <select class="form-control" name="code" id="code" >
-                        
-                        <option value="{{lettre.id}}" selected>{{lettre.numero_lettre}}</option>
-                        
+                        {%for detail_ordonancements in detail_ordonancement%}
+                        <option value="{{detail_ordonancements.id}}" selected>{{detail_ordonancements.numero_ordonancement }}</option>
+                        {%endfor%}
                       </select>
-                      <label for="floatingCity">Code Lettre Commande</label>
+                      <label for="floatingCity">Code Ordonancement</label>
                     </div>
                   </div>
                 </div>
@@ -313,7 +313,7 @@
                   <div class="form-floating mb-3">
                     <select class="form-select" id="societe" aria-label="State">
                     
-                      <option value="{{lettre.idsociete}}">{{lettre.idsociete}}</option>
+                      <option value="{{ordonancement.idsociete}}">{{ordonancement.idsociete.nom}}</option>
                      
                     </select>
                     <label for="floatingSelect">Prestataire</label>
@@ -341,7 +341,7 @@
       <div class="table-title">
         <div class="row">
           <div class="col-sm-12">
-           <h5 style="font-weight:bold">References Mercuriales Ajoutee</h5>
+           <h5 style="font-weight:bold">Salaires Ajoutees</h5>
           </div>
         
         </div>
@@ -545,7 +545,7 @@ create: true
         $('#annee').text('Chargement...');  
 
         $.ajax({  
-            url: '/search_paragraphe_lettre/',  
+            url: '/search_paragraphe_ordonancement/',  
             method: 'GET',  
             data: { id: selectedId },  
             success: function(data) {  
@@ -594,7 +594,7 @@ create: true
             }));  
 
             $.ajax({  
-                url: '/search_annee_lettre/', // URL pour récupérer les années  
+                url: '/search_annee_ordonancement/', // URL pour récupérer les années  
                 method: 'GET',  
                 data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId },  
                 success: function(data) {  
@@ -639,7 +639,7 @@ create: true
             montantDisplay.text('Chargement du montant...'); // Indiquer que le montant est en train d'être chargé  
 
             $.ajax({  
-    url: '/search_montant_lettre/', // URL pour récupérer le montant  
+    url: '/search_montant_ordonancement/', // URL pour récupérer le montant  
     method: 'GET',  
     data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId, year_id: selectedYearId },  
     success: function(data) {  

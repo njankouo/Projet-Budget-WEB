@@ -527,7 +527,7 @@
           
 
           $.ajax({  
-              url: '/search_annee/',  
+              url: '/search_annee_simple/',  
               method: 'GET',  
               data: { id: selectedId },  
               success: function(data) {  
@@ -553,7 +553,7 @@
                   } else {  
                       selectInformations.append($('<option>', {  
                           value: '',  
-                          text: 'Aucun paragraphe disponible'  
+                          text: 'Aucune Operation disponible'  
                       }));  
                       selectInformations.prop("disabled", true); // Désactiver le sélecteur si aucun élément  
                   }  

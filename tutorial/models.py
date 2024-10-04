@@ -1105,6 +1105,10 @@ class OperationDetail(models.Model):
     idoperation = models.ForeignKey(Operation,on_delete=models.CASCADE,null=True)
     idannee=models.ForeignKey(Annee,on_delete=models.CASCADE,null=True)
     montant = models.IntegerField(null=True)
+    montant_engage=models.IntegerField(null=True,default=0)
+    montant_valide=models.IntegerField(null=True,default=0)
+    montant_liquide=models.IntegerField(null=True,default=0)
+    montant_restant=models.IntegerField(null=True,default=0)
     idparagraphe=models.ForeignKey(Paragraphe,on_delete=models.CASCADE,null=True)
     
 # class OperationDetailMontant(models.Model):
@@ -2243,7 +2247,7 @@ class Ordonancement(models.Model):
 
 
 class DetailOrdonancement(models.Model):
-    idlettrecommande = models.ForeignKey(LettreCommande,on_delete=models.CASCADE,null=True)
+    idordonancement = models.ForeignKey(Ordonancement,on_delete=models.CASCADE,null=True)
     idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
     idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
     # idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
@@ -2265,8 +2269,30 @@ class Marche(models.Model):
     idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
     idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
 
+class LigneLettreCommande(models.Model):
+    prixunitaire=models.CharField(max_length=255,null=True)
+    quantite=models.CharField(max_length=255,null=True)
+    total=models.IntegerField(null=True)
+    prixmercurial=models.CharField(max_length=255,null=True)
+    verif=models.CharField(max_length=255,null=True)
+    references=models.CharField(max_length=255,null=True)
+    idelementcout=models.ForeignKey(Elementcout, on_delete=models.CASCADE, null=True,blank=True, db_column='idelementcout')
+    idlettrecommande=models.ForeignKey(LettreCommande, on_delete=models.CASCADE, null=True,blank=True, db_column='idboncommande')
+    class Meta:
+        db_table = 'lignelettrecommande'  
 
 
+class LigneOrdonancement(models.Model):
+    prixunitaire=models.CharField(max_length=255,null=True)
+    quantite=models.CharField(max_length=255,null=True)
+    total=models.IntegerField(null=True)
+    prixmercurial=models.CharField(max_length=255,null=True)
+    verif=models.CharField(max_length=255,null=True)
+    references=models.CharField(max_length=255,null=True)
+    # idelementcout=models.ForeignKey(Elementcout, on_delete=models.CASCADE, null=True,blank=True, db_column='idelementcout')
+    idordonancement=models.ForeignKey(Ordonancement, on_delete=models.CASCADE, null=True,blank=True, db_column='idboncommande')
+    class Meta:
+        db_table = 'ligneordonancement'  
 
 
 

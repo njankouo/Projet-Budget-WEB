@@ -82,6 +82,7 @@
                 <th scope="col">Montant Engag&eacute;</th>
                 <th scope="col">Montant Valid&eacute;</th>
                 <th scope="col">Montant Liquid&eacute;</th>
+                <th scope="col">Montant Restant</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -94,10 +95,10 @@
                 <td>{{operation_details.idparagraphe.nom}}</td>
                 <td>{{operation_details.idannee}}</td>
                 <td>{{operation_details.montant}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-          
+                <td>{{operation_details.montant_engage}}</td>
+                <td>{{operation_details.montant_valide}}</td>
+                <td>{{operation_details.montant_liquide}}</td>
+                <td>{{operation_details.montant_restant}}</td>
                 <td>
                 <a href="/delete_paragraphe_operation/{{operation_details.id}}/" class="delete btn btn-danger" ><i class="bi bi-trash" data-toggle="tooltip" title="Delete"></i></a>
                 <a  class="delete btn btn-primary"data-bs-toggle="modal" data-bs-target="#largeModal{{operation_details.id}}" ><i class="bi bi-pencil-square" data-toggle="tooltip" title="edit"></i></a>
