@@ -349,9 +349,7 @@
       <table class="table table-hover table-responsive text-center" id="myTable">
         <thead>
           <tr>
-            <th class="text-primary" style="width: 30%; font-weight: bold;">
-          Designation
-            </th>
+          
        
         
             <th style="width: 50%;">Qte</th>
@@ -363,19 +361,16 @@
         </thead>
         <tbody>
      
-            {%for ligne_lettres in ligne_lettre%}
+            {%for ligne_ordonancements in ligne_ordonancement%}
            
             <tr>
                
-                <td>{{ligne_lettres.idelementcout}}
                
-                  
-                </td>
                 
-                <td>{{ligne_lettres.quantite}}</td>
-                <td>{{ligne_lettres.prixunitaire}}</td>
+                <td>{{ligne_ordonancements.quantite}}</td>
+                <td>{{ligne_ordonancements.prixunitaire}}</td>
                 
-                <td>{{ligne_lettres.total}}</td>
+                <td>{{ligne_ordonancements.total}}</td>
                 <td>
                        <a href='/delete_commande/{{ligneboncommandes.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
                 </td>
