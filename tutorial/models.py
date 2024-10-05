@@ -2211,9 +2211,9 @@ class Decision(models.Model):
     idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
 
 
-class Signataire(models.Model):
-    libelle= models.CharField(null=True,max_length=255)
-    code = models.CharField(null=True,max_length=255)
+# class Signataire(models.Model):
+#     libelle= models.CharField(null=True,max_length=255)
+#     code = models.CharField(null=True,max_length=255)
 
 class LettreCommande(models.Model):
     numero_lettre = models.CharField(null=True,max_length=255)
@@ -2294,13 +2294,58 @@ class LigneOrdonancement(models.Model):
     class Meta:
         db_table = 'ligneordonancement'  
 
+class DetailDecision(models.Model):
+    iddecision = models.ForeignKey(Decision,on_delete=models.CASCADE,null=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
+    # idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
+    idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True)
+    idoperation=models.ForeignKey(Operation, on_delete=models.CASCADE, null=True,blank=True)
+    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True)
+
+    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure,on_delete=models.CASCADE,null=True)
+    idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
+
+
+class LigneDecision(models.Model):
+    prixunitaire=models.CharField(max_length=255,null=True)
+    quantite=models.CharField(max_length=255,null=True)
+    total=models.IntegerField(null=True)
+    prixmercurial=models.CharField(max_length=255,null=True)
+    verif=models.CharField(max_length=255,null=True)
+    iddecision=models.ForeignKey(Decision, on_delete=models.CASCADE, null=True,blank=True, db_column='idboncommande')
+    class Meta:
+        db_table = 'lignedecision'  
+
+class DetailMarche(models.Model):
+    idmarche = models.ForeignKey(Marche,on_delete=models.CASCADE,null=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure, on_delete=models.CASCADE, null=True,blank=True, db_column='idstructure')
+    # idsociete=models.ForeignKey(Societe, on_delete=models.CASCADE, null=True,blank=True, db_column='idsociete')
+    idsousprogramme=models.ForeignKey(Sousprogramme, on_delete=models.CASCADE, null=True,blank=True)
+    idoperation=models.ForeignKey(Operation, on_delete=models.CASCADE, null=True,blank=True)
+    idactivite=models.ForeignKey(Activite, on_delete=models.CASCADE, null=True,blank=True)
+
+    idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
+    idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
+    idstructure=models.ForeignKey(Structure,on_delete=models.CASCADE,null=True)
+    idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
+    class META:
+        db_table='detailmarche'
 
 
 
-
-
-
-
+class LigneMarche(models.Model):
+    prixunitaire=models.CharField(max_length=255,null=True)
+    quantite=models.CharField(max_length=255,null=True)
+    total=models.IntegerField(null=True)
+    prixmercurial=models.CharField(max_length=255,null=True)
+    verif=models.CharField(max_length=255,null=True)
+    idmarche=models.ForeignKey(Marche, on_delete=models.CASCADE, null=True,blank=True, db_column='idboncommande')
+    class Meta:
+        db_table = 'lignemarche'  
 
 
 

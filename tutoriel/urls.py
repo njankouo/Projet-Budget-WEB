@@ -198,7 +198,16 @@ urlpatterns = [
     path('search_annee_ordonancement/',views.search_annee_ordonancement,name='search_annee_ordonancement'),
     path('search_montant_ordonancement/',views.search_montant_ordonancement,name='search_montant_ordonancement'),
 
-    path('add_ligne_ordonancement/',views.add_ligne_ordonancement,name='add_ligne_ordonancement')
+    path('add_ligne_ordonancement/',views.add_ligne_ordonancement,name='add_ligne_ordonancement'),
+    path('set_language/', views.set_language, name='set_language'),
+    path('add_operation_decision/',views.add_operation_decision,name='add_operation_decision'),
+    path('add_references_decision/<int:id>/',views.add_references_decision,name='add_references_decision'),
+    path('search_paragraphe_decision/',views.search_paragraphe_decision,name='search_paragraphe_decision'),
+    path('search_annee_decision/',views.search_annee_decision,name='search_annee_decision'),
+    path('search_montant_decision/',views.search_montant_decision,name='search_montant_decision'),
+    path('add_ligne_decision/',views.add_ligne_decision,name='add_ligne_decision'),
+    path('add_operation_marche_op/',views.add_operation_marche_op,name='add_operation_marche_op'),
+    path('add_references_marche/<int:id>/',views.add_references_marche,name='add_references_marche')
 
 
 

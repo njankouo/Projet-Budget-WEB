@@ -226,7 +226,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title"style='font-weight:bold'>Ajouter Des Operations Au Bon De Commande {{decision.numero_decision}}</h5>
-              <form class="row g-3" method="POST" action="/add_operation_commande/">
+              <form class="row g-3" method="POST" action="/add_operation_decision/">
                 {%csrf_token%}
                 <h5 style="font-weight: bold; font-family: forte;">Selectionnez L'annee Budgetaire
                   <select name="annee_budget" id="annee" class="form-control">
@@ -237,7 +237,7 @@
                     {%endfor%}
                   </select>
                 </h5>
-                    <input type="text" name="boncommande" value="{{ordonancement.id}}" style="display: none;">
+                    <input type="text" name="decision" value="{{decision.id}}" style="display: none;">
                 <div class="col-md-6">
                   <div class="form-floating">
                     <select class="form-control" name="operation" id="operation">
@@ -300,7 +300,7 @@
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Ajouter</button>
                 </form>
-                  <a type="button" href="/add_references/{{decision.id}}/" class="btn btn-dark"> Lignes Ordonancement</a>
+                  <a type="button" href="/add_references_decision/{{decision.id}}/" class="btn btn-dark"> Lignes Decisions</a>
          
                 </div>
          
@@ -339,14 +339,14 @@
           </tr>
         </thead>
         <tbody>
-          {%for detail_bon_commandes in detail_bon_commande%}
+          {%for detai_decisions in detai_decision%}
           <tr>
-            <td>{{detail_bon_commandes.idoperation}}</td>
-              <td>{{detail_bon_commandes.idsousprogramme.nom}}</td>
-              <td>{{detail_bon_commandes.idactivite}}</td>
-              <td>{{detail_bon_commandes.idtache}}</td>
-              <td>{{detail_bon_commandes.idparagraphe.nom}}</td>
-              <td>{{detail_bon_commandes.idsociete}}</td>
+            <td>{{detai_decisions.idoperation}}</td>
+              <td>{{detai_decisions.idsousprogramme.nom}}</td>
+              <td>{{detai_decisions.idactivite}}</td>
+              <td>{{detai_decisions.idtache}}</td>
+              <td>{{detai_decisions.idparagraphe.nom}}</td>
+              <td>{{detai_decisions.idsociete}}</td>
             </tr>  
            {%endfor%}
          

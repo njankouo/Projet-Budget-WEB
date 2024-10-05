@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'tutoriel.urls'
@@ -71,7 +72,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tutoriel.wsgi.application'
+LANGUAGES = [
+    ('en', 'Anglais'),
+    ('fr', 'Français'),
+    
+]
 
+LANGUAGE_SESSION_KEY = 'django_language'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

@@ -210,13 +210,13 @@
           <div class="col-md-12">
               <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES D'ORDONANCEMENT <b class="text-primary"  style="font-weight: bold;">{{lettre.numero_lettre}}</b> </h5>
+                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES March&eacute;s <b class="text-primary"  style="font-weight: bold;">{{boncommande.code}}</b> </h5>
       
                     <nav>
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                         
-                        <li class="breadcrumb-item active">Ligne Ordonancement</li>
+                        <li class="breadcrumb-item active">Ligne March&eacute;</li>
                       </ol>
                     </nav>
                   </div>
@@ -226,15 +226,15 @@
      
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Montants L'ordonancement {{detail_ordonancement.numero_ordonancement}}</h5>
-              <form class="row g-3" method="POST" action="/add_ligne_ordonancement/">
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des References A La Commande {{bon_commande_id}}</h5>
+              <form class="row g-3" method="POST" action="/add_ligne_marche/">
                 {%csrf_token%}
 
                 <div class="col-md-4">
                   <div class="form-floating">
                     <select class="form-control" name="operation" id="operation">
                       <option></option>
-                      {% for operation in operation_liee %}
+                      {% for operation in operations_liees %}
                           <option value="{{ operation.id }}">{{ operation.nom }}</option>
                       {% endfor %}
                     </select>
@@ -260,7 +260,7 @@
                   </div>
                 </div>
 
-                <!-- <div class="col-md-6">
+                <div class="col-md-6">
                   <div class="form-floating">
                     <select class="form-control" name="reference" id="reference">
                             <option></option>
@@ -268,10 +268,10 @@
                             <option value="{{references.id}}">{{references.code}}-{{references.nom}}</option>
                             {%endfor%}
                     </select>
-                    <label for="floatingName">Selectionnez Une References Mercuriale</label>
+                    <label for="floatingName">Selectionnez Une References</label>
                   </div>
-                </div> -->
-                <div class="col-md-4" >
+                </div>
+                <div class="col-md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="montant" placeholder="Montant Du Paragraphe" name="montant" >
              
@@ -281,12 +281,12 @@
                 <div class="col-md-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="cu" placeholder="Cout Unitaire " name="cu"oninput="calculateTotal()">
-                    <label for="floatingEmail">Salaire</label>
+                    <label for="floatingEmail">Cout Unitaire</label>
                   </div>
                 </div>
-                <div class="col-md-4"style="display: none;">
+                <div class="col-md-4">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="qte" placeholder="Quantite" oninput="calculateTotal()" name="qte" value="1">
+                    <input type="text" class="form-control" id="qte" placeholder="Quantite" oninput="calculateTotal()" name="qte">
                     <label for="floatingPassword">Qte</label>
                   </div>
                 </div>
@@ -301,20 +301,20 @@
                   <div class="col-md-12">
                     <div class="form-floating">
                       <select class="form-control" name="code" id="code" >
-                  
-                        <option value="{{ordonancement.id}}" selected>{{ordonancement.numero_ordonancement }}</option>
+                
+                        <option value="{{marche.id}}" selected>{{marche.numero_marche}}</option>
                         
                       </select>
-                      <label for="floatingCity">Code Ordonancement</label>
+                      <label for="floatingCity">Code Commande</label>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-floating mb-3">
                     <select class="form-select" id="societe" aria-label="State">
+                      
+                      <option value="{{marche.idsociete}}">{{marche.idsociete}}</option>
                     
-                      <option value="{{ordonancement.idsociete}}">{{ordonancement.idsociete.nom}}</option>
-                     
                     </select>
                     <label for="floatingSelect">Prestataire</label>
                   </div>
@@ -340,37 +340,46 @@
     <div class="table-wrapper">
       <div class="table-title">
         <div class="row">
-          <div class="col-sm-12">
-           <h5 style="font-weight:bold">Salaires Ajoutees</h5>
+          <div class="col-sm-6">
+           <h5 style="font-weight:bold">References Ajoutee</h5>
           </div>
-        
+        <div class="col-sm-6">
+            <!-- <a  class="btn btn-success"><i class="bi bi-printer"></i> <span>Imprimer Le Bon De Commande</span></a> -->
+            <!-- <a href="" class="btn btn-danger"><i class="bi bi-dash-circle-dotted"></i> <span>supprimer</span></a>
+          -->
+        </div>  
         </div>
       </div>
       <table class="table table-hover table-responsive text-center" id="myTable">
         <thead>
           <tr>
-          
+            <th class="text-primary" style="width: 30%; font-weight: bold;">
+          Designation
+            </th>
        
         
             <th style="width: 50%;">Qte</th>
         
             <th style="width: 20%;">Cu</th>
             <th style="width: 20%;">Prix Total</th>
-            <th style="width: 20%;">Action</th>
+            
           </tr>
         </thead>
         <tbody>
      
-            {%for ligne_ordonancements in ligne_ordonancement%}
+            {%for ligneboncommandes in lignecommande%}
            
             <tr>
                
+                <td>{{ligneboncommandes.idelementcout}}
                
+                  
+                </td>
                 
-                <td>{{ligne_ordonancements.quantite}}</td>
-                <td>{{ligne_ordonancements.prixunitaire}}</td>
+                <td>{{ligneboncommandes.quantite}}</td>
+                <td>{{ligneboncommandes.prixunitaire}}</td>
                 
-                <td>{{ligne_ordonancements.total}}</td>
+                <td>{{ligneboncommandes.total}}</td>
                 <td>
                        <a href='/delete_commande/{{ligneboncommandes.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
                 </td>
@@ -540,7 +549,7 @@ create: true
         $('#annee').text('Chargement...');  
 
         $.ajax({  
-            url: '/search_paragraphe_ordonancement/',  
+            url: '/search_paragraphe/',  
             method: 'GET',  
             data: { id: selectedId },  
             success: function(data) {  
@@ -589,7 +598,7 @@ create: true
             }));  
 
             $.ajax({  
-                url: '/search_annee_ordonancement/', // URL pour récupérer les années  
+                url: '/search_annee/', // URL pour récupérer les années  
                 method: 'GET',  
                 data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId },  
                 success: function(data) {  
@@ -634,7 +643,7 @@ create: true
             montantDisplay.text('Chargement du montant...'); // Indiquer que le montant est en train d'être chargé  
 
             $.ajax({  
-    url: '/search_montant_ordonancement/', // URL pour récupérer le montant  
+    url: '/search_montant/', // URL pour récupérer le montant  
     method: 'GET',  
     data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId, year_id: selectedYearId },  
     success: function(data) {  

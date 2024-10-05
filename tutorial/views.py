@@ -17,7 +17,15 @@ def Home(request):
     template="../website/authentification/login.html"
     return render(request,template)
 
+from django.utils import translation
+from django.conf import settings
 
+def set_language(request):
+    user_language = request.GET.get('language', 'en')
+    
+    translation.activate(user_language)
+    request.session[settings.LANGUAGE_SESSION_KEY] = user_language
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 def list_taches(request):
     taches = Tache.objects.all()
@@ -1985,10 +1993,13 @@ def decisions_operations(request,id):
     decision = Decision.objects.get(id=int(id))
     annee = Annee.objects.all()
     prestataire=Societe.objects.all()
+    detai_decision = DetailDecision.objects.filter(iddecision=id)
     context={
         'decision':decision,
         'annee':annee,
-        'prestataire':prestataire
+        'prestataire':prestataire,
+        'detai_decision':detai_decision
+
     }
     template= '../website/detaildecision.html'
     return render(request,template,context)
@@ -2022,18 +2033,22 @@ def add_marche(request):
             messages.error(request,f'Erreur Survenue: {e}')
         return redirect(request.META.get('HTTP_REFERER','/'))
     return redirect(request.META.get('HTTP_REFERER','/'))
+from django.shortcuts import get_object_or_404
 
-def add_operation_marche(request,id):
-    marche = Marche.objects.get(id=int(id))
+def add_operation_marche(request, id):
+    marche = get_object_or_404(Marche, id=id)  # Cela renverra une 404 si l'objet n'existe pas
     annee = Annee.objects.all()
-    prestataire=Societe.objects.all()
-    context={
-        'marche':marche,
-        'annee':annee,
-        'prestataire':prestataire
+    prestataire = Societe.objects.all()
+    detail_marche = DetailMarche.objects.filter(idmarche=id)
+    context = {
+        'marche': marche,
+        'annee': annee,
+        'prestataire': prestataire,
+        'detail_marche':detail_marche
     }
-    template= '../website/detailmarche.html'
-    return render(request,template,context)
+    template = '../website/detailmarche.html'
+    return render(request, template, context)
+
 
 def search_annee_simple(request):
     selected_id = request.GET.get('id')
@@ -2339,12 +2354,13 @@ def add_references_ordonancement(request, id):
     ligne_ordonancement = LigneOrdonancement.objects.filter(idordonancement = id)
 
     # Préparer le contexte pour le rendu
-    reference = Elementcout.objects.all()
+
 
     context = {
         'detail_ordonancement': detail_ordonancement,
         'operation_liee': operation_liee,
-        'reference':reference,
+        'ordonancement':ordonancement,
+        
         'ligne_ordonancement':ligne_ordonancement
     }
 
@@ -2489,3 +2505,287 @@ def add_ligne_ordonancement(request):
         return redirect(request.META.get('HTTP_REFERER', '/'))  
 
     return redirect(request.META.get('HTTP_REFERER', '/'))  
+def add_operation_decision(request):
+    if request.method == 'POST':  
+        try:  
+            operation_id = request.POST['operation']  
+            sous_programme_id = request.POST['sous_programme']  
+            activite_id = request.POST['activite']  
+            tache_id = request.POST['tache']  
+            paragraphes = request.POST.getlist('paragraphe', [])  
+            # societe_id = request.POST['prestataire']  
+            decision = request.POST['decision']  
+
+            instance_operation = Operation.objects.get(id=int(operation_id))  
+            instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme_id))  
+            instance_activite = Activite.objects.get(id=int(activite_id))  
+            instance_tache = Tache.objects.get(id=int(tache_id))  
+            instance_decision= Decision.objects.get(id=int(decision))  
+            # instance_societe = Societe.objects.get(id=int(societe_id))  
+            print(paragraphes)
+            # Création de détails pour chaque paragraphe  
+            for paragraphe_id in paragraphes:  
+                instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe_id))  
+                
+                save_decision = DetailDecision.objects.create(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idsousprogramme=instance_sous_programme,  
+                    # idsociete=instance_societe,  
+                    idtache=instance_tache,  
+                    idactivite=instance_activite,  
+                    iddecision=instance_decision
+                )  
+                save_decision.save()  
+
+            messages.success(request, 'Enregistrement Reussi')  
+            return redirect(request.META.get('HTTP_REFERER', '/'))  
+        
+        except Operation.DoesNotExist:  
+            messages.error(request, 'L\'opération spécifiée n\'existe pas.')  
+        except Sousprogramme.DoesNotExist:  
+            messages.error(request, 'Le sous-programme spécifié n\'existe pas.')  
+        except Activite.DoesNotExist:  
+            messages.error(request, 'L\'activité spécifiée n\'existe pas.')  
+        except Tache.DoesNotExist:  
+            messages.error(request, 'La tâche spécifiée n\'existe pas.')  
+        except Paragraphe.DoesNotExist:  
+            messages.error(request, 'Le paragraphe spécifié n\'existe pas.')  
+        except Decision.DoesNotExist:  
+            messages.error(request, 'La Decision spécifié n\'existe pas.')  
+        except Societe.DoesNotExist:  
+            messages.error(request, 'La société spécifiée n\'existe pas.')  
+        except Exception as e:  
+            messages.error(request, f'une erreur est survenue: {e}')  
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+
+def add_references_decision(request,id):
+     # Récupérer la lettre de commande
+    try:
+        decision = Decision.objects.get(id=int(id))
+    except Decision.DoesNotExist:
+        return HttpResponse("Decision  non trouvée.", status=404)
+
+    # Récupérer les détails de la lettre de commande
+    detail_decision = DetailDecision.objects.filter(iddecision=id)
+    
+    # Rassembler les opérations liées
+    operation_liee = [detail.idoperation for detail in detail_decision]
+    ligne_decision = LigneDecision.objects.filter(iddecision = id)
+
+    # Préparer le contexte pour le rendu
+
+
+    context = {
+        'detail_decision': detail_decision,
+        'operation_liee': operation_liee,
+        'decision':decision,
+        'ligne_decision':ligne_decision
+    }
+
+    # Spécifier le modèle à utiliser pour le rendu
+    template = '../website/lignedecision.html'
+    return render(request, template, context)
+
+def search_paragraphe_decision(request):
+    selected_id = request.GET.get('id')  
+
+    # Validez que l'ID est fourni et qu'il est numérique  
+    if not selected_id or not selected_id.isdigit():  
+        return JsonResponse({'error': 'ID non valide'}, status=400)  
+
+    selected_id = int(selected_id)  # Convertir en entier pour le filtrage  
+    
+    try:  
+        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié, en évitant les doublons
+        paragraphs = OperationDetail.objects.filter(idoperation=selected_id) \
+            .select_related('idparagraphe') \
+            .values('idparagraphe__id', 'idparagraphe__nom') \
+            .distinct()  # Ajout de distinct() pour éviter les doublons
+
+        result = [  
+            {  
+                'idparagraphe': detail['idparagraphe__id'],  
+                'nom': detail['idparagraphe__nom'],  
+                'idoperation': selected_id  
+            }  
+            for detail in paragraphs  
+        ]  
+
+        return JsonResponse(result, safe=False)  # Retourner la liste des résultats  
+    except Exception as e:  
+        return JsonResponse({'error': str(e)}, status=500)
+
+def search_annee_decision(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    
+    try:  
+        # Récupérer les années en fonction de l'opération et du paragraphe  
+        annees = Annee.objects.filter(  
+            operationdetail__idoperation_id=operation_id,  
+            operationdetail__idparagraphe_id=paragraph_id  
+        ).distinct()  # Utilise distinct() pour éviter les doublons  
+
+        data = [{'idannee': annee.id, 'annee': annee.nom} for annee in annees]  # Renvoie le nom de l'année  
+    except Exception as e:  
+        data = []  
+
+    return JsonResponse(data, safe=False)  
+
+
+def search_montant_decision(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    year_id = request.GET.get('year_id')  
+
+    try:  
+        # Retrieve the amount based on the operation, paragraph, and year  
+        montant_detail = OperationDetail.objects.get(  
+            idoperation_id=operation_id,  
+            idparagraphe_id=paragraph_id,  
+            idannee_id=year_id  
+        )  
+        montant = montant_detail.montant_restant 
+
+        # If montant_restant is None, retrieve the alternative montant
+        if montant is None:
+            montant = montant_detail.montant  # Assuming 'montant' is the alternative field
+    except OperationDetail.DoesNotExist:  
+        montant = None  # No matching record found  
+
+    return JsonResponse({'montant': montant})
+
+def add_ligne_decision(request):
+    if request.method == 'POST':  
+        try:  
+            # Retrieve and validate input data
+            code = request.POST['code']  
+            # reference = request.POST['reference']  
+            cu = float(request.POST['cu'])  
+            qte = int(request.POST['qte'])  
+            prixT = float(request.POST['prixT'])  
+            montant = float(request.POST['montant'])  
+            paragraphe = request.POST.get('paragraphe', '')  
+            operation = request.POST.get('operation', '')  
+            annee = request.POST.get('annee', '')  
+
+            # Retrieve instances, using get_object_or_404 for better error handling
+            # instance_element = get_object_or_404(Elementcout, id=int(reference))  
+            instance_code = get_object_or_404(Decision, id=int(code))  
+            instance_paragraphe = get_object_or_404(Paragraphe, id=int(paragraphe))  
+            instance_operation = get_object_or_404(Operation, id=int(operation))  
+            instance_annee = get_object_or_404(Annee, id=int(annee))  
+
+            if montant < prixT:  
+                messages.info(request, 'Cette référence ne peut être ajoutée car le montant engagé est inférieur au prix total.')  
+            else:  
+                montant_paragraphe = montant - prixT  
+                verified_operation_details = OperationDetail.objects.filter(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idannee=instance_annee  
+                )  
+
+                if verified_operation_details.exists():  
+                    operation_detail = verified_operation_details.first()  
+                    if operation_detail.montant_engage is None:
+                        operation_detail.montant_engage = 0.0  
+                    operation_detail.montant_engage += prixT  
+                    operation_detail.montant_restant = montant_paragraphe
+                    operation_detail.save()  
+
+                    # Create the line item
+                    save_ligne_commande = LigneDecision.objects.create(  
+                        prixunitaire=cu,  
+                        quantite=qte,  
+                        total=prixT,  
+                        
+                        iddecision=instance_code  
+                    )  
+                    messages.success(request, 'Enregistrement réussi.')  
+                else:  
+                    messages.warning(request, 'Les détails de l\'opération vérifiée n\'existent pas.')  
+
+            redirect_url = request.META.get('HTTP_REFERER', '/')  
+            return redirect(redirect_url)  
+
+        except KeyError as ke:  
+            messages.error(request, f'Erreur: Champ manquant - {str(ke)}')  
+        except ValueError as ve:  
+            messages.error(request, f'Erreur: Vérifiez les valeurs entrées. - {str(ve)}')  
+        except Exception as e:  
+            messages.error(request, f'Erreur: {str(e)}')  
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+
+def add_operation_marche_op(request):
+    if request.method == 'POST':
+        try:
+            operation_id = request.POST['operation']
+            sous_programme_id = request.POST['sous_programme']
+            activite_id = request.POST['activite']
+            tache_id = request.POST['tache']
+            paragraphes = request.POST.getlist('paragraphe', [])
+            marche = request.POST['marche']
+
+            instance_operation = get_object_or_404(Operation, id=int(operation_id))
+            instance_sous_programme = get_object_or_404(Sousprogramme, id=int(sous_programme_id))
+            instance_activite = get_object_or_404(Activite, id=int(activite_id))
+            instance_tache = get_object_or_404(Tache, id=int(tache_id))
+            instance_marche = get_object_or_404(Marche, id=int(marche))
+
+            # Création de détails pour chaque paragraphe
+            for paragraphe_id in paragraphes:
+                instance_paragraphe = get_object_or_404(Paragraphe, id=int(paragraphe_id))
+
+                save_marche = DetailMarche.objects.create(
+                    idoperation=instance_operation,
+                    idparagraphe=instance_paragraphe,
+                    idsousprogramme=instance_sous_programme,
+                    idtache=instance_tache,
+                    idactivite=instance_activite,
+                    idmarche=instance_marche
+                )
+
+            messages.success(request, 'Enregistrement Réussi')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        except Exception as e:
+            messages.error(request, f'une erreur est survenue: {e}')
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def add_references_marche(request,id):
+     # Récupérer la lettre de commande
+    try:
+        marche = Marche.objects.get(id=int(id))
+    except Marche.DoesNotExist:
+        return HttpResponse("Marche  non trouvée.", status=404)
+
+    # Récupérer les détails de la lettre de commande
+    detail_marche = DetailMarche.objects.filter(idmarche=id)
+    
+    # Rassembler les opérations liées
+    operation_liee = [detail.idoperation for detail in detail_marche]
+    # return HttpResponse(operation_liee)
+    ligne_marche = LigneMarche.objects.filter(idmarche = id)
+    reference = Elementcout.objects.all()
+
+    # Préparer le contexte pour le rendu
+
+
+    context = {
+        'detail_marche': detail_marche,
+        'operation_liee': operation_liee,
+        'marche':marche,
+        'ligne_marche':ligne_marche,
+        'reference':reference
+    }
+
+    # Spécifier le modèle à utiliser pour le rendu
+    template = '../website/lignemarche.html'
+    return render(request, template, context)
