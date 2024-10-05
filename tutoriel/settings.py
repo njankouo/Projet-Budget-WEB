@@ -152,3 +152,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'website', 'static')]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Configure the locale path (where your .po files will be stored)  
+from pathlib import Path
+
+# Définir BASE_DIR
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Configurer le chemin de localisation
+LOCALE_PATHS = [  
+    BASE_DIR / 'locale',  
+]

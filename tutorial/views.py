@@ -20,13 +20,12 @@ def Home(request):
 from django.utils import translation
 from django.conf import settings
 
-def set_language(request):
-    user_language = request.GET.get('language', 'en')
-    
-    translation.activate(user_language)
-    request.session[settings.LANGUAGE_SESSION_KEY] = user_language
-    return redirect(request.META.get('HTTP_REFERER', '/'))
 
+def set_language(request):  
+    user_language = request.GET.get('lang', 'en')  
+    translation.activate(user_language)  # Activate the language for the current session  
+    request.session['django_language'] = user_language  # Store the language in session  
+    return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirect back  
 def list_taches(request):
     taches = Tache.objects.all()
     return render(request, 'list_taches.html', {'taches': taches})
