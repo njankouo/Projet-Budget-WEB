@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.http import FileResponse
 import os
 from django.contrib.auth.hashers import make_password  
+from django.utils.translation import gettext_lazy as _
 def Home(request):
    
     template="../website/authentification/login.html"
@@ -22,10 +23,13 @@ from django.conf import settings
 
 
 def set_language(request):  
-    user_language = request.GET.get('lang', 'en')  
-    translation.activate(user_language)  # Activate the language for the current session  
-    request.session['django_language'] = user_language  # Store the language in session  
-    return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirect back  
+    lang_code = request.GET.get('lang')  # Récupère la langue depuis les paramètres de l'URL  
+    if lang_code:  
+        translation.activate(lang_code)  # Active la langue  
+        request.session[translation.LANGUAGE_SESSION_KEY] = lang_code  # Stocke la langue dans la session  
+
+    # Redirige vers la page précédente  
+    return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirige vers la page précédente ou vers la racine si non disponible  
 def list_taches(request):
     taches = Tache.objects.all()
     return render(request, 'list_taches.html', {'taches': taches})
@@ -237,13 +241,35 @@ def nature_tache(request):
             return redirect('/configurations/')
     return redirect('/configurations/')
 from django.contrib.auth.decorators import login_required
-# @login_required(login_url = '/')  # Décorateur pour restreindre l'accès aux utilisateurs connectés
-def dashboard(request):
-    template = '../website/master.html'
-    boncommande = Boncommande.objects.count()
-    ligneboncommande = Ligneboncommande.objects.count()
-    context = {'boncommande': boncommande, 'ligneboncommande': ligneboncommande}
-    return render(request, template, context)
+@login_required
+def dashboard(request):  
+
+    template = '../website/master.html'    # Assurez-vous que le chemin est correct  
+
+    # Comptage des objets  
+    boncommande = Boncommande.objects.count()  
+    ligneboncommande = Ligneboncommande.objects.count()  
+    marche = Marche.objects.count()
+    utilisateur = Utilisateur.objects.count()
+
+    # Inclure le message dans le contexte  
+    context = {  
+        'boncommande': boncommande,  
+        'ligneboncommande': ligneboncommande,  
+        'marche':marche,
+        'utilisateur':utilisateur
+
+    }  
+
+    return render(request, template, context)  # Passer le contexte au template  
+from django.contrib.auth import logout as auth_logout
+#from django.shortcuts import redirect
+
+@login_required
+def logout(request):
+    auth_logout(request)  # Use a different name to avoid confusion
+    return redirect('/')
+
 def add_sources_financements(request):
     if request.method == 'POST':
         try:
@@ -1201,17 +1227,25 @@ def add_user(request):
             hashed_password = make_password(password)  
 
             # Création de l'utilisateur  
-            user = Utilisateur.objects.create(  
-                nom=nom,  
-                prenom=prenom,  
+            user = User.objects.create(  
+                username=nom,  
+                #firstname=prenom,  
                 email=email,  
                 password=hashed_password,  
-                sexe=sexe,  
-                photo=photo,  
-                matricule= matricule,
-                grade=grade
+                #sexe=sexe,  
+                #photo=photo,  
+                #matricule= matricule,
+                #grade=grade
             )  
-
+            personnel = Utilisateur.objects.create(
+                nom=nom,
+                prenom=prenom,
+                email=email,
+                sexe=sexe,
+                photo=photo,
+                matricule=matricule,
+                grade=grade
+            )
             # Message de succès  
             messages.success(request, 'Utilisateur créé avec succès.')  
             return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirection vers la page précédente  
@@ -1231,7 +1265,7 @@ def user_login(request):
         email = request.POST.get('email', '').strip().lower()  
         password = request.POST.get('password', '').strip() 
         
-        users = Utilisateur.objects.filter(email=email)  
+        users = User.objects.filter(email=email)  
         print(f'Email recherché : {email}')  
         print(f'Utilisateurs trouvés : {users}')  # Affiche les utilisateurs trouvés  
         
@@ -1244,7 +1278,7 @@ def user_login(request):
                 user.last_login = timezone.now()  
                 user.save()  
                 login(request, user)  
-                messages.success(request, 'Connexion réussie.')  
+                # messages.success(request, 'Connexion réussie.')  
                 return redirect('/dashboard/')  
               
             else:  
@@ -2788,3 +2822,147 @@ def add_references_marche(request,id):
     # Spécifier le modèle à utiliser pour le rendu
     template = '../website/lignemarche.html'
     return render(request, template, context)
+
+
+
+
+
+
+def search_paragraphe_marche(request):
+    selected_id = request.GET.get('id')  
+
+    # Validez que l'ID est fourni et qu'il est numérique  
+    if not selected_id or not selected_id.isdigit():  
+        return JsonResponse({'error': 'ID non valide'}, status=400)  
+
+    selected_id = int(selected_id)  # Convertir en entier pour le filtrage  
+    
+    try:  
+        # Requête pour obtenir les détails de l'opération, incluant le nom du paragraphe lié, en évitant les doublons
+        paragraphs = OperationDetail.objects.filter(idoperation=selected_id) \
+            .select_related('idparagraphe') \
+            .values('idparagraphe__id', 'idparagraphe__nom') \
+            .distinct()  # Ajout de distinct() pour éviter les doublons
+
+        result = [  
+            {  
+                'idparagraphe': detail['idparagraphe__id'],  
+                'nom': detail['idparagraphe__nom'],  
+                'idoperation': selected_id  
+            }  
+            for detail in paragraphs  
+        ]  
+
+        return JsonResponse(result, safe=False)  # Retourner la liste des résultats  
+    except Exception as e:  
+        return JsonResponse({'error': str(e)}, status=500)
+
+def search_annee_marche(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    
+    try:  
+        # Récupérer les années en fonction de l'opération et du paragraphe  
+        annees = Annee.objects.filter(  
+            operationdetail__idoperation_id=operation_id,  
+            operationdetail__idparagraphe_id=paragraph_id  
+        ).distinct()  # Utilise distinct() pour éviter les doublons  
+
+        data = [{'idannee': annee.id, 'annee': annee.nom} for annee in annees]  # Renvoie le nom de l'année  
+    except Exception as e:  
+        data = []  
+
+    return JsonResponse(data, safe=False)  
+
+
+def search_montant_marche(request):  
+    operation_id = request.GET.get('operation_id')  
+    paragraph_id = request.GET.get('paragraph_id')  
+    year_id = request.GET.get('year_id')  
+
+    try:  
+        # Retrieve the amount based on the operation, paragraph, and year  
+        montant_detail = OperationDetail.objects.get(  
+            idoperation_id=operation_id,  
+            idparagraphe_id=paragraph_id,  
+            idannee_id=year_id  
+        )  
+        montant = montant_detail.montant_restant 
+
+        # If montant_restant is None, retrieve the alternative montant
+        if montant is None:
+            montant = montant_detail.montant  # Assuming 'montant' is the alternative field
+    except OperationDetail.DoesNotExist:  
+        montant = None  # No matching record found  
+
+    return JsonResponse({'montant': montant})
+
+def add_ligne_marche(request):
+    if request.method == 'POST':  
+        try:  
+            # Retrieve and validate input data
+            code = request.POST['marche']  
+            reference = request.POST['reference']  
+            cu = float(request.POST['cu'])  
+            qte = int(request.POST['qte'])  
+            prixT = float(request.POST['prixT'])  
+            montant = float(request.POST['montant'])  
+            paragraphe = request.POST.get('paragraphe', '')  
+            operation = request.POST.get('operation', '')  
+            annee = request.POST.get('annee', '')  
+
+            # Retrieve instances, using get_object_or_404 for better error handling
+            instance_element = get_object_or_404(Elementcout, id=int(reference))  
+            instance_code = get_object_or_404(Marche, id=int(code))  
+            instance_paragraphe = get_object_or_404(Paragraphe, id=int(paragraphe))  
+            instance_operation = get_object_or_404(Operation, id=int(operation))  
+            instance_annee = get_object_or_404(Annee, id=int(annee))  
+
+            if montant < prixT:  
+                messages.info(request, 'Cette référence ne peut être ajoutée car le montant engagé est inférieur au prix total.')  
+            else:  
+                montant_paragraphe = montant - prixT  
+                verified_operation_details = OperationDetail.objects.filter(  
+                    idoperation=instance_operation,  
+                    idparagraphe=instance_paragraphe,  
+                    idannee=instance_annee  
+                )  
+
+                if verified_operation_details.exists():  
+                    operation_detail = verified_operation_details.first()  
+                    if operation_detail.montant_engage is None:
+                        operation_detail.montant_engage = 0.0  
+                    operation_detail.montant_engage += prixT  
+                    operation_detail.montant_restant = montant_paragraphe
+                    operation_detail.save()  
+
+                    # Create the line item
+                    save_ligne_commande = LigneMarche.objects.create(  
+                        prixunitaire=cu,  
+                        quantite=qte,  
+                        total=prixT,  
+                        idelementcout=instance_element,  
+                        idmarche=instance_code  
+                    )  
+                    messages.success(request, 'Enregistrement réussi.')  
+                else:  
+                    messages.warning(request, 'Les détails de l\'opération vérifiée n\'existent pas.')  
+
+            redirect_url = request.META.get('HTTP_REFERER', '/')  
+            return redirect(redirect_url)  
+
+        except KeyError as ke:  
+            messages.error(request, f'Erreur: Champ manquant - {str(ke)}')  
+        except ValueError as ve:  
+            messages.error(request, f'Erreur: Vérifiez les valeurs entrées. - {str(ve)}')  
+        except Exception as e:  
+            messages.error(request, f'Erreur: {str(e)}')  
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))  
+
+@login_required
+def profile(request):
+    template ='../website/profile.html'
+    return render(request,template)

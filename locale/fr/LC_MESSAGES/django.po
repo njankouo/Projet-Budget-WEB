@@ -1,0 +1,35 @@
+# Traduction du projet Exemple  
+# Copyright (C) 2024 Votre Nom  
+# This file is distributed under the same license as the Exemple package.  
+# Votre Nom <email@example.com>, 2024.  
+#, fuzzy  
+msgid ""  
+msgstr ""  
+"Project-Id-Version: Exemple 1.0\n"  
+"Report-Msgid-Bugs-To: \n"  
+"POT-Creation-Date: 2024-10-06 02:27+0200\n"  
+"PO-Revision-Date: 2024-10-06 02:27+0200\n"  
+"Last-Translator: Votre Nom <email@example.com>\n"  
+"Language-Team: French <fr@li.org>\n"  
+"Language: fr\n"  
+"MIME-Version: 1.0\n"  
+"Content-Type: text/plain; charset=UTF-8\n"  
+"Content-Transfer-Encoding: 8bit\n"  
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"  
+
+#: tutorial/views.py:246  
+msgid "Bonjour, le monde !"  
+msgstr "Bonjour, le monde !"  # Bien traduit.  
+
+#: website/master.html:228  
+msgid "Dashboard"  
+msgstr "Tableau de Bord"  # Assurez-vous que cela convient au contexte.  
+
+msgid "English"  
+msgstr "Anglais"  
+
+msgid "French"  
+msgstr "Français"  
+
+msgid "Spanish"  
+msgstr "Espagnol"

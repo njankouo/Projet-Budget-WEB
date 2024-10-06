@@ -207,7 +207,14 @@ urlpatterns = [
     path('search_montant_decision/',views.search_montant_decision,name='search_montant_decision'),
     path('add_ligne_decision/',views.add_ligne_decision,name='add_ligne_decision'),
     path('add_operation_marche_op/',views.add_operation_marche_op,name='add_operation_marche_op'),
-    path('add_references_marche/<int:id>/',views.add_references_marche,name='add_references_marche')
+    path('add_references_marche/<int:id>/',views.add_references_marche,name='add_references_marche'),
+    path('search_paragraphe_marches/',views.search_paragraphe_marche,name='search_paragraphe_marches'),
+    path('search_annee_marches/',views.search_annee_marche,name='search_annee_marches'),
+    path('search_montant_marches/',views.search_montant_marche,name='search_montant_marches'),
+    path('add_ligne_marche/',views.add_ligne_marche,name='add_ligne_marche'),
+    path('logout/',views.logout,name='logout'),
+    path('profile/',views.profile,name='profile')
+    
 
 
 
@@ -222,5 +229,7 @@ urlpatterns = [
 
  
 ]
+from django.conf.urls.i18n import i18n_patterns  
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.timezone import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password  # Use Django's password hashing
-
+from django.utils.translation import gettext_lazy as _
 class Statutmatrimonial(models.Model):
     libelle=models.CharField(max_length=255, null=True)
     etat=models.CharField(max_length=255, null=True)
@@ -2343,10 +2343,9 @@ class LigneMarche(models.Model):
     total=models.IntegerField(null=True)
     prixmercurial=models.CharField(max_length=255,null=True)
     verif=models.CharField(max_length=255,null=True)
+    references=models.CharField(max_length=255,null=True)
+    idelementcout=models.ForeignKey(Elementcout, on_delete=models.CASCADE, null=True,blank=True, db_column='idelementcout')
     idmarche=models.ForeignKey(Marche, on_delete=models.CASCADE, null=True,blank=True, db_column='idboncommande')
-    class Meta:
-        db_table = 'lignemarche'  
-
 
 
 

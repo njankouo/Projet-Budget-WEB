@@ -234,7 +234,7 @@
                   <div class="form-floating">
                     <select class="form-control" name="operation" id="operation">
                       <option></option>
-                      {% for operation in operations_liees %}
+                      {% for operation in operation_liee %}
                           <option value="{{ operation.id }}">{{ operation.nom }}</option>
                       {% endfor %}
                     </select>
@@ -300,7 +300,7 @@
                 <div class="col-md-6">
                   <div class="col-md-12">
                     <div class="form-floating">
-                      <select class="form-control" name="code" id="code" >
+                      <select class="form-control" name="marche" id="code" >
                 
                         <option value="{{marche.id}}" selected>{{marche.numero_marche}}</option>
                         
@@ -367,21 +367,21 @@
         </thead>
         <tbody>
      
-            {%for ligneboncommandes in lignecommande%}
+            {%for ligne_marches in ligne_marche%}
            
             <tr>
                
-                <td>{{ligneboncommandes.idelementcout}}
+                <td>{{ligne_marches.idelementcout}}
                
                   
                 </td>
                 
-                <td>{{ligneboncommandes.quantite}}</td>
-                <td>{{ligneboncommandes.prixunitaire}}</td>
+                <td>{{ligne_marches.quantite}}</td>
+                <td>{{ligne_marches.prixunitaire}}</td>
                 
-                <td>{{ligneboncommandes.total}}</td>
+                <td>{{ligne_marches.total}}</td>
                 <td>
-                       <a href='/delete_commande/{{ligneboncommandes.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
+                       <a href='/delete_commande/{{ligne_marches.id}}/' class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Retirer"></i></a>
                 </td>
               </tr>
              
@@ -446,7 +446,7 @@
  Swal.fire({
  position: "top-end",
  icon: "info",
- title: "{{message}}",
+ title: "{{message}}", 
  showConfirmButton: false,
  timer: 5000
 });
@@ -549,7 +549,7 @@ create: true
         $('#annee').text('Chargement...');  
 
         $.ajax({  
-            url: '/search_paragraphe/',  
+            url: '/search_paragraphe_marches/',  
             method: 'GET',  
             data: { id: selectedId },  
             success: function(data) {  
@@ -598,7 +598,7 @@ create: true
             }));  
 
             $.ajax({  
-                url: '/search_annee/', // URL pour récupérer les années  
+                url: '/search_annee_marches/', // URL pour récupérer les années  
                 method: 'GET',  
                 data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId },  
                 success: function(data) {  
@@ -643,7 +643,7 @@ create: true
             montantDisplay.text('Chargement du montant...'); // Indiquer que le montant est en train d'être chargé  
 
             $.ajax({  
-    url: '/search_montant/', // URL pour récupérer le montant  
+    url: '/search_montant_marches/', // URL pour récupérer le montant  
     method: 'GET',  
     data: { operation_id: selectedOperationId, paragraph_id: selectedParagraphId, year_id: selectedYearId },  
     success: function(data) {  

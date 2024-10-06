@@ -1,0 +1,33 @@
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Error: That port is already in use.
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Error: That IP address can't be assigned to.
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Error: That port is already in use.
