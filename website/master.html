@@ -40,6 +40,26 @@
         margin-bottom: 20px;
     }
 </style>
+
+<style>
+  .toast {  
+    display: none;   
+    position: fixed;  
+    bottom: 20px;  
+    right: 20px;  
+    background-color: #333;  
+    color: white;  
+    padding: 15px;  
+    border-radius: 5px;  
+    z-index: 1000;  
+    transition: opacity 0.5s ease-in-out;  
+}  
+
+.toast.show {  
+    display: block;  
+    opacity: 1;  
+}
+</style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <body>
@@ -52,7 +72,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="{%url 'dashboard'%}" class="logo d-flex align-items-center">
         
-        <img src="{% static 'img/nasla.jpeg' %}" alt="Description de l'image" height="90">
+        <img src="{% static 'img/nasla.jpeg' %}" alt="Description de l'image">
         <span class="d-none d-lg-block" style="font-weight: bold;font-family: forte;">BUDGET </span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -436,7 +456,10 @@
                     <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
                 </div>
-
+                <div id="loadingToast" class="toast" aria-live="assertive" aria-hidden="true">  
+                  <span>Chargement en cours, veuillez patienter...</span>  
+              </div>  
+               
                 <div class="card-body">
                   <h5 class="card-title">Commandes</h5>
 
@@ -610,7 +633,7 @@
           <!-- End Recent Activity -->
 
           <!-- Budget Report -->
-      
+          
         {%endblock%}
         </div><!-- End Right side columns -->
 
@@ -648,7 +671,33 @@
 
   <!-- Template Main JS File -->
   <script src="{%static 'js/main.js'%}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {  
+    showLoading(); // Affiche le toast au chargement de la page  
 
+    // Simule un chargement avec setTimeout  
+    setTimeout(() => {  
+        hideLoading(); // Masque le toast après 3 secondes (ou tout autre temps souhaité)  
+    }, 6000); // Remplacez 3000 par la durée de votre chargement  
+});  
+
+function showLoading() {  
+    const loadingToast = document.getElementById('loadingToast');  
+    loadingToast.style.display = 'block'; // Affiche le toast  
+    loadingToast.setAttribute('aria-hidden', 'false'); // Définit aria-hidden à false  
+    loadingToast.classList.add('show'); // Ajoute la classe show pour le style  
+}  
+
+function hideLoading() {  
+    const loadingToast = document.getElementById('loadingToast');  
+    loadingToast.classList.remove('show'); // Supprime la classe show  
+    loadingToast.setAttribute('aria-hidden', 'true'); // Définit aria-hidden à true  
+    setTimeout(() => {  
+        loadingToast.style.display = 'none'; // Masque le toast après la transition  
+    }, 500); // Attends que la transition soit terminée  
+}
+</script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8be90a8f6ea60be4","serverTiming":{"name":{"cfL4":true}},"version":"2024.8.0","token":"68c5ca450bae485a842ff76066d69420"}' crossorigin="anonymous"></script>
 </body>
 

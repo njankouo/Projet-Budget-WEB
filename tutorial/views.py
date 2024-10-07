@@ -460,7 +460,7 @@ def delete_operation(request,id):
     return redirect('/operations/')
 
 def users(request):
-    users=Utilisateur.objects.order_by('-id')
+    users=User.objects.order_by('-id')
    
     context={
         'users':users,

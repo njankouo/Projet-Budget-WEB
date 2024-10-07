@@ -322,7 +322,9 @@ input[type="radio"]:checked + div::before {
     {%extends 'master.html'%}
 
     {%block content%}
-   
+    <div id="loadingToast" class="toast" aria-live="assertive" aria-hidden="true">  
+      <span>Chargement en cours, veuillez patienter...</span>  
+  </div>  
     <div class="card">
         <div class="card-body">
           <h5 class="card-title">Gestion des Engagements</h5>
