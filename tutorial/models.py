@@ -1164,6 +1164,8 @@ class Boncommande(models.Model):
     montant_ordonne=models.CharField(max_length=255,null=True)
     taxe_ordonne=models.CharField(max_length=255,null=True)
     nap_ordonne=models.CharField(max_length=255,null=True)
+    idprocedure=models.ForeignKey(Procedure,on_delete=models.CASCADE,null=True)
+    idsignataire = models.ForeignKey(Signataire,on_delete=models.CASCADE,null=True)
     class Meta:
         db_table = 'boncommande'  # Specify the exact table name you want
 
@@ -2210,6 +2212,9 @@ class Decision(models.Model):
     idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
     idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
 
+    idprocedure = models.ForeignKey(Procedure,on_delete=models.CASCADE,null=True)
+    idsignataire = models.ForeignKey(Signataire,on_delete=models.CASCADE,null=True)
+
 
 # class Signataire(models.Model):
 #     libelle= models.CharField(null=True,max_length=255)
@@ -2222,6 +2227,10 @@ class LettreCommande(models.Model):
     idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
     idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
     idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
+    idprocedure=models.ForeignKey(Procedure,on_delete=models.CASCADE,null=True)
+    idsignataire = models.ForeignKey(Signataire,on_delete=models.CASCADE,null=True)
+    class META:
+        db_table='lettrecommande'
 class DetailLettreCommande(models.Model):
     idlettrecommande = models.ForeignKey(LettreCommande,on_delete=models.CASCADE,null=True)
     idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
@@ -2244,6 +2253,11 @@ class Ordonancement(models.Model):
     idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
     idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
     idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
+    idsignataire = models.ForeignKey(Signataire,on_delete=models.CASCADE,null=True)
+
+    idprocedure=models.ForeignKey(Procedure,on_delete=models.CASCADE,null=True)
+    class META:
+        db_table='ordonancement'
 
 
 class DetailOrdonancement(models.Model):
@@ -2258,7 +2272,7 @@ class DetailOrdonancement(models.Model):
     idtache=models.ForeignKey(Tache, on_delete=models.CASCADE, null=True,blank=True)
     idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
     idstructure=models.ForeignKey(Structure,on_delete=models.CASCADE,null=True)
-    idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
+  
 
 
 class Marche(models.Model):
@@ -2268,6 +2282,10 @@ class Marche(models.Model):
     idir=models.ForeignKey(Ir, on_delete=models.CASCADE, null=True,blank=True)
     idinstitution=models.ForeignKey(Institution,on_delete=models.CASCADE,null=True)
     idsociete=models.ForeignKey(Societe,on_delete=models.CASCADE,null=True)
+    idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
+    idsignataire = models.ForeignKey(Signataire,on_delete=models.CASCADE,null=True)
+    class META:
+        db_table='marche'
 
 class LigneLettreCommande(models.Model):
     prixunitaire=models.CharField(max_length=255,null=True)
@@ -2307,6 +2325,8 @@ class DetailDecision(models.Model):
     idparagraphe=models.ForeignKey(Paragraphe, on_delete=models.CASCADE, null=True,blank=True)
     idstructure=models.ForeignKey(Structure,on_delete=models.CASCADE,null=True)
     idprocedure=models.ForeignKey(Procedure,max_length=255,null=True,on_delete=models.CASCADE)
+    class META:
+        db_table='decision'
 
 
 class LigneDecision(models.Model):

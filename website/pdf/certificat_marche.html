@@ -117,8 +117,8 @@
     <tr>
       <th class="ths"> <div class="service-block" style="display: inline-block; margin-right: 20px;"></div>
         <p>
-            SERVICE: {{ boncommande.idinstitution }}<br><br>
-            {{ boncommande.code }}
+            SERVICE: {{ lettre.idinstitution }}<br><br>
+            {{ lettre.code }}
         </p>
     </div></th>
     <th class="ths">
@@ -165,8 +165,8 @@
             </tr>
             <tr>
                 <td>CERTIFICAT D'ENGAGEMENT</td>
-                <td>{{boncommande.idstructure}} <br>..........</td>
-                <td>{{boncommande.idsociete.boite_postale}}</td>
+                <td>{{marche.idstructure}} <br>..........</td>
+                <td>{{marche.idsociete.boite_postale}}</td>
             </tr>
             <tr>
                 <td>NUMERO</td>
@@ -179,15 +179,15 @@
                 <td>AMOUNT</td>
             </tr>
             <tr>
-                <td>{{boncommande.code}}</td>
+                <td>{{marche.numero_marche}}</td>
                 <td>-------</td>
                 <td>------</td>
             </tr>
             <tr>
-                <td colspan="3">PROCEDURE:  {{boncommande.idprocedure.objet}}</td>
+                <td colspan="3">PROCEDURE: {{marche.idprocedure.objet}}</td>
             </tr>
             <tr>
-                <td colspan="3">ORDONNATEUR: {{boncommande.idsignataire.nom}}</td>
+                <td colspan="3">ORDONNATEUR: {{marche.idsignataire.nom}}</td>
             </tr>
         </tbody>
     </table>
@@ -238,31 +238,31 @@
         <thead>
             <tr>
                 <th class="ths">COMPTE N<sup>0</sup></th>
-                <th>  {{boncommande.idsociete.bqswift}}</th>
+                <th>  {{marche.idsociete.bqswift}}</th>
                
             </tr>
             <tr>
                 <th class="ths">ETABLISSEMENT</th>
                 <th>
-                  {{boncommande.idsociete}}
+                  {{marche.idsociete}}
 
                 </th>
                
             </tr>
             <tr>
                 <th class="ths">AGENCE</th>
-                <th>{{boncommande.idsociete}}</th>
+                <th>{{marche.idsociete}}</th>
                
             </tr>
             <tr>
                 <th class="ths">VILLE</th>
-                <th>{{boncommande.idsociete.bqville}}</th>
+                <th>{{marche.idsociete.bqville}}</th>
                
             </tr>
         </thead>
       
     </table>
-    <h5>OBJET DE L'ACTE: {{boncommande.idprocedure.objet}}</h5>
+    <h5>OBJET DE L'ACTE: {{marche.idprocedure.objet}}</h5>
 
     <h5>SIGNATURE DE L'ORDONNATEUR</h5>
 </body>

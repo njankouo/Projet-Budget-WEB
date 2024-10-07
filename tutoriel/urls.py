@@ -213,7 +213,19 @@ urlpatterns = [
     path('search_montant_marches/',views.search_montant_marche,name='search_montant_marches'),
     path('add_ligne_marche/',views.add_ligne_marche,name='add_ligne_marche'),
     path('logout/',views.logout,name='logout'),
-    path('profile/',views.profile,name='profile')
+    path('profile/',views.profile,name='profile'),
+    path('certificat_lettre/<int:id>/',views.certificat_lettre,name='certificat_lettre'),
+    path('certificat_ordonancement/<int:id>/',views.certificat_ordonancement,name='certificat_ordonancement'),
+    path('certificat_decision/<int:id>/',views.certificat_decision,name='certificat_decision'),
+    path('certificat_marche/<int:id>/',views.certificat_marche,name='certificat_marche'),
+
+    path('procedure/',views.procedure,name='procedure'),
+
+    path('add_procedure/',views.add_procedure,name='add_procedure'),
+
+    path('signataire/',views.signataire,name='signataire'),
+
+    path('add_signataire/',views.add_signataire,name='add_signataire')
     
 
 

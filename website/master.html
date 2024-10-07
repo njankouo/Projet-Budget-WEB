@@ -31,10 +31,21 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <style>
+    #message {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+</style>
 </head>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <body>
   {% load i18n %}
+
+
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -42,7 +53,7 @@
       <a href="{%url 'dashboard'%}" class="logo d-flex align-items-center">
         
         <img src="{% static 'img/nasla.jpeg' %}" alt="Description de l'image" height="90">
-        <span class="d-none d-lg-block" style="font-weight: bold;font-family: forte;">BUDGET 2.0</span>
+        <span class="d-none d-lg-block" style="font-weight: bold;font-family: forte;">BUDGET </span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -55,8 +66,23 @@
     </div><!-- End Search Bar -->
 
     <nav class="header-nav ms-auto">
+      
       <ul class="d-flex align-items-center">
-
+        {% if messages %}
+        <div id="message" class="alert" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <script>
+            // Utiliser jQuery pour un effet de fondu
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $('#message').fadeOut(1500); // 1000 millisecondes = 1 seconde
+                }, 6000); // 5000 millisecondes = 5 secondes
+            });
+        </script>
+    {% endif %}
         <li class="nav-item d-block d-lg-none">
           <a class="nav-link nav-icon search-bar-toggle " href="#">
             <i class="bi bi-search"></i>
@@ -66,13 +92,15 @@
         <li class="nav-item dropdown">
 
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+       
             <i class="bi bi-globe2"></i>
           
           </a><!-- End Notification Icon -->
-
+        
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-           
+         
             <li class="dropdown-footer">  
+            
               {% get_available_languages as LANGUAGES %}  
               {% get_language_info_list for LANGUAGES as languages %}  
               <ul>  
@@ -89,12 +117,12 @@
         </li><!-- End Notification Nav -->
 
      
-      
+        
         <li class="nav-item dropdown pe-3">
      
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="{%static 'img/profile.png'%}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{user.nom}}</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{user.username}}</span>
           </a><!-- End Profile Iamge Icon -->
      
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -287,8 +315,18 @@
               <i class="bi bi-circle"></i><span> Maintenance Globale </span>
             </a>
           </li>
-         
           <li>
+            <a href="{%url 'procedure'%}">
+              <i class="bi bi-circle"></i><span> Procedure </span>
+            </a>
+          </li>
+          <li>
+            <li>
+              <a href="{%url 'signataire'%}">
+                <i class="bi bi-circle"></i><span> Signataire </span>
+              </a>
+            </li>
+            <li>
             <a href="{%url 'secteur'%}">
               <i class="bi bi-circle"></i><span> Secteur </span>
             </a>
@@ -490,7 +528,7 @@
               </div>
 
             </div><!-- End Customers Card -->
-
+            
             <!-- Reports -->
              <div class="col-md-6">
               <div class="card info-card customers-card">
@@ -572,10 +610,7 @@
           <!-- End Recent Activity -->
 
           <!-- Budget Report -->
-          <div class="center">
-            <div class="ring"></div>
-            <span>Loading...</span>
-          </div>
+      
         {%endblock%}
         </div><!-- End Right side columns -->
 

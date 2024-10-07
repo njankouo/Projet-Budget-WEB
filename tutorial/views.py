@@ -872,11 +872,16 @@ def add_commande(request):
             # activite = request.POST['activite']  
             # tache = request.POST['tache']  
             tva = request.POST['tva']  
-            ir = request.POST['ir']  # Corrigé pour utiliser 'ir' au lieu de 'tva'  
+            ir = request.POST['ir']  # Corrigé pour utiliser 'ir' au lieu de 'tva' 
+            procedure = request.POST['procedure'] 
+
+            signataire = request.POST['signataire']
 
             # Récupération des instances  
             instance_institution=Institution.objects.get(id=int(institution))
             instance_societe = Societe.objects.get(id=int(societe))  
+            instance_procedure=Procedure.objects.get(id=int(procedure))
+            intance_signataire = Signataire.objects.get(id=int(signataire))
             # instance_operation = Operation.objects.get(id=int(operations))  
             # instance_sous_programme = Sousprogramme.objects.get(id=int(sous_programme))  
             # instance_activite = Activite.objects.get(id=int(activite))  
@@ -893,8 +898,10 @@ def add_commande(request):
                 # idsousprogramme=instance_sous_programme,  
                 # idactivite=instance_activite,  
                 # idtache=instance_tache,  
+                idprocedure=instance_procedure,
                 idtva=instance_tva,  
-                idir=instance_ir  
+                idir=instance_ir,  
+                idsignataire=intance_signataire
             )  
             save_commande.save()  
 
@@ -1054,9 +1061,12 @@ def add_ligne_commande(request):
                 )  
 
                 if verified_operation_details.exists():  
-                    operation_detail = verified_operation_details.first()  # Récupérer la première instance correspondant à la requête  
-                    operation_detail.montant = montant_paragraphe  # Mettre à jour le montant  
-                    operation_detail.save()  # Enregistrer la modification  
+                    operation_detail = verified_operation_details.first()  
+                    if operation_detail.montant_engage is None:
+                        operation_detail.montant_engage = 0.0  
+                    operation_detail.montant_engage += prixT  
+                    operation_detail.montant_restant = montant_paragraphe
+                    operation_detail.save() 
 
                     # Créer la ligne de commande  
                     save_ligne_commande = Ligneboncommande.objects.create(  
@@ -1119,6 +1129,10 @@ def search_activities(request):
 
 def engagements(request):
     template = '../website/engagement.html'
+    procedure =Procedure.objects.all()
+
+    signataire = Signataire.objects.all()
+
    
     tva =Tva.objects.all()
     ir=Ir.objects.all()
@@ -1129,7 +1143,7 @@ def engagements(request):
     boncommande =Boncommande.objects.filter(status__in=[0,1])
     decision = Decision.objects.all()
     marche = Marche.objects.all()
-    context={'marche':marche,'decision':decision,'ordonancement':ordonancement,'lettrecommande':lettrecommande,'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
+    context={'signataire':signataire,'procedure':procedure,'marche':marche,'decision':decision,'ordonancement':ordonancement,'lettrecommande':lettrecommande,'tva':tva,'ir':ir,'boncommande':boncommande,'institution':institution,'societe':societe}
 
     return render(request,template,context)
 
@@ -1258,8 +1272,6 @@ def add_user(request):
 
 from django.utils import timezone
 
-
-
 def user_login(request):  
     if request.method == 'POST':  
         email = request.POST.get('email', '').strip().lower()  
@@ -1267,25 +1279,24 @@ def user_login(request):
         
         users = User.objects.filter(email=email)  
         print(f'Email recherché : {email}')  
-        print(f'Utilisateurs trouvés : {users}')  # Affiche les utilisateurs trouvés  
+        print(f'Utilisateurs trouvés : {users}')  
         
         if users.exists():  
             user = users.first()  
             print(f'Utilisateur trouvé : {user}, Mot de passe haché : {user.password}, Email : {user.email}')  
            
-            # Vérifiez si le mot de passe est correct  
             if check_password(password, user.password):  
                 user.last_login = timezone.now()  
                 user.save()  
                 login(request, user)  
-                # messages.success(request, 'Connexion réussie.')  
+                messages.success(request, f'Bienvenue, {user.username}!')  # Message de bienvenue
                 return redirect('/dashboard/')  
               
             else:  
-                print('Mot de passe incorrect.')  # Log pour le mot de passe incorrect  
+                print('Mot de passe incorrect.')  
                 messages.error(request, 'Identifiants invalides. Veuillez réessayer.')  
         else:  
-            print('Aucun utilisateur trouvé avec cet email.')  # Log si aucun utilisateur n'est trouvé  
+            print('Aucun utilisateur trouvé avec cet email.')  
             messages.error(request, 'Identifiants invalides. Veuillez réessayer.')  
 
     return render(request, '../website/authentification/login.html')
@@ -1589,7 +1600,7 @@ def search_montant(request):
             idparagraphe_id=paragraph_id,  
             idannee_id=year_id  
         )  
-        montant = montant_detail.montant  
+        montant = montant_detail.montant_restant  
     except OperationDetail.DoesNotExist:  
         montant = None  # Aucun enregistrement correspondant trouvé  
 
@@ -1716,18 +1727,26 @@ def add_lettre_commande(request):
             societe=request.POST['societe']
             institution=request.POST['institution']
             numero_lettre = request.POST['numero_lettre']
+            procedure =request.POST['procedure']
+
+            signataire = request.POST['signataire']
 
             instance_tva= Tva.objects.get(id=int(tva))
             instance_ir=Ir.objects.get(id=int(ir))
             instance_societe=Societe.objects.get(id=int(societe))
             instance_institution=Institution.objects.get(id=int(institution))
+            instance_procedure = Procedure.objects.get(id=int(procedure))
+
+            instance_signataire = Signataire.objects.get(id=int(signataire))
 
             save_lettre=LettreCommande.objects.create(
                 idtva=instance_tva,
                 idir=instance_ir,
                 idsociete=instance_societe,
                 idinstitution=instance_institution,
-                numero_lettre=numero_lettre
+                numero_lettre=numero_lettre,
+                idprocedure =instance_procedure,
+                idsignataire=instance_signataire
             )
             save_lettre.save()
             messages.success(request,'Enregistrement Reussi')
@@ -1959,18 +1978,25 @@ def add_ordonancement(request):
             societe=request.POST['societe']
             institution=request.POST['institution']
             numero = request.POST['numero']
+            procedure = request.POST['procedure']
+            signataire = request.POST['signataire']
 
             instance_tva= Tva.objects.get(id=int(tva))
             instance_ir=Ir.objects.get(id=int(ir))
             instance_societe=Societe.objects.get(id=int(societe))
             instance_institution=Institution.objects.get(id=int(institution))
+            instance_procedure = Procedure.objects.get(id=int(procedure))
+
+            instance_signataire = Signataire.objects.get(id=int(signataire))
 
             save_lettre=Ordonancement.objects.create(
                 idtva=instance_tva,
                 idir=instance_ir,
                 idsociete=instance_societe,
                 idinstitution=instance_institution,
-                numero_ordonancement=numero
+                numero_ordonancement=numero,
+                idprocedure=instance_procedure,
+                idsignataire=instance_signataire
             )
             save_lettre.save()
             messages.success(request,'Enregistrement Reussi')
@@ -2003,17 +2029,27 @@ def add_decision(request):
             institution=request.POST['institution']
             numero = request.POST['numero']
 
+            procedure = request.POST['procedure']
+
+            signataire = request.POST['signataire']
+
             instance_tva= Tva.objects.get(id=int(tva))
             instance_ir=Ir.objects.get(id=int(ir))
             instance_societe=Societe.objects.get(id=int(societe))
             instance_institution=Institution.objects.get(id=int(institution))
+
+            instance_procedure = Procedure.objects.get(id=int(procedure))
+
+            instance_signataire = Signataire.objects.get(id=int(signataire))
 
             save_lettre=Decision.objects.create(
                 idtva=instance_tva,
                 idir=instance_ir,
                 idsociete=instance_societe,
                 idinstitution=instance_institution,
-                numero_decision=numero
+                numero_decision=numero,
+                idprocedure=instance_procedure,
+                idsignataire=instance_signataire
             )
             save_lettre.save()
             messages.success(request,'Enregistrement Reussi')
@@ -2047,18 +2083,26 @@ def add_marche(request):
             societe=request.POST['societe']
             institution=request.POST['institution']
             numero = request.POST['numero']
+            procedure = request.POST['procedure']
+
+            signataire = request.POST['signataire']
 
             instance_tva= Tva.objects.get(id=int(tva))
             instance_ir=Ir.objects.get(id=int(ir))
             instance_societe=Societe.objects.get(id=int(societe))
             instance_institution=Institution.objects.get(id=int(institution))
+            instance_procedure = Procedure.objects.get(id=int(procedure))
+
+            instance_signataire = Signataire.objects.get(id=int(signataire))
 
             save_lettre=Marche.objects.create(
                 idtva=instance_tva,
                 idir=instance_ir,
                 idsociete=instance_societe,
                 idinstitution=instance_institution,
-                numero_marche=numero
+                numero_marche=numero,
+                idprocedure=instance_procedure,
+                idsignataire=instance_signataire
             )
             save_lettre.save()
             messages.success(request,'Enregistrement Reussi')
@@ -2966,3 +3010,308 @@ def add_ligne_marche(request):
 def profile(request):
     template ='../website/profile.html'
     return render(request,template)
+
+
+
+
+
+
+def certificat_lettre(request, id):  
+    template_path = "../website/pdf/certificat_lettre.html"  
+
+    # Essayer de récupérer le modèle  
+    try:  
+        template = get_template(template_path)  
+    except TemplateDoesNotExist:  
+        print(f"Error: Template '{template_path}' not found.")  
+        return HttpResponse("Template not found.", status=404)  
+
+    # Récupérer les données de Boncommande  
+    try:  
+        image_url = 'website/static/img/nasla.jpeg'  
+        lettre = LettreCommande.objects.get(id=int(id))  
+        detail = DetailLettreCommande.objects.filter(idlettrecommande=id).distinct('idsousprogramme','idactivite','idtache')
+    except Boncommande.DoesNotExist:  
+        return HttpResponse("Lettre Commande not found.", status=404)  
+
+    # Préparer le contexte  
+    context = {'detail':detail,'image_url': image_url, 'lettre': lettre}  
+
+    # Rendre le modèle avec le contexte  
+    html = template.render(context)  
+
+    # Créer un objet BytesIO pour contenir le contenu PDF  
+    result = io.BytesIO()  
+
+    # Convertir HTML en PDF avec pisa  
+    try:  
+        # Définir une taille de page personnalisée (par exemple, 1200x600 points)  
+        page_size = (1200, 600)  # Largeur, hauteur en points  
+
+        pisa_status = pisa.CreatePDF(  
+            html.encode("UTF-8"),  
+            dest=result,  
+            show_page_numbers=True,  
+            page_size=page_size,  
+            inline_css=True,  
+        )  
+
+        # Vérifier les erreurs  
+        if pisa_status.err:  
+            return HttpResponse("Error generating PDF.", status=500)  
+
+        return HttpResponse(result.getvalue(), content_type='application/pdf')  
+
+    except Exception as e:  
+        print(f"Error generating PDF: {e}")  
+        return HttpResponse("Error generating PDF.", status=500)  
+
+    return HttpResponse("No content generated.", status=204)  
+
+
+
+
+
+
+def certificat_ordonancement(request, id):  
+    template_path = "../website/pdf/certificat_ordonancement.html"  
+
+    # Essayer de récupérer le modèle  
+    try:  
+        template = get_template(template_path)  
+    except TemplateDoesNotExist:  
+        print(f"Error: Template '{template_path}' not found.")  
+        return HttpResponse("Template not found.", status=404)  
+
+    # Récupérer les données de Boncommande  
+    try:  
+        image_url = 'website/static/img/nasla.jpeg'  
+        ordonancement = Ordonancement.objects.get(id=int(id))  
+        detail = DetailOrdonancement.objects.filter(idordonancement=id).distinct('idsousprogramme','idactivite','idtache')
+    except Boncommande.DoesNotExist:  
+        return HttpResponse("Ordonancement not found.", status=404)  
+
+    # Préparer le contexte  
+    context = {'detail':detail,'image_url': image_url, 'ordonancement': ordonancement}  
+
+    # Rendre le modèle avec le contexte  
+    html = template.render(context)  
+
+    # Créer un objet BytesIO pour contenir le contenu PDF  
+    result = io.BytesIO()  
+
+    # Convertir HTML en PDF avec pisa  
+    try:  
+        # Définir une taille de page personnalisée (par exemple, 1200x600 points)  
+        page_size = (1200, 600)  # Largeur, hauteur en points  
+
+        pisa_status = pisa.CreatePDF(  
+            html.encode("UTF-8"),  
+            dest=result,  
+            show_page_numbers=True,  
+            page_size=page_size,  
+            inline_css=True,  
+        )  
+
+        # Vérifier les erreurs  
+        if pisa_status.err:  
+            return HttpResponse("Error generating PDF.", status=500)  
+
+        return HttpResponse(result.getvalue(), content_type='application/pdf')  
+
+    except Exception as e:  
+        print(f"Error generating PDF: {e}")  
+        return HttpResponse("Error generating PDF.", status=500)  
+
+    return HttpResponse("No content generated.", status=204)  
+
+
+
+
+
+
+def certificat_decision(request, id):  
+    template_path = "../website/pdf/certificat_decision.html"  
+
+    # Essayer de récupérer le modèle  
+    try:  
+        template = get_template(template_path)  
+    except TemplateDoesNotExist:  
+        print(f"Error: Template '{template_path}' not found.")  
+        return HttpResponse("Template not found.", status=404)  
+
+    # Récupérer les données de Boncommande  
+    try:  
+        image_url = 'website/static/img/nasla.jpeg'  
+        decision = Decision.objects.get(id=int(id))  
+        detail = DetailDecision.objects.filter(iddecision=id).distinct('idsousprogramme','idactivite','idtache')
+    except Boncommande.DoesNotExist:  
+        return HttpResponse("Decision not found.", status=404)  
+
+    # Préparer le contexte  
+    context = {'detail':detail,'image_url': image_url, 'decision': decision}  
+
+    # Rendre le modèle avec le contexte  
+    html = template.render(context)  
+
+    # Créer un objet BytesIO pour contenir le contenu PDF  
+    result = io.BytesIO()  
+
+    # Convertir HTML en PDF avec pisa  
+    try:  
+        # Définir une taille de page personnalisée (par exemple, 1200x600 points)  
+        page_size = (1200, 600)  # Largeur, hauteur en points  
+
+        pisa_status = pisa.CreatePDF(  
+            html.encode("UTF-8"),  
+            dest=result,  
+            show_page_numbers=True,  
+            page_size=page_size,  
+            inline_css=True,  
+        )  
+
+        # Vérifier les erreurs  
+        if pisa_status.err:  
+            return HttpResponse("Error generating PDF.", status=500)  
+
+        return HttpResponse(result.getvalue(), content_type='application/pdf')  
+
+    except Exception as e:  
+        print(f"Error generating PDF: {e}")  
+        return HttpResponse("Error generating PDF.", status=500)  
+
+    return HttpResponse("No content generated.", status=204)  
+
+
+
+
+
+
+def certificat_marche(request, id):  
+    template_path = "../website/pdf/certificat_marche.html"  
+
+    # Essayer de récupérer le modèle  
+    try:  
+        template = get_template(template_path)  
+    except TemplateDoesNotExist:  
+        print(f"Error: Template '{template_path}' not found.")  
+        return HttpResponse("Template not found.", status=404)  
+
+    # Récupérer les données de Boncommande  
+    try:  
+        image_url = 'website/static/img/nasla.jpeg'  
+        marche = Marche.objects.get(id=int(id))  
+        detail = DetailMarche.objects.filter(idmarche=id).distinct('idsousprogramme','idactivite','idtache')
+    except Marche.DoesNotExist:  
+        return HttpResponse("Marche not found.", status=404)  
+
+    # Préparer le contexte  
+    context = {'detail':detail,'image_url': image_url, 'marche': marche}  
+
+    # Rendre le modèle avec le contexte  
+    html = template.render(context)  
+
+    # Créer un objet BytesIO pour contenir le contenu PDF  
+    result = io.BytesIO()  
+
+    # Convertir HTML en PDF avec pisa  
+    try:  
+        # Définir une taille de page personnalisée (par exemple, 1200x600 points)  
+        page_size = (1200, 600)  # Largeur, hauteur en points  
+
+        pisa_status = pisa.CreatePDF(  
+            html.encode("UTF-8"),  
+            dest=result,  
+            show_page_numbers=True,  
+            page_size=page_size,  
+            inline_css=True,  
+        )  
+
+        # Vérifier les erreurs  
+        if pisa_status.err:  
+            return HttpResponse("Error generating PDF.", status=500)  
+
+        return HttpResponse(result.getvalue(), content_type='application/pdf')  
+
+    except Exception as e:  
+        print(f"Error generating PDF: {e}")  
+        return HttpResponse("Error generating PDF.", status=500)  
+
+    return HttpResponse("No content generated.", status=204)  
+
+
+def procedure(request):
+    template ='../website/procedure.html'
+    procedure =Procedure.objects.all()
+    context ={
+        'procedure':procedure
+    }
+    return render(request,template,context)
+
+
+def add_procedure(request):
+    if request.method == 'POST':
+        code = request.POST['code']
+        objet = request.POST['objet']
+
+        try:
+            save_procedure = Procedure.objects.create(
+                code =code,
+                objet=objet
+            )
+            save_procedure.save()
+            messages.success(request,'Enregistrement Reussi')
+
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,f'Une Erreur Est Survenue: {e}')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+def signataire(request):
+    template = '../website/signataire.html'
+    structure = Structure.objects.all()
+    signataire = Signataire.objects.all()
+
+    context={
+        'structure':structure,
+        'signataire':signataire
+    }
+    return render(request,template,context)
+
+def add_signataire(request):
+    if request.method == 'POST':
+        nom = request.POST.get('nom')
+        prenom = request.POST.get('prenom')
+        adresse = request.POST.get('adresse')
+        tel = request.POST.get('tel')
+        structure_id = request.POST['structure']
+
+        # Validation des champs requis
+        if not nom or not prenom or not adresse or not tel or not structure_id:
+            messages.error(request, 'Tous les champs sont requis.')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        # Vérification si structure_id est valide
+        if structure_id == 'None':
+            messages.error(request, 'La structure sélectionnée est invalide.')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        # Récupération de la structure avec gestion des erreurs
+        instance_structure = get_object_or_404(Structure, id=int(structure_id))
+
+        try:
+            save_signataire = Signataire.objects.create(
+                nom=nom,
+                prenom=prenom,
+                idstructure=instance_structure,
+                adresse=adresse,
+                telephone=tel,
+            )
+            messages.success(request, 'Enregistrement réussi')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        except Exception as e:
+            messages.error(request, f'Une erreur est survenue : {e}')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))

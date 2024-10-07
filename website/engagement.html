@@ -484,7 +484,7 @@ input[type="radio"]:checked + div::before {
                 <h5 class="card-title">Renseignez Les Informations Relatives Aux Bons De COmmandes</h5>
   
                 <!-- No Labels Form -->
-                <form class="row g-3" method="POST" action="/add_lettrecommande/">
+                <form class="row g-3" method="POST" action="/add_commande/">
                   {%csrf_token%}
 
                   <div class="col-md-12">
@@ -585,6 +585,27 @@ input[type="radio"]:checked + div::before {
           </select>
         
   </div>
+  <div class="col-md-6">
+    <label >Procedure</label>
+    <select class="form-control" name="procedure" id="procedure">
+      <option>selectionnez Une Procedure</option>
+      {%for procedures in procedure%}
+        <option value="{{procedures.id}}">{{procedures.objet}}</option>
+        {%endfor%}
+    </select>
+  
+</div>
+
+<div class="col-md-6">
+  <label >Signataire</label>
+  <select class="form-control" name="signataire" id="signataire">
+    <option>selectionnez Un Signataire</option>
+    {%for signataires in signataire%}
+      <option value="{{signataires.id}}">{{signataires.nom}}</option>
+      {%endfor%}
+  </select>
+
+</div>
           </div>
             </div>
       
@@ -639,81 +660,63 @@ input[type="radio"]:checked + div::before {
                       </div>
                     </div>
                   </div>
-                  <table class="datatable table table-hover table-responsive text-center " >
+                 
+                <table class="datatable table table-hover table-responsive text-center">
                     <thead>
-                      <tr>
-                        <th style="width: 25%;">
-                            code
-                    
-                        </th>
-         
-          
-              <!-- <th>Operations</th>
-          
-              <th>Sous-Programmes</th>
-              <th>Activites</th> -->
-              <th>Tva </th>
-              <th>Ir</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-    
-            {%for lettre in lettrecommande%}
-            <tr>
-             
-              <td style="font-weight: bold;">
+                        <tr>
+                            <th style="width: 25%;">code</th>
+                            <th>Tva</th>
+                            <th>Ir</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                      
+                        {% for lettre in lettrecommande %}
+                        <tr>
+                            <td style="font-weight: bold;">
+                                <a href="/add_references_lettre/{{lettre.id}}/"> <i class="bi bi-journal-text"></i> {{lettre.numero_lettre}}</a>
+                            </td>
+                            <td>{{lettre.idtva.nom}}</td>
+                            <td>{{lettre.idir.nom}}</td>
+                            <td>
+                                <label>
+                                    {% if lettre.status == 1 %}
+                                    <input type="checkbox" name="checkboxYannis" checked />
+                                    <div class="btn btn-sık"><span>Valide</span></div>
+                                    {% elif lettre.status == 0 %}
+                                    <input type="checkbox" name="checkboxYannis" />
+                                    <div class="btn btn-sık"><span>Non Valide</span></div>
+                                    {% endif %}
+                                </label>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-ui-checks"></i> Outils
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        {% if lettre.status == 0 %}
+                                        <form method="POST" action="/valid/{{lettre.id}}/">
+                                            {% csrf_token %}
+                                            <li><button type='submit' class="dropdown-item btn btn-success"><i class="bi bi-check-circle-fill"></i> Valider</button></li>
+                                        </form>
+                                        {% endif %}
+                                        <li><a class="dropdown-item" href="/add_operation_lettre/{{lettre.id}}/"><i class="bi bi-plus-square-dotted"></i> Ajouter Operation</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
+                                        <li><a class="dropdown-item" href="/certificat_lettre/{{lettre.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 
-                <a href="/add_references_lettre/{{lettre.id}}/"> <i class="bi bi-journal-text"></i>   {{lettre.numero_lettre}}      </a>
-              </td>
-              <!-- <td>{{bon.idoperation}}</td>
              
-              <td>{{bon.idsousprogramme}}</td>
-              <td>{{bon.idactivite}}</td> -->
-              <td>{{lettre.idtva.nom}}</td>
-              <td>{{lettre.idir.nom}}</td>
-              <td>
-                <label>
-                  {%if lettre.status == 1%}
-                  <input type="checkbox" name="checkboxYannis" checked/>  
-                  <div class="btn btn-sık"><span>Valide</span></div>
-                  {%elif lettre.status == 0%}  
-                  <input type="checkbox" name="checkboxYannis"/>  
-                    <div class="btn btn-sık"><span>Non Valide</span></div>
-                    {%endif%}
-              </label>
-              </td>
-              <td>
-              
-                <div class="dropdown">
-                  <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-               <i class="bi bi-ui-checks"></i>     Outils
-                  </button>
-                  <ul class="dropdown-menu">
-                    {%if lettre.status == 0%}
-                    <form method="POST" action="/valid/{{lettre.id}}/">
-                      {%csrf_token%}
-                    <li><button type='submit' class="dropdown-item btn btn-success"><i class="bi bi-check-circle-fill"></i> Valider</button></li>
-                  </form>
-                  {%endif%}
-                    <li><a class="dropdown-item" href="/add_operation_lettre/{{lettre.id}}/"><i class="bi bi-plus-square-dotted"></i> Ajouter Operation</a></li>
-                  
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
-                    {%if lettre.status == 1%}
-                    <li><a class="dropdown-item" href="/fiche_bon/{{lettre.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
-                    {%endif%}
-                  </ul>
-                </div>
-              
-              </td>
-            </tr>
-            {%endfor%}
-       
-          </tbody>
-        </table>
-        
+                
       </div>
     </div>
     
@@ -831,6 +834,26 @@ input[type="radio"]:checked + div::before {
               </select>
             
       </div>
+      <div class="col-md-6">
+        <label >Procedure</label>
+        <select class="form-control" name="procedure" id="procedure">
+          <option>selectionnez Une Procedure</option>
+          {%for procedures in procedure%}
+            <option value="{{procedures.id}}">{{procedures.objet}}</option>
+            {%endfor%}
+        </select>
+      
+    </div>
+    <div class="col-md-6">
+      <label >Signataire</label>
+      <select class="form-control" name="signataire" id="signataire">
+        <option>selectionnez Un Signataire</option>
+        {%for signataires in signataire%}
+          <option value="{{signataires.id}}">{{signataires.nom}}</option>
+          {%endfor%}
+      </select>
+    
+    </div>
               </div>
                 </div>
           
@@ -946,9 +969,9 @@ input[type="radio"]:checked + div::before {
                       
                         <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
-                        {%if ordonancements.status == 1%}
-                        <li><a class="dropdown-item" href="/fiche_bon/{{ordonancements.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
-                        {%endif%}
+                     
+                        <li><a class="dropdown-item" href="/certificat_ordonancement/{{ordonancements.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
+                        
                       </ul>
                     </div>
                   
@@ -1075,7 +1098,27 @@ input[type="radio"]:checked + div::before {
                       {%endfor%}
                   </select>
                 
-          </div>
+          </div> 
+          <div class="col-md-6">
+            <label >Procedure</label>
+            <select class="form-control" name="procedure" id="procedure">
+              <option>selectionnez Une Procedure</option>
+              {%for procedures in procedure%}
+                <option value="{{procedures.id}}">{{procedures.objet}}</option>
+                {%endfor%}
+            </select>
+          
+        </div>
+        <div class="col-md-6">
+          <label >Signataire</label>
+          <select class="form-control" name="signataire" id="signataire">
+            <option>selectionnez Un Signataire</option>
+            {%for signataires in signataire%}
+              <option value="{{signataires.id}}">{{signataires.nom}}</option>
+              {%endfor%}
+          </select>
+        
+        </div>
                   </div>
                     </div>
               
@@ -1194,9 +1237,9 @@ input[type="radio"]:checked + div::before {
                       
                         <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
-                        {%if decisions.status == 1%}
-                        <li><a class="dropdown-item" href="/fiche_bon/{{lettre.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
-                        {%endif%}
+                        
+                        <li><a class="dropdown-item" href="/certificat_decision/{{decisions.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
+                       
                       </ul>
                     </div>
                   
@@ -1324,6 +1367,26 @@ input[type="radio"]:checked + div::before {
                   </select>
                 
           </div>
+          <div class="col-md-6">
+            <label >Procedure</label>
+            <select class="form-control" name="procedure" id="procedure">
+              <option>selectionnez Une Procedure</option>
+              {%for procedures in procedure%}
+                <option value="{{procedures.id}}">{{procedures.objet}}</option>
+                {%endfor%}
+            </select>
+          
+        </div>
+        <div class="col-md-6">
+          <label >Signataire</label>
+          <select class="form-control" name="signataire" id="signataire">
+            <option>selectionnez Un Signataire</option>
+            {%for signataires in signataire%}
+              <option value="{{signataires.id}}">{{signataires.nom}}</option>
+              {%endfor%}
+          </select>
+        
+        </div>
                   </div>
                     </div>
               
@@ -1685,9 +1748,9 @@ input[type="radio"]:checked + div::before {
                       
                         <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Annuler</a></li>
-                        {%if lettre.status == 1%}
-                        <li><a class="dropdown-item" href="/fiche_bon/{{marches.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
-                        {%endif%}
+                       
+                        <li><a class="dropdown-item" href="/certificat_marche/{{marches.id}}/"> <i class="bi bi-printer-fill"></i>Generer Certificat Engagement</a></li>
+                      
                       </ul>
                     </div>
                   
@@ -1763,6 +1826,26 @@ input[type="radio"]:checked + div::before {
                   </select>
                 
           </div>
+          <div class="col-md-6">
+            <label >Procedure</label>
+            <select class="form-control" name="procedure" id="procedure">
+              <option>selectionnez Une Procedure</option>
+              {%for procedures in procedure%}
+                <option value="{{procedures.id}}">{{procedures.objet}}</option>
+                {%endfor%}
+            </select>
+          
+        </div>
+        <div class="col-md-6">
+          <label >Signataire</label>
+          <select class="form-control" name="signataire" id="signataire">
+            <option>selectionnez Un SIgnataire</option>
+            {%for signataires in signataire%}
+              <option value="{{signataires.id}}">{{signataires.nom}}</option>
+              {%endfor%}
+          </select>
+        
+      </div>
                   </div>
                     </div>
               
@@ -1881,6 +1964,23 @@ create: true
 </script>
 <script>
   new TomSelect("#prestataire",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+
+
+<script>
+  new TomSelect("#procedure",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
+
+<script>
+  new TomSelect("#signataire",{
 persist: false,
 createOnBlur: true,
 create: true
