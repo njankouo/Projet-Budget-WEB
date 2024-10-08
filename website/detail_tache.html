@@ -1,0 +1,53 @@
+
+    {%extends 'master.html'%}
+    
+    
+    {%block content%}
+    
+      
+  <div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Detail Des Montants Li&eacute;es A La Tache {{tache.nom}}</h5>
+
+          <nav class="d-flex justify-content-end">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/dashboard/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/tache/">Tache</a></li>
+              <li class="breadcrumb-item active">Detail Tache</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Repartition Des Montants </h5>
+
+          <!-- Default Table -->
+          <table class="table table-responsive text-center">
+            <thead>
+              <tr>
+                <th scope="col">Montant Initial</th>
+                <th scope="col">Montant Engag&eacute;</th>
+                <th scope="col">Montant Valid&eacute;</th>
+                <th scope="col">Montant Liquid&eacute;</th>
+                <th scope="col">Montant Ordonanc&eacute;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th ></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+             
+            </tbody>
+          </table>
+          <!-- End Default Table Example -->
+        </div>
+      </div>
+  </div>
+  
+    {%endblock%}

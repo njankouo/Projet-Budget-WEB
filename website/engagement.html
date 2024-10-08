@@ -338,7 +338,7 @@ input[type="radio"]:checked + div::before {
               <button class="nav-link w-100 " id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Lettre Commande</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Ordonancements</button>
+              <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Salaire</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="decision-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-decision" type="button" role="tab" aria-controls="decision" aria-selected="false" tabindex="-1">Decision</button>
@@ -881,13 +881,13 @@ input[type="radio"]:checked + div::before {
               <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title" style="font-weight: bold;font-family: forte;">GESTION DES ORDONANCEMENTS</h5>
+                      <h5 class="card-title" style="font-weight: bold;font-family: forte;">GESTION DES SALAIRES</h5>
         
                       <nav>
                         <ol class="breadcrumb">
                           <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                           
-                          <li class="breadcrumb-item active">Engagements</li>
+                          <li class="breadcrumb-item active">Salaires</li>
                         </ol>
                       </nav>
                     </div>
@@ -901,7 +901,7 @@ input[type="radio"]:checked + div::before {
                       <div class="table-title">
                         <div class="row">
                           <div class="col-sm-6">
-                          <h5 style="font-weight: bold;" style="font-family:forte">LISTE DES ORDONANCEMENTS</h5>
+                          <h5 style="font-weight: bold;" style="font-family:forte">LISTE DES SALAIRES</h5>
                           </div>
                           <div class="col-sm-6">
                             <a  class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#largeModal_ordonancement"><i class="bi bi-plus-circle-dotted"></i> <span>Ajouter</span></a>
@@ -991,21 +991,21 @@ input[type="radio"]:checked + div::before {
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" style="font-weight: bold;font-family: forte;">Creer Un Ordonancements</h5>
+                <h5 class="modal-title" style="font-weight: bold;font-family: forte;">Creer Un Salaire</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
                   <div class="card">
                       <div class="card-body">
-                        <h5 class="card-title">Renseignez Les Informations Relatives Aux Ordonancements</h5>
+                        <h5 class="card-title">Renseignez Les Informations Relatives Aux Salaires</h5>
           
                         <!-- No Labels Form -->
                         <form class="row g-3" method="POST" action="/add_ordonancement/">
                           {%csrf_token%}
         
                           <div class="col-md-12">
-                            <label >Numero Ordonancement</label>
-                        <input type="text" name="numero" class="form-control" placeholder="Numero Ordonancement">
+                            <label >Numero Salaire</label>
+                        <input type="text" name="numero" class="form-control" placeholder="Numero Salaire">
                         </div>
         
                           <!-- <div class="col-md-6">

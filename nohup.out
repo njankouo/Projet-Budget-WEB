@@ -2987,3 +2987,522 @@ Not Found: /cdn-cgi/rum
 [07/Oct/2024 19:17:51] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
 Not Found: /cdn-cgi/rum
 [07/Oct/2024 19:18:16] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+/home/njankouo/Téléchargements/tutoriel/tutoriel/settings.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 19:15:09
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Une erreur est survenue : ERREUR:  la valeur d'une clé dupliquée rompt la contrainte unique « auth_user_username_key »
+DETAIL:  La clé « (username)=(njankouo) » existe déjà.
+
+Email recherché : dairounjankouo2019@yahoo.fr
+Utilisateurs trouvés : <QuerySet [<User: njankouo Ndam>]>
+Utilisateur trouvé : njankouo Ndam, Mot de passe haché : pbkdf2_sha256$870000$UfLTNnTtknoatjMxi9QbIg$BA7ljFrMYO7xVZOH/90LzHr2FlWW1m1BDLLU/zzW9Nw=, Email : dairounjankouo2019@yahoo.fr
+Traceback (most recent call last):
+  File "/home/njankouo/Téléchargements/tutoriel/manage.py", line 22, in <module>
+    main()
+  File "/home/njankouo/Téléchargements/tutoriel/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/__init__.py", line 382, in execute
+    settings.INSTALLED_APPS
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/conf/__init__.py", line 81, in __getattr__
+    self._setup(name)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/conf/__init__.py", line 68, in _setup
+    self._wrapped = Settings(settings_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/conf/__init__.py", line 166, in __init__
+    mod = importlib.import_module(self.SETTINGS_MODULE)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/settings.py", line 76, in <module>
+    ('en', _('English')),  
+NameError: name '_' is not defined
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+[07/Oct/2024 19:53:31] "GET /dashboard/ HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:53:36] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+/home/njankouo/Téléchargements/tutoriel/tutoriel/settings.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 19:53:28
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+[07/Oct/2024 19:53:50] "GET /dashboard/ HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:53:55] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:53:55] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+/home/njankouo/Téléchargements/tutoriel/tutoriel/settings.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 19:53:49
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Traceback (most recent call last):
+  File "/home/njankouo/Téléchargements/tutoriel/manage.py", line 22, in <module>
+    main()
+  File "/home/njankouo/Téléchargements/tutoriel/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/__init__.py", line 382, in execute
+    settings.INSTALLED_APPS
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/conf/__init__.py", line 81, in __getattr__
+    self._setup(name)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/conf/__init__.py", line 68, in _setup
+    self._wrapped = Settings(settings_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/conf/__init__.py", line 166, in __init__
+    mod = importlib.import_module(self.SETTINGS_MODULE)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/settings.py", line 76, in <module>
+    ('en', _('English')),  
+NameError: name '_' is not defined
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+[07/Oct/2024 19:54:51] "GET /dashboard/ HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:54:56] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+[07/Oct/2024 19:54:58] "GET /dashboard/ HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:54:58] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:54:59] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+[07/Oct/2024 19:55:02] "GET /dashboard/?lang=en HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:55:02] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:55:03] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+[07/Oct/2024 19:55:11] "GET /dashboard/?lang=fr HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:55:11] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:55:12] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:55:16] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+/home/njankouo/Téléchargements/tutoriel/tutorial/views.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 19:54:49
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+[07/Oct/2024 19:56:18] "GET /dashboard/?lang=fr HTTP/1.1" 200 25631
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:56:20] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:56:21] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+[07/Oct/2024 19:57:10] "GET /dashboard/?lang=fr HTTP/1.1" 200 25663
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:57:12] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+Not Found: /cdn-cgi/rum
+[07/Oct/2024 19:57:14] "POST /cdn-cgi/rum? HTTP/1.1" 404 28156
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 19:56:18
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+/home/njankouo/Téléchargements/tutoriel/tutorial/views.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 20:01:34
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Not Found: /dashboard/
+[07/Oct/2024 20:02:05] "GET /dashboard/?lang=fr HTTP/1.1" 404 2381
+Not Found: /dashboard/
+[07/Oct/2024 20:02:11] "GET /dashboard/ HTTP/1.1" 404 2373
+Not Found: /dashboard
+[07/Oct/2024 20:02:13] "GET /dashboard HTTP/1.1" 404 2370
+Not Found: /
+[07/Oct/2024 20:02:33] "GET / HTTP/1.1" 404 2325
+Not Found: /
+[07/Oct/2024 20:02:33] "GET / HTTP/1.1" 404 2325
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 20:02:02
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Not Found: /
+[07/Oct/2024 20:03:04] "GET / HTTP/1.1" 404 2325
+Not Found: /
+[07/Oct/2024 20:03:07] "GET / HTTP/1.1" 404 2325
+Not Found: /dashboard/
+[07/Oct/2024 20:03:31] "GET /dashboard/ HTTP/1.1" 404 2373
+Not Found: /dashboard/
+[07/Oct/2024 20:03:33] "GET /dashboard/ HTTP/1.1" 404 2373
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 20:02:54
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 20:05:14
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+October 07, 2024 - 20:05:19
+Django version 5.1, using settings 'tutoriel.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/base.py", line 486, in check
+    all_issues = checks.run_checks(
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/registry.py", line 88, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py", line 27, in <module>
+    urlpatterns = i18n_patterns[
+NameError: name 'i18n_patterns' is not defined
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/base.py", line 486, in check
+    all_issues = checks.run_checks(
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/registry.py", line 88, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py", line 27, in <module>
+    urlpatterns = i18n_patterns[
+NameError: name 'i18n_patterns' is not defined
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/base.py", line 486, in check
+    all_issues = checks.run_checks(
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/registry.py", line 88, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py", line 30, in <module>
+    urlpatterns = i18n_patterns[
+TypeError: 'function' object is not subscriptable
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/base.py", line 486, in check
+    all_issues = checks.run_checks(
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/registry.py", line 88, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py", line 30, in <module>
+    urlpatterns = i18n_patterns[
+TypeError: 'function' object is not subscriptable
+Performing system checks...
+
+/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py changed, reloading.
+Performing system checks...
+
+Watching for file changes with StatReloader
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Error: That port is already in use.
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/management/base.py", line 486, in check
+    all_issues = checks.run_checks(
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/registry.py", line 88, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 16, in check_url_config
+    return check_resolver(resolver)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/core/checks/urls.py", line 26, in check_resolver
+    return check_method()
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 531, in check
+    for pattern in self.url_patterns:
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 718, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/njankouo/.local/lib/python3.10/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/njankouo/Téléchargements/tutoriel/tutoriel/urls.py", line 21, in <module>
+    from tutorial.views import Home
+  File "/home/njankouo/Téléchargements/tutoriel/tutorial/views.py", line 3399
+    cu = request.POST['pu']
+IndentationError: unexpected indent
+Performing system checks...
+
+System check identified some issues:
+
+WARNINGS:
+tutorial.Operation.idsourcefinancement: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.idrole: (fields.W340) null has no effect on ManyToManyField.
+tutorial.Utilisateur.sexe: (fields.W122) 'max_length' is ignored when used with IntegerField.
+	HINT: Remove 'max_length' from field
+
+System check identified 3 issues (0 silenced).
+Error: That port is already in use.

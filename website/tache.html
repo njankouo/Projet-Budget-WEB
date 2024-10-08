@@ -152,8 +152,17 @@
             {%for taches in tache%}
           <tr>
            
-            <td>{{taches.code}}</td>
-            <td>{{taches.nom}}</td>
+            <td>
+                
+              {{taches.code}}
+           
+            </td>
+            <td>
+              <a href="/detail_tache/{{taches.id}}/">
+           
+              {{taches.nom}}
+            </a>
+            </td>
             
           
             <td>{{taches.idsousprogramme.nom}}</td>

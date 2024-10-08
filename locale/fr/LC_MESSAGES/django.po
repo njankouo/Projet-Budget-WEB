@@ -17,13 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"  
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"  
 
-#: tutorial/views.py:246  
-msgid "Bonjour, le monde !"  
-msgstr "Bonjour, le monde !"  # Bien traduit.  
-
 #: website/master.html:228  
-msgid "Dashboard"  
-msgstr "Tableau de Bord"  # Assurez-vous que cela convient au contexte.  
+msgid "Welcome to my portfolio"  
+msgstr "Bienvenue sur mon portfolio"  # Correction pour le contexte.
 
 msgid "English"  
 msgstr "Anglais"  
@@ -32,4 +28,4 @@ msgid "French"
 msgstr "Français"  
 
 msgid "Spanish"  
-msgstr "Espagnol"
+msgstr "Espagnol"  

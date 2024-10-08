@@ -189,7 +189,7 @@ def operations(request):
     template = '../website/operations_list.html'
     return render(request,template,context)
 def configurations(request):
-    annee = Annee.objects.all()
+    annee = Annee.objects.filter(etat='Actif')
     nature =Naturetache.objects.all()
     source = Sourcefinacement.objects.all()
     type= Typefinancement.objects.all()
@@ -241,27 +241,7 @@ def nature_tache(request):
             return redirect('/configurations/')
     return redirect('/configurations/')
 from django.contrib.auth.decorators import login_required
-@login_required
-def dashboard(request):  
 
-    template = '../website/master.html'    # Assurez-vous que le chemin est correct  
-
-    # Comptage des objets  
-    boncommande = Boncommande.objects.count()  
-    ligneboncommande = Ligneboncommande.objects.count()  
-    marche = Marche.objects.count()
-    utilisateur = Utilisateur.objects.count()
-
-    # Inclure le message dans le contexte  
-    context = {  
-        'boncommande': boncommande,  
-        'ligneboncommande': ligneboncommande,  
-        'marche':marche,
-        'utilisateur':utilisateur
-
-    }  
-
-    return render(request, template, context)  # Passer le contexte au template  
 from django.contrib.auth import logout as auth_logout
 #from django.shortcuts import redirect
 
@@ -445,9 +425,11 @@ def operation_paragraphe(request,id):
     # Calculer le montant total (avec gestion de valeurs nulles)  
     montant_total = somme_montants['montant__sum'] if somme_montants['montant__sum'] is not None else 0  
 
-   
+    somme_montants_operation = OperationDetail.objects.filter(idoperation=operation).aggregate(Sum('montant_engage'))  
+    montant_total_operation = somme_montants_operation['montant_engage__sum'] if somme_montants_operation['montant_engage__sum'] is not None else 0  
+
     template ='../website/operation_view.html'
-    context={'montant_total': montant_total,'operation_detail':operation_detail,'operation':operation,'operation_source_financement':operation_source_financement,'annee':annee,'paragraphe':paragraphe}
+    context={'montant_total_operation':montant_total_operation,'montant_total': montant_total,'operation_detail':operation_detail,'operation':operation,'operation_source_financement':operation_source_financement,'annee':annee,'paragraphe':paragraphe}
 
 
 
@@ -479,7 +461,8 @@ def rubrique(request):
 def sous_rubrique(request):
     template = '../website/sous_rubrique.html'
     sous_rubrique= Sousrubrique.objects.all()
-    context={'sous_rubrique':sous_rubrique}
+    rubrique = Rubrique.objects.all()
+    context={'rubrique':rubrique,'sous_rubrique':sous_rubrique}
     return render(request,template,context)
 
 def references(request):
@@ -1174,6 +1157,7 @@ def paragraphe_operation(request):
                 # Si des détails existent, mise à jour du montant  
                 for existing_detail in existing_details:  
                     existing_detail.montant += montant  
+                    existing_detail.montant_restant += montant  
                     existing_detail.save()  
                 messages.success(request, 'Montant mis à jour avec succès')  
             else:  
@@ -1182,7 +1166,8 @@ def paragraphe_operation(request):
                     idoperation=instance_operation,  
                     idannee=instance_annee,  
                     idparagraphe=instance_paragraphe,  
-                    montant=montant  
+                    montant=montant,  
+                    montant_restant=montant
                 )  
                 messages.success(request, 'Enregistrement réussi')  
 
@@ -3315,3 +3300,150 @@ def add_signataire(request):
             return redirect(request.META.get('HTTP_REFERER', '/'))
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+from django.utils.translation import gettext as _  
+from django.utils import translation
+
+from django.urls import reverse     # Import the reverse function  
+from .models import Boncommande, Ligneboncommande, Marche, Utilisateur  # Import your models  
+
+def set_language(request):  
+    """Set the user's language preference."""  
+    user_language = request.GET.get('lang', 'en')  
+    translation.activate(user_language)  
+    request.session['django_language'] = user_language  
+    print("Active language:", user_language)  # For debug purposes, consider using logging in production  
+    return redirect(reverse('dashboard'))  # Redirect using the URL pattern name  
+
+@login_required  
+def dashboard(request):  
+    """Render the dashboard with user's language settings."""  
+    # Activate the user's chosen language, or fall back to the default language  
+    #user_language = request.LANGUAGE_CODE  
+    #translation.activate(user_language)  
+    user_language = request.session.get('django_language', 'en')  
+    translation.activate(user_language)
+
+    template = '../website/master.html'  # Make sure this template path is correct  
+
+    # Count objects for dashboard statistics  
+    boncommande_count = Boncommande.objects.count()  
+    ligneboncommande_count = Ligneboncommande.objects.count()  
+    marche_count = Marche.objects.count()  
+    utilisateur_count = Utilisateur.objects.count()  
+    
+    # Prepare context data for the template  
+    context = {  
+        'boncommande': boncommande_count,  
+        'ligneboncommande': ligneboncommande_count,  
+        'marche': marche_count,  
+        'utilisateur': utilisateur_count,  
+    }  
+
+    return render(request, template, context)  # Render the template with the context 
+
+
+def edit_rubriques(request,id):
+    rubriques = Rubrique.objects.get(id=int(id))
+    if request.method == 'POST':
+        nom =request.POST['nom']
+
+        code = request.POST['code']
+
+        try:
+            rubriques.nom=nom
+            rubriques.code = code
+
+            rubriques.save()
+            messages.success(request,'Mise A Jour Reussi')
+
+            return redirect(request.META.get('HTTP_REFERER','/'))
+
+        except Exception as e:
+            messages.error(request,'Erreur Survenue:{e}')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+def edit_sous_rubrique(request,id):
+    sous_rubrique = Sousrubrique.objects.get(id=int(id))
+    if request.method == 'POST':
+        nom=request.POST['nom']
+        code=request.POST['code']
+        rubrique = request.POST['rubrique']
+
+        instance_rubrique = Rubrique.objects.get(id=int(rubrique))
+
+        try:
+            sous_rubrique.nom=nom
+            sous_rubrique.code=code
+            sous_rubrique.idrubrique=instance_rubrique
+
+            sous_rubrique.save()
+
+            messages.success(request,'Mise A Jour Reussi')
+
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,f'Erreur Survenue Au Cour De La Modification')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+def edit_references(request,id):
+    reference = Elementcout.objects.get(id=int(id))
+
+    if request.method == 'POST':
+        nom = request.POST['nom']
+
+        code = request.POST['code']
+
+        rubrique= request.POST['rubrique']
+
+        sous_rubrique = request.POST['sous_rubrique']
+        cu = request.POST['pu']
+        conditionnement = request.POST['conditionnement']
+
+        instance_rubrique = Rubrique.objects.get(id=int(rubrique))
+
+        instance_sous_rubrique = Sousrubrique.objects.get(id=int(sous_rubrique))
+
+        try:
+            reference.nom=nom
+            reference.code=code
+            reference.prixunitaire=cu
+            reference.idsousrubriquemercurial=instance_sous_rubrique
+
+            reference.idrubriquemercurial=instance_rubrique
+            reference.conditionnement=conditionnement
+
+            reference.save()
+            messages.success(request,'Mise A Jour Reussi')
+            return redirect(request.META.get('HTTP_REFERER','/'))
+        except Exception as e:
+            messages.error(request,f'Erreur Survenue: {e}')
+    return redirect(request.META.get('HTTP_REFERER','/'))
+
+
+def detail_tache(request,id):
+    template ='../website/detail_tache.html'
+    tache = Tache.objects.get(id=int(id))
+    context={
+        'tache':tache
+    }
+    return render(request,template,context)
+
+def detail_activite(request,id):
+    template='../website/detail_activite.html'
+    activite = Activite.objects.get(id=int(id))
+    context={
+        'activite':activite
+    }
+    return render(request,template,context)
+
+def detail_sous_programme(request,id):
+    template ='../website/detail_sous_programme.html'
+    sous_programme = Sousprogramme.objects.get(id=int(id))
+    context={
+        'sous_programme':sous_programme
+    }
+    return render(request,template,context)

@@ -129,26 +129,84 @@
          </div>
         </div>
       </div>
-      <table class="table table-hover table-responsive text-center" id="myTable">
+      <table class="table table-hover table-responsive text-center datatable" id="myTable">
         <thead>
           <tr>
           
        
-
+            <th style="width: 10%;">Code </th>
             <th style="width: 50%;">Libelle </th>
-            <th style="width: 50%;">Rubrique </th>
-            <th style="width: 50%;">Actions</th>
+            <th style="width: 30%;">Rubrique </th>
+            <th style="width: 10%;">Actions</th>
           </tr>
         </thead>
         <tbody>
   {%for sous_rubriques in sous_rubrique%}
           <tr>
-          
+            <td>{{sous_rubriques.code}}</td>
             <td>{{sous_rubriques.nom}}</td>
             <td>{{sous_rubriques.idrubrique}}</td>
     
             <td>
-              <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+              <a href="#editEmployeeModal" class="edit"data-bs-toggle="modal" data-bs-target="#verticalycentered{{sous_rubriques.id}}"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+             
+             
+             
+             
+            
+             
+              <div class="modal fade" id="verticalycentered{{sous_rubriques.id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">MISE A JOUR SOUS-RUBRIQUE {{sous_rubriques.nom}}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/edit_sous_rubrique/{{sous_rubriques.id}}/" method="post">
+                        {%csrf_token%}
+                      <div class="row mb-3">
+                        <div class="col-sm-12">
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Code Rubrique" value="{{sous_rubriques.code}}" name="code">
+                            <label for="floatingInput">Code Sous-Rubrique</label>
+                          </div>
+                   
+                        
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Nom Rubrique" value="{{sous_rubriques.nom}}" name="nom">
+                            <label for="floatingInput">Nom Sous-Rubrique</label>
+                          </div>
+
+                          <div class="form-floating mb-3">
+                           <select name="rubrique" id="rubrique" class="form-control">
+                            {%for rubriques in rubrique%}
+                            {%if rubriques.id == sous_rubriques.idrubrique_id%}
+                            <option value="{{rubriques.id}}" selected>{{rubriques.nom}}</option>
+                            {%else%}
+                            <option value="{{rubriques.id}}" >{{rubriques.nom}}</option>
+                            {%endif%}
+                            {%endfor%}
+                           </select>
+                            <label for="floatingInput">Rubriques</label>
+                          </div>
+                   
+                   
+      
+                  </div>
+                  </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                      <button type="submit" class="btn btn-primary">Mise A Jour</button>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+             
+             
+             
               <a href="/delete_activite/{{activites.id}}" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
             </td>
           </tr>

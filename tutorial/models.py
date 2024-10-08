@@ -418,16 +418,7 @@ class Adresse(models.Model):
 
     def __str__(self):
         return self.nom
-class Role(models.Model):
-    NOM_ROLES={
-        'SA':'SuperAdministrateur',
-        'A':'Administrateur',
-        'SU':'Simple Utilisateur'
-    }
-    nom=models.CharField(null=True,max_length=255,choices=NOM_ROLES)
 
-    class META:
-        db_table='role'
 class Utilisateur(models.Model):
     grade = models.CharField(null=True,max_length=255)
     matricule= models.CharField(null=True,max_length=255)
@@ -442,7 +433,7 @@ class Utilisateur(models.Model):
     photo = models.FileField(null=True)
     telephone = models.IntegerField(null=True)
     last_login = models.DateTimeField(null=True, blank=True)  # Ajoutez ce champ
-    idrole = models.ManyToManyField(Role,null=True)
+  
 
     # idarrondissement=models.ForeignKey(Arrondissement, on_delete=models.CASCADE, null=True,blank=True, db_column='idarrondissement')
     # idstatut_matrimonial=models.ForeignKey(Statutmatrimonial, on_delete=models.CASCADE, null=True,blank=True, db_column='idstatut_matrimonial')
@@ -2198,8 +2189,7 @@ class Sousrogramme1(models.Model):
     idsoussecteur=models.ForeignKey(Soussecteur, on_delete=models.CASCADE, null=True,blank=True, db_column='idsoussecteur')
     idinstitution=models.ForeignKey(Institution, on_delete=models.CASCADE, null=True,blank=True, db_column='idinstitution')
     idaxestrategique=models.ForeignKey(Axestrategique, on_delete=models.CASCADE, null=True,blank=True, db_column='idaxestrategique')
-    class Meta:
-        db_table = 'programme1'  
+    
 
     def __str__(self):
         return self.nom

@@ -19,22 +19,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import  path
 from tutorial.views import Home
-
 from tutorial.views import Operation
 from tutorial.views import list_taches
-
 from tutorial import views
 
-
-urlpatterns = [
+from django.conf.urls.i18n import i18n_patterns  
+from django.views.i18n import set_language  
+from django.utils.translation import gettext_lazy as _  
+from django.conf.urls.i18n import i18n_patterns  
+urlpatterns =[
     path('admin/', admin.site.urls),
     path('',Home,name='home'),
     path('dashboard/',views.dashboard,name='dashboard'),
-    
- 
-   
- 
-
     path('list_taches/', list_taches, name='list_taches'),
     path('delete_tache/<int:id>/',views.delete_tache,name="delete_tache"),
     path('tache/',views.tache,name="tache"),
@@ -225,23 +221,24 @@ urlpatterns = [
 
     path('signataire/',views.signataire,name='signataire'),
 
-    path('add_signataire/',views.add_signataire,name='add_signataire')
-    
+    path('add_signataire/',views.add_signataire,name='add_signataire'),
 
+    path('set_language/', views.set_language, name='set_language'),
 
+    path('edit_rubriques/<int:id>/',views.edit_rubriques,name='edit_rubriques'),
 
+    path('edit_sous_rubrique/<int:id>/',views.edit_sous_rubrique,name='edit_sous_rubrique'),
+    path('edit_references/<int:id>/',views.edit_references,name='edit_references'),
 
+    path('detail_tache/<int:id>/',views.detail_tache,name='detail_tache'),
 
+    path('detail_activite/<int:id>/',views.detail_activite,name='detail_activite'),
 
-
-
-
-
-
-
- 
+    path('detail_sous_programme/<int:id>/',views.detail_sous_programme,name='detail_sous_programme')
+  
 ]
-from django.conf.urls.i18n import i18n_patterns  
+
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

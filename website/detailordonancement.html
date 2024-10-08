@@ -219,7 +219,7 @@
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                         
-                        <li class="breadcrumb-item active">Details Ordonancements</li>
+                        <li class="breadcrumb-item active">Details Salaire</li>
                       </ol>
                     </nav>
                   </div>
@@ -228,7 +228,7 @@
           </div>
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Operations Au Bon De Commande {{ordonancement.numero_ordonancement}}</h5>
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Operations Au Salaire {{ordonancement.numero_ordonancement}}</h5>
               <form class="row g-3" method="POST" action="/add_detail_ordonancement/">
                 {%csrf_token%}
                 <h5 style="font-weight: bold; font-family: forte;">Selectionnez L'annee Budgetaire
@@ -316,7 +316,7 @@
       <div class="table-title">
         <div class="row">
           <div class="col-sm-6">
-           <h5 style="font-weight:bold">Liste Des Operations Associees A L'ordonancement {{ordonancement.numero_ordonancement}}</h5>
+           <h5 style="font-weight:bold">Liste Des Operations Associees Au Salaire {{ordonancement.numero_ordonancement}}</h5>
           </div>
         <div class="col-sm-6">
             <a  class="btn btn-success"><i class="bi bi-printer"></i> <span>Supprimer Les Operations De Associees</span></a>

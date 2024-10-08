@@ -1,6 +1,6 @@
-
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 
 <head>
   <meta charset="utf-8">
@@ -67,12 +67,12 @@
 
 
   <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
+  <header id="header" class="header fixed-top d-flex align-items-center ">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{%url 'dashboard'%}" class="logo d-flex align-items-center">
         
-        <img src="{% static 'img/nasla.jpeg' %}" alt="Description de l'image">
+        <img src="{% static 'img/favicon.png' %}" alt="Description de l'image">
         <span class="d-none d-lg-block" style="font-weight: bold;font-family: forte;">BUDGET </span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -121,15 +121,15 @@
          
             <li class="dropdown-footer">  
             
-              {% get_available_languages as LANGUAGES %}  
-              {% get_language_info_list for LANGUAGES as languages %}  
-              <ul>  
-                  {% for language in languages %}  
-                      <li>  
-                          <a href="?lang={{ language.code }}">{{ language.name_local }}</a>  
-                      </li>  
-                  {% endfor %}  
-              </ul>  
+              
+<ul>  
+    
+        <li>  
+          <a href="{% url 'set_language' %}?lang=fr">Français</a>
+          <a href="{% url 'set_language' %}?lang=en">English</a>
+        </li>  
+
+</ul>
           </li>
 
           </ul><!-- End Notification Dropdown Items -->
@@ -208,7 +208,7 @@
       <li class="nav-item">
         <a class="nav-link " href="{%url 'dashboard'%}">
           <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
+          <span>Dashboard </span>
         </a>
       </li><!-- End Dashboard Nav -->
 
@@ -257,7 +257,7 @@
           </li>
           <li>
             <a href="{%url 'references'%}">
-              <i class="bi bi-circle"></i><span> References  </span>
+              <i class="bi bi-circle"></i><span> References Mercuriales </span>
             </a>
           </li>
          
@@ -308,10 +308,10 @@
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="{%url 'paiement'%}">
-          <i class="bi bi-cash-stack"></i><span>Paiements</span>
+          <i class="bi bi-cash-stack"></i><span>Ordonancement</span>
         </a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-graph-up"></i><span>Analyse</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -323,7 +323,7 @@
           </li>
          
         </ul>
-      </li><!-- End Tables Nav -->
+      </li>End Tables Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -405,13 +405,13 @@
      
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
+        <a class="nav-link collapsed" href="/profile/">
           <i class="bi bi-person-circle"></i>
           <span>Profil</span>
         </a>
       </li><!-- End Blank Page Nav -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-error-404.html">
+        <a class="nav-link collapsed" href="/logout/">
           <i class="bi bi-dash-circle"></i>
           <span>Deconnexion</span>
         </a>
@@ -553,76 +553,121 @@
             </div><!-- End Customers Card -->
             
             <!-- Reports -->
-             <div class="col-md-6">
-              <div class="card info-card customers-card">
+          
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+         
+          <h5 style="font-weight: bold; font-family: forte;" class="text-center my-2">GESTION DE L'ANALYSE BUDGETAIRE</h5>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Ordre De Mission</h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-credit-card-2-front-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>144</h6>
-                      <span class="text-danger small pt-1 fw-bold">12</span> <span class="text-muted small pt-2 ps-1">OM Actifs</span>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card info-card customers-card">
-
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Visualiser</a></li>
-                  <li><a class="dropdown-item" href="#">Imprimer</a></li>
-                  <li><a class="dropdown-item" href="#">Statistique</a></li>
-                </ul>
-              </div>
-
+          <div class="col-sm-6">
+            <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Marche</h5>
-
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-exclude"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6>{{marche}}</h6>
-                    <span class="text-danger small pt-1 fw-bold">Valid&eacute;...</span> <span class="text-muted small pt-2 ps-1"></span>
-
-                  </div>
-                </div>
-
+                <h5 class="card-title">Pie Chart</h5>
+  
+                <!-- Pie Chart -->
+                <div id="pieChart" style="min-height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); position: relative;" class="echart" _echarts_instance_="ec_1728412017361"><div style="position: relative; width: 731px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="731" height="400" style="position: absolute; left: 0px; top: 0px; width: 731px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div class="" style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px; transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); background-color: rgb(255, 255, 255); border-width: 1px; border-radius: 4px; color: rgb(102, 102, 102); font: 14px / 21px sans-serif; padding: 10px; top: 0px; left: 0px; transform: translate3d(246px, 283px, 0px); border-color: rgb(145, 204, 117); pointer-events: none; visibility: hidden; opacity: 0;"><div style="margin: 0px 0 0;line-height:1;"><div style="font-size:14px;color:#666;font-weight:400;line-height:1;">Access From</div><div style="margin: 10px 0 0;line-height:1;"><div style="margin: 0px 0 0;line-height:1;"><span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#91cc75;"></span><span style="font-size:14px;color:#666;font-weight:400;margin-left:2px">Direct</span><span style="float:right;margin-left:20px;font-size:14px;color:#666;font-weight:900">735</span><div style="clear:both"></div></div><div style="clear:both"></div></div><div style="clear:both"></div></div></div></div>
+  
+                <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#pieChart")).setOption({
+                      title: {
+                        text: 'Referer of a Website',
+                        subtext: 'Fake Data',
+                        left: 'center'
+                      },
+                      tooltip: {
+                        trigger: 'item'
+                      },
+                      legend: {
+                        orient: 'vertical',
+                        left: 'left'
+                      },
+                      series: [{
+                        name: 'Access From',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [{
+                            value: 1048,
+                            name: 'Search Engine'
+                          },
+                          {
+                            value: 735,
+                            name: 'Direct'
+                          },
+                          {
+                            value: 580,
+                            name: 'Email'
+                          },
+                          {
+                            value: 484,
+                            name: 'Union Ads'
+                          },
+                          {
+                            value: 300,
+                            name: 'Video Ads'
+                          }
+                        ],
+                        emphasis: {
+                          itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                          }
+                        }
+                      }]
+                    });
+                  });
+                </script>
+                <!-- End Pie Chart -->
+  
               </div>
             </div>
-          </div>
-          
-            <!-- Top Selling -->
-           
 
+          </div>
+            <!-- Top Selling -->
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Bar Chart</h5>
+    
+                  <!-- Bar Chart -->
+                  <div id="barChart" style="min-height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" class="echart" _echarts_instance_="ec_1728412816241"><div style="position: relative; width: 731px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="731" height="400" style="position: absolute; left: 0px; top: 0px; width: 731px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas><div style="position: absolute !important; visibility: hidden !important; padding: 0px !important; margin: 0px !important; border-width: 0px !important; user-select: none !important; width: 0px !important; height: 0px !important; inset: 0px auto auto 0px !important;"></div><div style="position: absolute !important; visibility: hidden !important; padding: 0px !important; margin: 0px !important; border-width: 0px !important; user-select: none !important; width: 0px !important; height: 0px !important; inset: 0px 0px auto auto !important;"></div><div style="position: absolute !important; visibility: hidden !important; padding: 0px !important; margin: 0px !important; border-width: 0px !important; user-select: none !important; width: 0px !important; height: 0px !important; inset: auto auto 0px 0px !important;"></div><div style="position: absolute !important; visibility: hidden !important; padding: 0px !important; margin: 0px !important; border-width: 0px !important; user-select: none !important; width: 0px !important; height: 0px !important; inset: auto 0px 0px auto !important;"></div></div></div>
+    
+                  <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      echarts.init(document.querySelector("#barChart")).setOption({
+                        xAxis: {
+                          type: 'category',
+                          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        },
+                        yAxis: {
+                          type: 'value'
+                        },
+                        series: [{
+                          data: [120, 200, 150, 80, 70, 110, 130],
+                          type: 'bar'
+                        }]
+                      });
+                    });
+                  </script>
+                  <!-- End Bar Chart -->
+    
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-12">
+              <div id="container"></div>
+            </div>
+
+            <div class="col-md-12">
+              <figure class="highcharts-figure">
+                <div id="container2"></div>
+                <p class="highcharts-description">
+                  Lollipop charts are variants of column charts, with a circle
+                  marker for the data value and a line extending to the axis.
+                </p>
+              </figure>
+            </div>
           </div>
         </div><!-- End Left side columns -->
 
@@ -633,7 +678,8 @@
           <!-- End Recent Activity -->
 
           <!-- Budget Report -->
-          
+        
+    
         {%endblock%}
         </div><!-- End Right side columns -->
 
@@ -660,6 +706,7 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- Vendor JS Files -->
+  <script src="https://code.highcharts.com/10/highcharts.js"></script>
   <script src="{%static 'vendor/apexcharts/apexcharts.min.js'%}"></script>
   <script src="{%static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
   <script src="{% static 'vendor/chart.js/chart.umd.js'%}"></script>
@@ -698,7 +745,150 @@ function hideLoading() {
     }, 500); // Attends que la transition soit terminée  
 }
 </script>
+
+<script>
+  const chart = Highcharts.chart('container', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Highcharts responsive chart'
+  },
+  subtitle: {
+    text: 'Resize the frame to see the legend position change'
+  },
+  legend: {
+    align: 'right',
+    verticalAlign: 'middle',
+    layout: 'vertical'
+  },
+  xAxis: {
+    categories: ['Apples', 'Oranges', 'Bananas']
+  },
+  yAxis: {
+    title: {
+      text: 'Amount'
+    }
+  },
+  series: [{
+    name: 'Christmas Eve',
+    data: [1, 4, 3]
+  }, {
+    name: 'Christmas Day before dinner',
+    data: [6, 4, 2]
+  }, {
+    name: 'Christmas Day after dinner',
+    data: [8, 4, 3]
+  }],
+  responsive: {
+    rules: [{
+      condition: {
+        maxWidth: 500
+      },
+      chartOptions: {
+        legend: {
+          align: 'center',
+          verticalAlign: 'bottom',
+          layout: 'horizontal'
+        }
+      }
+    }]
+  }
+});
+
+document.getElementById('small').addEventListener('click', () => {
+  chart.setSize(400, 300);
+});
+
+document.getElementById('large').addEventListener('click', () => {
+  chart.setSize(600, 300);
+});
+</script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/dumbbell.js"></script>
+<script src="https://code.highcharts.com/modules/lollipop.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8be90a8f6ea60be4","serverTiming":{"name":{"cfL4":true}},"version":"2024.8.0","token":"68c5ca450bae485a842ff76066d69420"}' crossorigin="anonymous"></script>
+<script>
+  // Data retrieved from https://worldpopulationreview.com/countries
+Highcharts.chart('container2', {
+
+chart: {
+  type: 'lollipop'
+},
+
+accessibility: {
+  point: {
+    valueDescriptionFormat: '{index}. {xDescription}, {point.y}.'
+  }
+},
+
+legend: {
+  enabled: false
+},
+
+subtitle: {
+  text: '2021'
+},
+
+title: {
+  text: 'Top 10 Countries by Population'
+},
+
+tooltip: {
+  shared: true
+},
+
+xAxis: {
+  type: 'category'
+},
+
+yAxis: {
+  title: {
+    text: 'Population'
+  }
+},
+
+series: [{
+  name: 'Population',
+  data: [{
+    name: 'China',
+    y: 1444216107
+  }, {
+    name: 'India',
+    y: 1393409038
+  }, {
+    name: 'United States',
+    y: 332915073
+  }, {
+    name: 'Indonesia',
+    y: 276361783
+  }, {
+    name: 'Pakistan',
+    y: 225199937
+  }, {
+    name: 'Brazil',
+    y: 213993437
+  }, {
+    name: 'Nigeria',
+    y: 211400708
+  }, {
+    name: 'Bangladesh',
+    y: 166303498
+  }, {
+    name: 'Russia',
+    y: 145912025
+  }, {
+    name: 'Mexico',
+    y: 130262216
+  }]
+}]
+
+});
+</script>
 </body>
 
 </html>

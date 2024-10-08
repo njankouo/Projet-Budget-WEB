@@ -210,13 +210,13 @@
           <div class="col-md-12">
               <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES D'ORDONANCEMENT <b class="text-primary"  style="font-weight: bold;">{{lettre.numero_lettre}}</b> </h5>
+                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">LIGNES SALAIRE <b class="text-primary"  style="font-weight: bold;">{{lettre.numero_lettre}}</b> </h5>
       
                     <nav>
                       <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                         
-                        <li class="breadcrumb-item active">Ligne Ordonancement</li>
+                        <li class="breadcrumb-item active">Ligne Salaire</li>
                       </ol>
                     </nav>
                   </div>
@@ -226,7 +226,7 @@
      
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Montants L'ordonancement {{detail_ordonancement.numero_ordonancement}}</h5>
+              <h5 class="card-title"style='font-weight:bold'>Ajouter Des Montants Salaire {{detail_ordonancement.numero_ordonancement}}</h5>
               <form class="row g-3" method="POST" action="/add_ligne_ordonancement/">
                 {%csrf_token%}
 
@@ -305,7 +305,7 @@
                         <option value="{{ordonancement.id}}" selected>{{ordonancement.numero_ordonancement }}</option>
                         
                       </select>
-                      <label for="floatingCity">Code Ordonancement</label>
+                      <label for="floatingCity">Code Salaire</label>
                     </div>
                   </div>
                 </div>

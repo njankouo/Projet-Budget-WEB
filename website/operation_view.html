@@ -21,9 +21,35 @@
 
      
       
-        <h5 style="font-weight: bold; font-family: forte;" class="mx-2">Montant Global De L'operation <b class="text-primary" style="font-weight: bold;">{{operation.nom}}  Pour L'ann&eacute;e {{operation.idannee.nom}}:</b> 
-{{montant_total}} Fcfa
-        </h5>
+       
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Repartition Des Montants De L'operation {{operation.nom}}  Pour L'ann&eacute;e {{operation.idannee.nom}}</h5>
+
+            <!-- Default Table -->
+            <table class="table table-responsive text-center">
+              <thead>
+                <tr>
+                  <th scope="col">Montant Initial</th>
+                  <th scope="col">Montant Engag&eacute;</th>
+                  <th scope="col">Montant Valid&eacute;</th>
+                  <th scope="col">Montant Liquid&eacute;</th>
+                  <th scope="col">Montant Ordonanc&eacute;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  </tr>
+                <td>{{montant_total}} Fcfa</td>
+                <td>{{montant_total_operation}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tbody>
+            </table>
+            <!-- End Default Table Example -->
+          </div>
+        </div>
      
       <div class="card">
         <div class="card-body">

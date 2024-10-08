@@ -132,7 +132,7 @@
           </div>
         </div>
       </div>
-      <table class="table table-hover table-responsive text-center" id="myTable">
+      <table class="table table-hover table-responsive text-center datatable" id="myTable">
         <thead>
           <tr>
            
@@ -158,7 +158,85 @@
             <td>{{references.idrubriquemercurial}}</td>
             <td>{{references.idsousrubriquemercurial}}</td>
             <td>
-              <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+              <a href="#editEmployeeModal" class="edit" data-bs-toggle="modal" data-bs-target="#verticalycentered{{references.id}}"><i class="bi bi-pencil-square" data-toggle="tooltip" title="Edit"></i></a>
+              <div class="modal fade" id="verticalycentered{{references.id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">MISE A JOUR REFERENCE MERCURIALE {{references.nom}}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <form action="/edit_references/{{references.id}}/" method="post">
+                      {%csrf_token%}
+                      <div class="row mb-3">
+                        <div class="col-sm-12">
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Code Rubrique" value="{{references.code}}" name="code">
+                            <label for="floatingInput">Code </label>
+                          </div>
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="References Mercuriales" value="{{references.nom}}" name="nom">
+                            <label for="floatingInput">Nom </label>
+                          </div>
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Conditionnement" value="{{references.conditionnement}}" name="conditionnement">
+                            <label for="floatingInput">Conditionnement </label>
+                          </div>
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Cout Unitaire" value="{{references.prixunitaire}}" name="pu">
+                            <label for="floatingInput">Cout Unitaire </label>
+                          </div>
+                   
+                        
+                          <div class="form-floating mb-3">
+                            <select name="rubrique"  class="form-control" >
+                              {%for sous_rubriques in sous_rubrique%}
+                              {%if sous_rubriques.id == references.idsousrubriquemercurial_id%}
+                              <option value="{{sous_rubriques.id}}" selected>{{sous_rubriques.nom}}</option>
+                              {%else%}
+                              <option value="{{sous_rubriques.id}}" >{{sous_rubriques.nom}}</option>
+                              {%endif%}
+                              {%endfor%}
+                             </select>
+                            <label for="floatingInput"> Sous-Rubrique</label>
+                          </div>
+
+                          <div class="form-floating mb-3">
+                           <select name="sous_rubrique" class="form-control">
+                            {%for rubriques in rubrique%}
+                            {%if rubriques.id == references.idrubriquemercurial_id%}
+                            <option value="{{rubriques.id}}" selected>{{rubriques.nom}}</option>
+                            {%else%}
+                            <option value="{{rubriques.id}}" >{{rubriques.nom}}</option>
+                            {%endif%}
+                            {%endfor%}
+                           </select>
+                            <label for="floatingInput">Rubriques</label>
+                          </div>
+                   
+                   </div>
+                   </div>
+                   <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Mise A Jour</button>
+                  </div>
+              
+                   </form>
+      
+                  
+
+
+
+                    </div>
+                  
+                  </div>
+                  
+                </div>
+              </div>
+             
+             
+             
               <a href="/" class="delete" ><i class="bi bi-archive" data-toggle="tooltip" title="Delete"></i></a>
             </td>
           </tr>
@@ -294,7 +372,13 @@
 });
 </script>
 
-
+<script>
+  new TomSelect("#sous_rubrique",{
+persist: false,
+createOnBlur: true,
+create: true
+});
+</script>
 
 <script>
     $(document).ready(function() {

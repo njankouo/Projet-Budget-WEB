@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-62ws22czt-=a+abqn33lxcv=!f7_)k_y30izn7jof!g8)86vw$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 #allow_host accepte pour certains sites d'acceder a notre projet django
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -45,12 +46,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Doit être ici
+   
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'tutoriel.urls'
@@ -71,13 +74,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'tutoriel.wsgi.application'
-LANGUAGES = [
-    ('en', 'Anglais'),
-    ('fr', 'Français'),
-    
-]
 
+WSGI_APPLICATION = 'tutoriel.wsgi.application'
+from django.utils.translation import gettext_lazy as _  
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('fr', 'French'),
+]
 LANGUAGE_SESSION_KEY = 'django_language'
 
 # Database
@@ -119,6 +123,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+import os
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_debug.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
