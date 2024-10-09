@@ -338,7 +338,7 @@ input[type="radio"]:checked + div::before {
               <button class="nav-link w-100 " id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Lettre Commande</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-              <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Salaire</button>
+              <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Ordonancements</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="decision-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-decision" type="button" role="tab" aria-controls="decision" aria-selected="false" tabindex="-1">Decision</button>
@@ -440,12 +440,9 @@ input[type="radio"]:checked + div::before {
            <i class="bi bi-ui-checks"></i>     Outils
               </button>
               <ul class="dropdown-menu">
-                {%if bon.status == 0%}
-                <form method="POST" action="/valid/{{bon.id}}/">
-                  {%csrf_token%}
-                <li><button type='submit' class="dropdown-item btn btn-success"><i class="bi bi-check-circle-fill"></i> Valider</button></li>
-              </form>
-              {%endif%}
+           
+                <li><a type='button' class="dropdown-item btn btn-success" href="/valid_boncom/{{bon.id}}/"><i class="bi bi-check-circle-fill"></i> Valider</a></li>
+            
                 <li><a class="dropdown-item" href="/add_operations/{{bon.id}}/"><i class="bi bi-plus-square-dotted"></i> Ajouter Operation</a></li>
               
                 <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> Mise A Jour</a></li>

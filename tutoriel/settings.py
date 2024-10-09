@@ -97,7 +97,7 @@ LANGUAGE_SESSION_KEY = 'django_language'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'budget',
+        'NAME': 'budget_version2',
         'USER': 'postgres',
         'PASSWORD': 'corporate2019',
         'HOST': 'localhost',

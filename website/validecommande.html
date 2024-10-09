@@ -1,0 +1,133 @@
+<style></style>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"> 
+    {%extends 'master.html'%}
+
+    {%block content%}
+   
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;font-family: forte;">VALIDER LE BON DE COMMANDE {{commande.code}}</h5>
+      
+                    <nav>
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        
+                        <li class="breadcrumb-item active">Bon Commande</li>
+                      </ol>
+                    </nav>
+                  </div>
+                </div>
+  
+          </div>
+       
+    <!-- <div class="col-md-6">
+
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-2">
+
+    </div> -->
+    <div class="card">
+        <div class="card-body">
+
+          <!-- Default Table -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col"><h5 style="font-weight: bold; font-family:forte" class="text-center">Liste Des Operations</h5></th>
+                <th scope="col">  <h5 style="font-weight: bold; font-family:forte" class="text-center">Liste Des Paragraphes</h5></th>
+                <th scope="col">        <h5 style="font-weight: bold; font-family:forte" class="text-center">Liste Des Annees</h5></th>
+              
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>
+                    {% for operation in operations %}
+                    <div>
+                        <input type="checkbox" id="operation-{{ operation.id }}" name="operations" value="{{ operation.id }}">
+                        <label for="operation-{{ operation.id }}">{{ operation.nom }}</label>
+                    </div>
+                {% endfor %}
+                </th>
+                <td></td>
+                <td></td>
+               
+              </tr>
+            
+               
+            </tbody>
+          </table>
+          <!-- End Default Table Example -->
+        </div>
+      </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>  
+<script>  
+    $(document).ready(function() {  
+        $('#myTable').DataTable();  
+    });  
+</script>  
+
+{% for message in messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ {% if message.tags == 'success' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "success",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 2000
+});
+</script>
+{%endif%}
+{%endfor%}
+</script>
+{% for message in messages %}
+
+ {% if message.tags == 'error' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "error",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
+
+{% for message in messages %}
+
+ {% if message.tags == 'info' %}
+
+<script type="text/javascript">
+ Swal.fire({
+ position: "top-end",
+ icon: "info",
+ title: "{{message}}",
+ showConfirmButton: false,
+ timer: 5000
+});
+</script>
+{%endif%}
+{%endfor%}
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+    new TomSelect("#article",{
+	persist: false,
+	createOnBlur: true,
+	create: true
+});
+</script>
+{%endblock%}

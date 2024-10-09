@@ -3,6 +3,19 @@ from django.utils.timezone import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password  # Use Django's password hashing
 from django.utils.translation import gettext_lazy as _
+
+
+class Sousprogramme(models.Model):
+    code = models.CharField(null=True,max_length=155)
+    nom=models.CharField(max_length=255,null=True)
+    libelleobjectif=models.CharField(max_length=255,null=True)
+    libelleindicateur=models.CharField(max_length=255,null=True)
+    
+    class Meta:
+        db_table = 'sousprogramme'  # Specify the exact table name you want
+
+    def __str__(self):
+        return self.nom
 class Statutmatrimonial(models.Model):
     libelle=models.CharField(max_length=255, null=True)
     etat=models.CharField(max_length=255, null=True)
@@ -613,17 +626,7 @@ class Souscritere(models.Model):
     def __str__(self):
         return self.nom
     
-class Sousprogramme(models.Model):
-    code = models.CharField(null=True,max_length=255)
-    nom=models.CharField(max_length=255,null=True)
-    libelleobjectif=models.CharField(max_length=255,null=True)
-    libelleindicateur=models.CharField(max_length=255,null=True)
-    
-    class Meta:
-        db_table = 'sousprogramme'  # Specify the exact table name you want
 
-    def __str__(self):
-        return self.nom
     
 class Mission(models.Model):
     code=models.CharField(max_length=255,null=True)
@@ -1608,6 +1611,9 @@ class Ligneboncommande(models.Model):
     prixmercurial=models.CharField(max_length=255,null=True)
     verif=models.CharField(max_length=255,null=True)
     references=models.CharField(max_length=255,null=True)
+    idoperation=models.ForeignKey(Operation,on_delete=models.CASCADE,null=True)
+    idannee=models.ForeignKey(Annee,on_delete=models.CASCADE,null=True)
+    idparagraphe = models.ForeignKey(Paragraphe,on_delete=models.CASCADE,null=True)
     idelementcout=models.ForeignKey(Elementcout, on_delete=models.CASCADE, null=True,blank=True, db_column='idelementcout')
     idboncommande=models.ForeignKey(Boncommande, on_delete=models.CASCADE, null=True,blank=True, db_column='idboncommande')
     class Meta:

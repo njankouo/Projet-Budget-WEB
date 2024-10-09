@@ -1025,6 +1025,7 @@ def add_ligne_commande(request):
             paragraphe = request.POST.get('paragraphe', '')  
             operation = request.POST.get('operation', '')  
             annee = request.POST.get('annee', '')  
+  
 
             # Vérifiez si les instances correspondantes existent  
             instance_element = Elementcout.objects.get(id=int(reference))  
@@ -1032,6 +1033,8 @@ def add_ligne_commande(request):
             instance_paragraphe = Paragraphe.objects.get(id=int(paragraphe))  
             instance_operation = Operation.objects.get(id=int(operation))  
             instance_annee = Annee.objects.get(id=int(annee))  
+
+         
 
             if montant < prixT:  
                 messages.info(request, 'Cette référence ne peut être ajoutée car le montant engagé est inférieur au prix total.')  
@@ -1057,7 +1060,10 @@ def add_ligne_commande(request):
                         quantite=qte,  
                         total=prixT,  
                         idelementcout=instance_element,  
-                        idboncommande=instance_code  
+                        idboncommande=instance_code,
+                        idparagraphe=instance_paragraphe,
+                        idoperation=instance_operation,
+                        idannee=instance_annee  
                     )  
                     save_ligne_commande.save()  
                     messages.success(request, 'Enregistrement réussi.')  
@@ -3447,3 +3453,24 @@ def detail_sous_programme(request,id):
         'sous_programme':sous_programme
     }
     return render(request,template,context)
+
+def valid_boncom(request, id):
+    template = '../website/validecommande.html'
+    commande = Boncommande.objects.get(id=int(id))
+    
+    # Récupérer les lignes de bon de commande
+    ligneboncommande = Ligneboncommande.objects.filter(idboncommande=id)
+    
+    # Récupérer les opérations associées
+    operations = []
+    for ligne in ligneboncommande:
+        if ligne.idoperation:  # Vérifiez que l'opération existe
+            operations.append(ligne.idoperation)  # Ajoutez l'opération à la liste
+
+    context = {
+        'commande': commande,
+        'ligneboncommande': ligneboncommande,
+        'operations': operations  # Ajoutez les opérations au contexte
+    }
+    
+    return render(request, template, context)

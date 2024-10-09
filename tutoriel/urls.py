@@ -234,7 +234,9 @@ urlpatterns =[
 
     path('detail_activite/<int:id>/',views.detail_activite,name='detail_activite'),
 
-    path('detail_sous_programme/<int:id>/',views.detail_sous_programme,name='detail_sous_programme')
+    path('detail_sous_programme/<int:id>/',views.detail_sous_programme,name='detail_sous_programme'),
+
+    path('valid_boncom/<int:id>/',views.valid_boncom,name='valid_boncom')
   
 ]
 
